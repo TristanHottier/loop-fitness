@@ -33,15 +33,34 @@ Create a Pages project from this repository with the following settings:
 
 The Vite preset in the Pages dashboard applies the same build command and output directory automatically.
 
-### Wrangler CLI
+### Wrangler CLI (token-based, current workflow)
 
-For direct upload deployments, build locally and upload the output directory:
+The project is deployed with the Wrangler CLI using a Cloudflare API token, not a GitHub connection. The Pages project already exists (`loop-fitness`, production branch `main`), so only the deploy step is needed on each release.
+
+Set the token and account ID as environment variables (do not commit them):
+
+```sh
+export CLOUDFLARE_API_TOKEN="<your-api-token>"
+export CLOUDFLARE_ACCOUNT_ID="<your-account-id>"
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:CLOUDFLARE_API_TOKEN="<your-api-token>"
+$env:CLOUDFLARE_ACCOUNT_ID="<your-account-id>"
+```
+
+Then build and deploy:
 
 ```sh
 npm run build
-npx wrangler pages project create
-npx wrangler pages deploy dist
+npx wrangler pages deploy dist --project-name=loop-fitness --branch=main
 ```
+
+The deploy prints a deployment URL. The production URL is `https://loop-fitness.pages.dev`.
+
+The API token needs the **Cloudflare Pages: Edit** permission. The account ID is required because a scoped token cannot always auto-detect the account.
 
 ### Caching
 
