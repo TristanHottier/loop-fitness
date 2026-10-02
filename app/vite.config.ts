@@ -10,7 +10,7 @@ export default defineConfig({
       // The manifest lives in public/manifest.webmanifest and is copied to dist as-is.
       manifest: false,
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,webmanifest,json}'],
         navigateFallback: 'index.html',
         runtimeCaching: [
           {

@@ -1,0 +1,656 @@
+{
+  "bandLadders": {
+    "tube": ["30", "40", "50", "30+40", "40+50", "30+40+50"],
+    "loop": ["5-30", "15-50", "25-75", "35-95", "50-145"]
+  },
+  "exercises": {
+    "pull-down": {
+      "slug": "pull-down",
+      "name": "Pull down",
+      "equipment": "T",
+      "repMin": 10,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "T40",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "lats (back width), biceps",
+      "instructions": {
+        "setup": [
+          "Door anchor at the top of the door. Clip the tube(s) to it, with the Pilates bar (wide grip) or two handles.",
+          "Kneel or stand facing the door, far enough back that the band is taut with your arms overhead.",
+          "Grip slightly wider than shoulder width and lean back about 10-15 degrees."
+        ],
+        "execution": [
+          "Pull your shoulder blades down.",
+          "Drive your elbows down and toward your hips until your hands reach upper-chest level.",
+          "Squeeze your lats for 1 s.",
+          "Return in 3 s to a full overhead stretch."
+        ],
+        "cues": "Elbows to hips. Think of your hands as hooks.",
+        "mistakes": "Leaning back to row the weight, shrugging, cutting the top stretch short.",
+        "progress": "Step back, stack tubes, or go single-arm with one handle."
+      }
+    },
+    "seated-row": {
+      "slug": "seated-row",
+      "name": "Seated row",
+      "equipment": "T",
+      "repMin": 10,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "T40",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "mid-back, lats, rear delts, biceps",
+      "instructions": {
+        "setup": [
+          "Door anchor at the lowest point of the door, with the tube and two handles (or the Pilates bar).",
+          "Sit on the floor facing the door with legs extended and knees soft, far enough back that the band is taut.",
+          "Sit tall with arms extended."
+        ],
+        "execution": [
+          "Pull the handles to your lower ribs, elbows at about 45 degrees from your torso.",
+          "Squeeze your shoulder blades together for 1 s.",
+          "Return in 3 s to full arm extension, keeping your back flat."
+        ],
+        "cues": "Chest tall, elbows back.",
+        "mistakes": "Rounding the back, leaning back to cheat, shrugging.",
+        "progress": "Stack tubes, or sit farther back."
+      }
+    },
+    "bend-over-rows": {
+      "slug": "bend-over-rows",
+      "name": "Bend over rows",
+      "equipment": "L",
+      "repMin": 10,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "L35-95",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "mid-back, lats, rear delts, biceps",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of a heavy loop band (35-95 or 50-145) with feet shoulder-width apart.",
+          "Hold the top of the loop with both hands, palms facing in.",
+          "Hinge at the hips until your torso is at about 45 degrees, with a flat back and soft knees."
+        ],
+        "execution": [
+          "Pull the band toward your lower ribs, driving your elbows back.",
+          "Squeeze your shoulder blades for 1 s.",
+          "Lower in 3 s to full arm extension."
+        ],
+        "cues": "Your torso stays still. Elbows to the back pockets.",
+        "mistakes": "Standing up during the rep, rounding the lower back, jerking with the hips.",
+        "progress": "Widen your stance or grip lower on the loop for more tension; move to the next loop."
+      }
+    },
+    "push-down-straight-arm": {
+      "slug": "push-down-straight-arm",
+      "name": "Push down (straight-arm)",
+      "equipment": "T",
+      "repMin": 15,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "lats (isolation)",
+      "instructions": {
+        "setup": [
+          "Door anchor at the top of the door, with the tube (30 lb) and two handles.",
+          "Face the door, step back until taut, and hinge slightly at the hips (about 20 degrees).",
+          "Hold the handles in front of you at about head height, arms straight with a slight elbow bend."
+        ],
+        "execution": [
+          "Sweep both arms down in a wide arc until your hands reach your thighs.",
+          "Squeeze your lats hard for 1 s.",
+          "Return in 3 s."
+        ],
+        "cues": "Keep the elbow angle fixed the whole time.",
+        "mistakes": "Bending the elbows (this turns it into a triceps pushdown), swinging from the hips.",
+        "progress": ""
+      }
+    },
+    "reverse-fly": {
+      "slug": "reverse-fly",
+      "name": "Reverse fly",
+      "equipment": "T",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "rear delts, upper back",
+      "instructions": {
+        "setup": [
+          "Door anchor at chest height, with the tube and two handles.",
+          "Face the door, hold the handles with arms straight in front of you at chest height, and step back until taut."
+        ],
+        "execution": [
+          "Open your arms out to the sides in a horizontal arc until your hands are in line with your shoulders.",
+          "Squeeze your shoulder blades and rear delts for 1 s.",
+          "Return in 3 s."
+        ],
+        "cues": "Lead with your elbows and keep a slight bend in them.",
+        "mistakes": "Shrugging, using your torso for momentum.",
+        "progress": ""
+      }
+    },
+    "close-grip-barbell": {
+      "slug": "close-grip-barbell",
+      "name": "Close grip barbell",
+      "equipment": "T + Pilates bar",
+      "repMin": 10,
+      "repMax": 12,
+      "sets": 4,
+      "restSeconds": 75,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "biceps",
+      "instructions": {
+        "setup": [
+          "Clip the tube(s) to the Pilates bar and stand on the middle of the tube(s), feet shoulder-width apart.",
+          "Grip the bar palms up with hands about 15 cm apart, elbows at your sides."
+        ],
+        "execution": [
+          "Curl the bar toward your shoulders.",
+          "Squeeze your biceps for 1 s.",
+          "Lower in 3 s to full arm extension."
+        ],
+        "cues": "Elbows pinned to your ribs. Only your forearms move.",
+        "mistakes": "Swinging the torso, elbows drifting forward.",
+        "progress": "Add or stack a tube, or stand with feet wider."
+      }
+    },
+    "curl-biceps-neutral-grip": {
+      "slug": "curl-biceps-neutral-grip",
+      "name": "Curl biceps (neutral grip)",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "biceps, brachialis (arm thickness)",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of the tube with feet shoulder-width apart.",
+          "Hold one handle in each hand with palms facing each other, elbows at your sides."
+        ],
+        "execution": [
+          "Curl both hands toward your shoulders without rotating your wrists.",
+          "Squeeze for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "",
+        "mistakes": "Swinging, elbows drifting forward.",
+        "progress": "Choke up on the tube, stand wider, or use a heavier tube."
+      }
+    },
+    "lying-chest-press": {
+      "slug": "lying-chest-press",
+      "name": "Lying chest press",
+      "equipment": "L",
+      "repMin": 8,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "L25-75",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "chest, front delts, triceps",
+      "instructions": {
+        "setup": [
+          "Lie on your back on the floor with your knees bent.",
+          "Wrap a loop band (25-75 or 35-95) across your upper back, under your shoulder blades.",
+          "Hold each side of the band at chest level, elbows at about 45 degrees from your torso."
+        ],
+        "execution": [
+          "Press your hands straight up until your arms are fully extended (the band is hardest here).",
+          "Squeeze your chest for 1 s.",
+          "Lower in 3 s until your upper arms lightly touch the floor."
+        ],
+        "cues": "Keep your shoulder blades pinched and flat on the floor. Push the ceiling away.",
+        "mistakes": "The band slipping up to your neck (keep it across the shoulder blades), flaring the elbows to 90 degrees, bouncing off the floor.",
+        "progress": "Heavier loop, double loop, or add a 2 s pause at the top."
+      }
+    },
+    "hex-press": {
+      "slug": "hex-press",
+      "name": "Hex press",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 75,
+      "startBand": "T40",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "inner chest, triceps",
+      "instructions": {
+        "setup": [
+          "Door anchor at chest height, with the tube and two handles.",
+          "Face away from the door, hold the handles together at chest level with palms facing each other, and step forward into a staggered stance until taut."
+        ],
+        "execution": [
+          "Press the handles straight forward, keeping them pressed together the whole way.",
+          "Squeeze your chest for 1 s at full extension.",
+          "Return in 3 s with the handles still touching."
+        ],
+        "cues": "Squeeze the handles into each other as if crushing a ball.",
+        "mistakes": "Letting the handles drift apart, rounding the shoulders at the end.",
+        "progress": "Step farther forward, or stack tubes."
+      }
+    },
+    "standing-press": {
+      "slug": "standing-press",
+      "name": "Standing press",
+      "equipment": "T",
+      "repMin": 10,
+      "repMax": 12,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "T40",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "shoulders (front and side delts), triceps",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of the tube (40 lb) with feet shoulder-width apart.",
+          "Hold the handles at shoulder height, palms facing forward, elbows slightly in front of your body."
+        ],
+        "execution": [
+          "Squeeze your glutes and brace your abs so your ribs stay down.",
+          "Press your hands straight up until your arms are nearly locked out.",
+          "Hold for 1 s.",
+          "Lower in 3 s back to shoulder height."
+        ],
+        "cues": "Move your head slightly forward at the top.",
+        "mistakes": "Arching the lower back, pressing the band out in front.",
+        "progress": "Choke up on the tube, stack tubes, or go single-arm."
+      }
+    },
+    "lateral-raises": {
+      "slug": "lateral-raises",
+      "name": "Lateral raises",
+      "equipment": "T",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 4,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "side delts (shoulder width)",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of the tube (30 lb), feet together or slightly apart.",
+          "Hold the handles at your sides, palms facing in, slight elbow bend."
+        ],
+        "execution": [
+          "Raise both arms out to the sides, leading with your elbows, until they reach shoulder height.",
+          "Hold for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "Imagine pouring water out of a jug at the top. Don't swing.",
+        "mistakes": "Shrugging, raising above shoulder height, using momentum.",
+        "progress": "Stand with feet wider, choke up, or stack tubes. Finish the last set with partial reps in the top half."
+      }
+    },
+    "push-down-tricep": {
+      "slug": "push-down-tricep",
+      "name": "Push-down tricep",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "triceps",
+      "instructions": {
+        "setup": [
+          "Door anchor at the top of the door, with the tube and the handles (or the Pilates bar).",
+          "Face the door with elbows at your sides, bent to about 90 degrees."
+        ],
+        "execution": [
+          "Pin your elbows to your ribs.",
+          "Push your hands down until your arms are straight.",
+          "Squeeze your triceps for 1 s.",
+          "Return in 3 s to elbows at about 90 degrees."
+        ],
+        "cues": "Only your forearms move.",
+        "mistakes": "Elbows drifting forward or flaring, leaning over the band.",
+        "progress": "Stack tubes or step back."
+      }
+    },
+    "triceps-extension": {
+      "slug": "triceps-extension",
+      "name": "Triceps extension",
+      "equipment": "L",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "L15-50",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "triceps (long head)",
+      "instructions": {
+        "setup": [
+          "Stand on one end of a loop band (15-50) with your front foot and hold the other end behind your head with both hands.",
+          "Elbows point forward, upper arms close to your ears."
+        ],
+        "execution": [
+          "Extend your arms straight up.",
+          "Squeeze your triceps for 1 s.",
+          "Lower in 3 s until your hands are behind your head."
+        ],
+        "cues": "Only your forearms move.",
+        "mistakes": "Elbows flaring out, arching the lower back.",
+        "progress": "Next loop up, or go single-arm."
+      }
+    },
+    "lateral-raise": {
+      "slug": "lateral-raise",
+      "name": "Lateral raise",
+      "equipment": "L",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 4,
+      "restSeconds": 60,
+      "startBand": "L5-30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "side delts (the main driver of shoulder width)",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of a loop band (5-30, then 15-50) with feet together or slightly apart.",
+          "Hold the band at your sides, palms facing in, slight elbow bend."
+        ],
+        "execution": [
+          "Raise both arms out to the sides, leading with your elbows, until they reach shoulder height.",
+          "Hold for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "Imagine pouring water out of a jug at the top. Don't swing.",
+        "mistakes": "Shrugging, momentum from the torso, raising above shoulder height.",
+        "progress": "Next loop up, stand wider, or finish the last set with partial reps in the top half."
+      }
+    },
+    "bend-over-fly": {
+      "slug": "bend-over-fly",
+      "name": "Bend over fly",
+      "equipment": "T",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "rear delts, upper back",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of the tube (30 lb) with feet shoulder-width apart.",
+          "Hinge forward at the hips to about 45 degrees, back flat, arms hanging with a slight elbow bend."
+        ],
+        "execution": [
+          "Raise both arms out to the sides, leading with your elbows, until they reach shoulder height.",
+          "Squeeze your rear delts for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "Spread your arms apart rather than lifting them.",
+        "mistakes": "Standing up during the rep, shrugging, pulling with the hands.",
+        "progress": "Choke up on the tube or stack tubes."
+      }
+    },
+    "upright-row": {
+      "slug": "upright-row",
+      "name": "Upright row",
+      "equipment": "L",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "L25-75",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "side delts, upper traps",
+      "instructions": {
+        "setup": [
+          "Stand on the middle of a loop band (25-75) with feet shoulder-width apart.",
+          "Hold the top of the loop with hands about shoulder-width apart, arms down."
+        ],
+        "execution": [
+          "Pull your hands up along your body toward your chest, leading with your elbows.",
+          "Stop when your elbows reach shoulder height. Don't go higher.",
+          "Hold for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "Elbows stay higher than your wrists. Keep your shoulders down and away from your ears.",
+        "mistakes": "Pulling the elbows above shoulder height (this can irritate the shoulder), using a very narrow grip, shrugging.",
+        "progress": "Next loop up, or widen your stance."
+      }
+    },
+    "pull-down-underhand": {
+      "slug": "pull-down-underhand",
+      "name": "Pull down (underhand)",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 75,
+      "startBand": "T40",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "lower lats, biceps",
+      "instructions": {
+        "setup": [
+          "Door anchor at the top of the door, with the tube and the Pilates bar (or two handles).",
+          "Kneel or stand facing the door, hands palms up about shoulder-width apart, arms overhead and the band taut."
+        ],
+        "execution": [
+          "Pull the bar down to your upper chest, elbows close to your body.",
+          "Squeeze your lats and biceps for 1 s.",
+          "Return in 3 s to a full stretch."
+        ],
+        "cues": "Elbows to hips.",
+        "mistakes": "Leaning too far back, shrugging.",
+        "progress": "Step back or stack tubes."
+      }
+    },
+    "cable-crossover": {
+      "slug": "cable-crossover",
+      "name": "Cable crossover",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T40",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": false,
+      "targets": "chest (lower and mid), front delts",
+      "instructions": {
+        "setup": [
+          "Door anchor at the top of the door, with the tube and two handles.",
+          "Face away from the door in a staggered stance, hinge slightly at the hips, with arms out to your sides slightly above shoulder height and a slight elbow bend."
+        ],
+        "execution": [
+          "Sweep both hands down and across in an arc until they meet in front of your hips or lower chest.",
+          "Squeeze your chest for 1 s.",
+          "Return in 3 s with your elbow bend unchanged."
+        ],
+        "cues": "Hug a big tree downward. Keep your elbow bend constant.",
+        "mistakes": "Pressing instead of sweeping, shrugging, standing up straight.",
+        "progress": "Step forward or stack tubes."
+      }
+    },
+    "wide-grip-barbell": {
+      "slug": "wide-grip-barbell",
+      "name": "Wide grip barbell",
+      "equipment": "T + Pilates bar",
+      "repMin": 10,
+      "repMax": 12,
+      "sets": 3,
+      "restSeconds": 75,
+      "startBand": "T30",
+      "unilateral": false,
+      "supersetGroup": "A",
+      "optional": false,
+      "targets": "biceps",
+      "instructions": {
+        "setup": [
+          "Clip the tube(s) to the Pilates bar and stand on the middle of the tube(s).",
+          "Grip the bar palms up, slightly wider than shoulder width, elbows at your sides."
+        ],
+        "execution": [
+          "Curl the bar toward your shoulders.",
+          "Squeeze for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "",
+        "mistakes": "Swinging, elbows drifting forward.",
+        "progress": ""
+      }
+    },
+    "side-pull-biceps": {
+      "slug": "side-pull-biceps",
+      "name": "Side pull biceps",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 75,
+      "startBand": "T30",
+      "unilateral": true,
+      "supersetGroup": "B",
+      "optional": false,
+      "targets": "biceps (peak)",
+      "instructions": {
+        "setup": [
+          "Door anchor at about shoulder height, with the tube and one handle.",
+          "Stand side-on to the door, working arm extended out to the side at shoulder height, palm up, band taut."
+        ],
+        "execution": [
+          "Curl the handle toward your head, keeping your upper arm at shoulder height.",
+          "Squeeze your biceps for 1 s.",
+          "Return in 3 s to a straight arm."
+        ],
+        "cues": "",
+        "mistakes": "Dropping the elbow, shrugging.",
+        "progress": ""
+      }
+    },
+    "bicep-curls": {
+      "slug": "bicep-curls",
+      "name": "Bicep curls",
+      "equipment": "L",
+      "repMin": 20,
+      "repMax": 20,
+      "sets": 2,
+      "restSeconds": 45,
+      "startBand": "L15-50",
+      "unilateral": false,
+      "supersetGroup": null,
+      "optional": true,
+      "targets": "biceps (pump)",
+      "instructions": {
+        "setup": [
+          "Stand on one end of a loop band (15-50) and hold the other end with both hands, palms up, elbows at your sides."
+        ],
+        "execution": [
+          "Curl your hands toward your shoulders.",
+          "Squeeze for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "",
+        "mistakes": "",
+        "progress": "Drop this if you are running past 60 minutes."
+      }
+    }
+  },
+  "workouts": [
+    {
+      "id": "pull",
+      "name": "Pull",
+      "day": "Monday",
+      "exercises": [
+        "pull-down",
+        "seated-row",
+        "bend-over-rows",
+        "push-down-straight-arm",
+        "reverse-fly",
+        "close-grip-barbell",
+        "curl-biceps-neutral-grip"
+      ],
+      "overrides": {}
+    },
+    {
+      "id": "push",
+      "name": "Push",
+      "day": "Wednesday",
+      "exercises": [
+        "lying-chest-press",
+        "hex-press",
+        "standing-press",
+        "lateral-raises",
+        "push-down-tricep",
+        "triceps-extension"
+      ],
+      "overrides": {}
+    },
+    {
+      "id": "shoulders-arms",
+      "name": "Shoulders and arms",
+      "day": "Friday",
+      "exercises": [
+        "lateral-raise",
+        "bend-over-fly",
+        "upright-row",
+        "pull-down-underhand",
+        "cable-crossover",
+        "wide-grip-barbell",
+        "push-down-tricep",
+        "side-pull-biceps",
+        "triceps-extension",
+        "bicep-curls"
+      ],
+      "overrides": {
+        "push-down-tricep": { "sets": 3, "restSeconds": 75, "supersetGroup": "A" },
+        "triceps-extension": { "sets": 3, "restSeconds": 75, "supersetGroup": "B" }
+      }
+    }
+  ]
+}
