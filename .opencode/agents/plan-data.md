@@ -18,6 +18,12 @@ You parse workout content and generate the static `plan.json` configuration, ens
 - Validate that all required schema fields (`slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`) are present.
 - Never invent metrics not present in the markdown source.
 
+# Reliability
+- You MUST create or modify files using the write/edit tools. Never just describe the change in text.
+- After writing, you MUST run the verification command and report the actual result.
+- Your final message MUST list every file you created or modified and the verification result.
+- If you cannot complete the task, state exactly what you did and did not do. Never return an empty message.
+
 # Definition of Done
 `plan.json` is generated, correctly formatted, and completely represents the source of truth in the `content/` files. Gallery directories exist for every `slug`.
 

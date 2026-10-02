@@ -17,6 +17,12 @@ You build the Cloudflare Worker API, D1 database migrations, authentication, syn
 - Validate all incoming payloads against the expected schema.
 - Use Web Crypto (or a Cloudflare-compatible library like `@mmmike/web-push`) for VAPID signing, avoiding Node-specific crypto modules.
 
+# Reliability
+- You MUST create or modify files using the write/edit tools. Never just describe the change in text.
+- After writing, you MUST run the verification command and report the actual result.
+- Your final message MUST list every file you created or modified and the verification result.
+- If you cannot complete the task, state exactly what you did and did not do. Never return an empty message.
+
 # Definition of Done
 The Worker compiles within the 64 MiB limit, endpoints return valid JSON responses, database schemas are applied locally, and the sync logic accurately resolves timestamp conflicts.
 

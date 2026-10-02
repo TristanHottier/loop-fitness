@@ -28,3 +28,16 @@ Done when: the three workouts and every exercise page render from `plan.json`, w
 - [x] Reviewer pass (M1 review: all items PASS after the offline precache fix)
 
 Status: complete, awaiting deploy and user content (YouTube links, gallery pictures)
+
+## M2: Session logging and rest timer
+Done when: a full workout can be logged offline, and the timer starts per set with the right duration.
+
+Tasks (~15 min each):
+1. [x] Dexie db layer: `app/src/db/db.ts` (sessions + set_logs stores, helpers)
+2. [x] Session screen logging UI: `app/src/screens/Session.tsx` + `session.css`
+3. [x] Today screen + navigation: `app/src/screens/Today.tsx` + `today.css` + `app/src/App.tsx`
+4. [x] Rest timer component: `app/src/components/RestTimer.tsx` + `rest-timer.css` + wake lock
+5. [x] Timer wiring + superset/unilateral rules (in `Session.tsx`)
+6. [ ] Reviewer pass + deploy + commit
+
+Status: in progress (tasks 1-5 done; build + typecheck pass)

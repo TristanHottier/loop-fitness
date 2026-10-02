@@ -1,0 +1,176 @@
+/* Session screen styles.
+   Reference: docs/fitness-app-brief.md, section 9.
+   Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
+
+.session {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.session-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.session-finish {
+  min-height: var(--touch-min);
+  padding: 10px 16px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.session-finish:hover {
+  background-color: var(--color-hover);
+}
+
+.session-finish:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.session-exercise {
+  margin-bottom: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.session-exercise-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-text);
+}
+
+.session-note {
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.session-set {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--touch-min);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.session-set-label {
+  min-width: 48px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.session-input {
+  min-height: var(--touch-min);
+  padding: 10px 12px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.session-input:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.session-input-reps {
+  width: 64px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-input-band {
+  width: 96px;
+}
+
+.session-input-note {
+  flex: 1;
+  min-width: 120px;
+}
+
+.session-input-note::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.session-check {
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+  padding: 10px 16px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.session-check:hover {
+  background-color: var(--color-hover);
+}
+
+.session-check:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.session-check-logged {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #FFFFFF;
+}
+
+.session-check-logged:hover {
+  background-color: var(--color-accent);
+}
+
+.session-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--touch-min);
+  padding: 8px 0 8px 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.session-side-label {
+  min-width: 24px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.session-timer-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-min);
+  padding: 10px 16px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
