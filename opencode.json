@@ -1,0 +1,150 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "unsloth-studio/unsloth/Qwen3.6-35B-A3B-MTP-GGUF",
+  "provider": {
+    "unsloth-studio": {
+      "name": "Unsloth Studio",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://ai.helmwire.com/v1",
+        "apiKey": "{env:UNSLOTH_API_KEY}"
+      },
+      "models": {
+        "qwen3.8-27b": {
+          "name": "Qwen3.8 27B NVFP4 — vLLM",
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "limit": {
+            "context": 131072,
+            "output": 16000
+          },
+          "options": {
+            "temperature": 0.2,
+            "topP": 0.9,
+            "provider_id": "edf65c37f80c43a1",
+            "provider_type": "vllm",
+            "external_model": "qwen3.8-27b",
+            "provider_base_url": "http://127.0.0.1:8000/v1"
+          }
+        },
+        "unsloth/Qwen3.6-35B-A3B-MTP-GGUF": {
+          "name": "Qwen3.6 35B A3B MTP",
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "limit": {
+            "context": 250000,
+            "output": 16000
+          },
+          "options": {
+            "temperature": 0.2,
+            "topP": 0.9
+          }
+        },
+        "unsloth/Muse-Glimmer-30B-GGUF": {
+          "name": "Muse Glimmer 30B",
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "limit": {
+            "context": 131072,
+            "output": 16000
+          },
+          "options": {
+            "temperature": 0.2,
+            "topP": 0.9
+          }
+        },
+        "unsloth/Qwen3.8-27B-GGUF": {
+          "name": "Qwen3.8 27B",
+          "reasoning": true,
+          "tool_call": true,
+          "temperature": true,
+          "limit": {
+            "context": 161792,
+            "output": 16000
+          },
+          "options": {
+            "temperature": 0.2,
+            "topP": 0.9
+          }
+        }
+      }
+    }
+  },
+  "default_agent": "orchestrator",
+  "subagent_depth": 1,
+  "permission": {
+    "edit": "allow",
+    "bash": "allow",
+    "skill": {
+      "*": "deny",
+      "notion-style-ui": "allow",
+      "plan-data-and-progression": "allow",
+      "pwa-offline-sync": "allow",
+      "rest-timer": "allow",
+      "cloudflare-stack": "allow",
+      "web-push-reminders": "allow"
+    }
+  },
+  "agent": {
+    "orchestrator": {
+      "description": "Reads the brief, keeps docs/progress.md, splits each milestone into small tasks, delegates, checks the definition of done, reports to the user at each milestone end. Writes no feature code.",
+      "mode": "primary",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "skill": { "*": "deny" },
+        "task": { "*": "deny", "frontend": "allow", "backend": "allow", "plan-data": "allow", "reviewer": "allow" }
+      }
+    },
+    "frontend": {
+      "description": "Builds the React PWA: screens, design system, session logging, rest timer, charts, exercise pages.",
+      "mode": "subagent",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "skill": { "*": "deny", "notion-style-ui": "allow", "rest-timer": "allow", "pwa-offline-sync": "allow" }
+      }
+    },
+    "backend": {
+      "description": "Builds the Worker API, D1 migrations, auth, sync endpoints, and the push cron.",
+      "mode": "subagent",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "skill": { "*": "deny", "cloudflare-stack": "allow", "web-push-reminders": "allow" }
+      }
+    },
+    "plan-data": {
+      "description": "Converts the content/ workout files into plan.json and exercise pages, sets up the gallery folders and media.json, validates everything against the schema.",
+      "mode": "subagent",
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "skill": { "*": "deny", "plan-data-and-progression": "allow" }
+      }
+    },
+    "reviewer": {
+      "description": "Reviews each milestone: runs build, lint and tests, applies the design checklist, tests at 360 to 412 px width, offline and sync behaviour. Returns a pass or fail list.",
+      "mode": "subagent",
+      "permission": {
+        "edit": "deny",
+        "bash": "allow",
+        "skill": { "*": "deny", "notion-style-ui": "allow" }
+      }
+    },
+    "build": { "disable": true },
+    "plan": { "disable": true },
+    "compaction": { "description": "Internal agent used during context compaction.", "mode": "subagent", "hidden": true },
+    "explore": { "description": "Rapid discovery sub-agent.", "mode": "subagent" },
+    "general": { "description": "General-purpose sub-agent for research and multi-step tasks.", "mode": "subagent" },
+    "scout": { "description": "Lightweight sub-agent for targeted scouting and exploration.", "mode": "subagent" },
+    "summary": { "description": "Internal agent used to summarize a session.", "mode": "subagent", "hidden": true },
+    "title": { "description": "Internal agent used to generate session titles.", "mode": "subagent", "hidden": true }
+  },
+  "compaction": { "auto": true, "prune": true, "tail_turns": 6, "preserve_recent_tokens": 24000, "reserved": 16000 },
+  "watcher": { "ignore": [ "node_modules/**", ".next/**", "dist/**", "build/**", ".git/**", "*.log", "*.sqlite", "*.db", ".wrangler/**" ] },
+  "lsp": true
+}
