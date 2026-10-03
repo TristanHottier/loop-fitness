@@ -1,0 +1,89 @@
+/* Chart styles.
+   Reference: docs/fitness-app-brief.md, section 9.
+   Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
+
+.chart {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 24px;
+  text-align: left;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 8px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-line-average {
+  fill: none;
+  stroke: var(--color-text-secondary);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+.chart-dot {
+  fill: var(--color-accent);
+}
+
+.chart-axis {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.chart-label {
+  fill: var(--color-text-secondary);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.chart-legend-swatch {
+  width: 16px;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--color-accent);
+}
+
+.chart-legend-swatch-average {
+  background-color: transparent;
+  border-top: 2px dashed var(--color-text-secondary);
+  border-radius: 0;
+}
+
+.chart-empty {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  padding: 16px 0;
+}

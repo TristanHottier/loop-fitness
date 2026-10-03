@@ -7,12 +7,14 @@ import { Progress } from './screens/Progress'
 import { Settings } from './screens/Settings'
 import { Exercise } from './screens/Exercise'
 import { Session } from './screens/Session'
+import { History } from './screens/History'
 import type { Workout } from './data/plan'
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('today')
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null)
   const [activeSession, setActiveSession] = useState<Workout | null>(null)
+  const [showHistory, setShowHistory] = useState(false)
 
   function openExercise(slug: string) {
     setSelectedExercise(slug)
@@ -22,10 +24,15 @@ export default function App() {
     setActiveSession(workout)
   }
 
+  function openHistory() {
+    setShowHistory(true)
+  }
+
   function selectTab(next: Tab) {
     setTab(next)
     setSelectedExercise(null)
     setActiveSession(null)
+    setShowHistory(false)
   }
 
   return (
@@ -35,12 +42,14 @@ export default function App() {
           <Session workout={activeSession} onExit={() => setActiveSession(null)} />
         ) : selectedExercise ? (
           <Exercise slug={selectedExercise} onBack={() => setSelectedExercise(null)} />
+        ) : showHistory ? (
+          <History onBack={() => setShowHistory(false)} />
         ) : tab === 'today' ? (
           <Today onStartWorkout={startWorkout} />
         ) : tab === 'plan' ? (
           <Plan onOpenExercise={openExercise} />
         ) : tab === 'progress' ? (
-          <Progress />
+          <Progress onOpenHistory={openHistory} />
         ) : (
           <Settings />
         )}

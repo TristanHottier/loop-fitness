@@ -24,15 +24,36 @@ export interface SetLog {
   deleted: boolean;
 }
 
+export type BodyMetricType =
+  | 'weight_kg'
+  | 'arm_left_cm'
+  | 'arm_right_cm'
+  | 'shoulders_cm'
+  | 'chest_cm'
+  | 'waist_cm';
+
+export interface BodyMetric {
+  id: string;
+  date: string; // YYYY-MM-DD
+  type: BodyMetricType;
+  value: number;
+  updated_at: string; // ISO
+  deleted: boolean;
+}
+
 class FitnessDB extends Dexie {
   sessions!: Table<Session>;
   set_logs!: Table<SetLog>;
+  body_metrics!: Table<BodyMetric>;
 
   constructor() {
     super('fitness-tracker');
     this.version(1).stores({
       sessions: 'id, date',
       set_logs: 'id, session_id',
+    });
+    this.version(2).stores({
+      body_metrics: 'id, date, type',
     });
   }
 }
@@ -124,4 +145,66 @@ export async function endSession(sessionId: string): Promise<void> {
   session.ended_at = now;
   session.updated_at = now;
   await db.sessions.put(session);
+}
+
+export async function getSessions(): Promise<Session[]> {
+  const sessions = await db.sessions
+    .filter((session) => !session.deleted)
+    .toArray();
+  sessions.sort((a, b) => b.date.localeCompare(a.date));
+  return sessions;
+}
+
+export async function updateSession(session: Session): Promise<void> {
+  session.updated_at = new Date().toISOString();
+  await db.sessions.put(session);
+}
+
+export function newBodyMetric(type: BodyMetricType, date: string, value: number): BodyMetric {
+  return {
+    id: crypto.randomUUID(),
+    date,
+    type,
+    value,
+    updated_at: new Date().toISOString(),
+    deleted: false,
+  };
+}
+
+export async function createBodyMetric(metric: BodyMetric): Promise<void> {
+  await db.body_metrics.put(metric);
+}
+
+export async function updateBodyMetric(metric: BodyMetric): Promise<void> {
+  metric.updated_at = new Date().toISOString();
+  await db.body_metrics.put(metric);
+}
+
+export async function deleteBodyMetric(id: string): Promise<void> {
+  const metric = await db.body_metrics.get(id);
+  if (!metric) return;
+  metric.deleted = true;
+  metric.updated_at = new Date().toISOString();
+  await db.body_metrics.put(metric);
+}
+
+export async function getBodyMetrics(type: BodyMetricType): Promise<BodyMetric[]> {
+  const metrics = await db.body_metrics
+    .where('type')
+    .equals(type)
+    .filter((metric) => !metric.deleted)
+    .toArray();
+  metrics.sort((a, b) => a.date.localeCompare(b.date));
+  return metrics;
+}
+
+export async function getLatestBodyMetric(type: BodyMetricType): Promise<BodyMetric | null> {
+  const metrics = await getBodyMetrics(type);
+  if (metrics.length === 0) return null;
+  return metrics.reduce((a, b) =>
+    b.date.localeCompare(a.date) > 0 ||
+    (b.date === a.date && b.updated_at.localeCompare(a.updated_at) > 0)
+      ? b
+      : a
+  );
 }

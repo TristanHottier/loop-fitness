@@ -38,6 +38,19 @@ Tasks (~15 min each):
 3. [x] Today screen + navigation: `app/src/screens/Today.tsx` + `today.css` + `app/src/App.tsx`
 4. [x] Rest timer component: `app/src/components/RestTimer.tsx` + `rest-timer.css` + wake lock
 5. [x] Timer wiring + superset/unilateral rules (in `Session.tsx`)
+6. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer pass on all 8 items; two brief deviations fixed: reps prefill + local date; deployed + committed)
+
+## M3: Progress
+Done when: weight and arm entries with charts, and a history view.
+
+Tasks (~15 min each):
+1. [x] `body_metrics` Dexie store + helpers (extend `app/src/db/db.ts`)
+2. [x] Chart component: `app/src/components/Chart.tsx` + `chart.css` (SVG line chart, 7-day average)
+3. [x] Progress screen: `app/src/screens/Progress.tsx` + `progress.css` (weight + arm charts, entries table, add/edit)
+4. [x] History screen: `app/src/screens/History.tsx` + `history.css` (past sessions, editable)
+5. [x] Wire History into navigation (`app/src/App.tsx`)
 6. [ ] Reviewer pass + deploy + commit
 
 Status: in progress (tasks 1-5 done; build + typecheck pass)
