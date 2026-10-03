@@ -76,6 +76,6 @@ Tasks (~15 min each):
 2. [x] Show next-band suggestion on the exercise card in `app/src/screens/Session.tsx`
 3. [x] Show due prompts (arm measurement, deload) on `app/src/screens/Today.tsx`
 4. [x] CSS for suggestion/prompt notes (session.css, today.css)
-5. [ ] Reviewer pass + deploy + commit
+5. [x] Reviewer pass + deploy + commit
 
-Status: in progress (tasks 1-4 done; build + typecheck pass)
+Status: complete (reviewer 6/6 pass; two minor fixes applied post-review: latest-session keyed on session date, stay-message wording; deployed + committed)
