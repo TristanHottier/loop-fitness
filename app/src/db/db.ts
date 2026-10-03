@@ -41,10 +41,26 @@ export interface BodyMetric {
   deleted: boolean;
 }
 
+export interface Setting {
+  key: string;
+  value: string;
+  updated_at: string; // ISO
+  deleted: boolean;
+}
+
+export interface SyncQueueEntry {
+  id: string;
+  table: string; // 'sessions' | 'set_logs' | 'body_metrics' | 'settings'
+  record_id: string;
+  updated_at: string; // ISO
+}
+
 class FitnessDB extends Dexie {
   sessions!: Table<Session>;
   set_logs!: Table<SetLog>;
   body_metrics!: Table<BodyMetric>;
+  settings!: Table<Setting>;
+  sync_queue!: Table<SyncQueueEntry>;
 
   constructor() {
     super('fitness-tracker');
@@ -55,10 +71,50 @@ class FitnessDB extends Dexie {
     this.version(2).stores({
       body_metrics: 'id, date, type',
     });
+    this.version(3).stores({
+      settings: 'key',
+      sync_queue: 'id, table, record_id',
+    });
   }
 }
 
 export const db = new FitnessDB();
+
+// Outbox: record a mutation so the sync layer can push it later.
+export async function enqueue(table: string, recordId: string, updatedAt: string): Promise<void> {
+  await db.sync_queue.put({
+    id: crypto.randomUUID(),
+    table,
+    record_id: recordId,
+    updated_at: updatedAt,
+  });
+}
+
+export async function getSetting(key: string): Promise<string | null> {
+  const row = await db.settings.get(key);
+  if (!row || row.deleted) return null;
+  return row.value;
+}
+
+export async function setSetting(key: string, value: string): Promise<void> {
+  const now = new Date().toISOString();
+  const row: Setting = {
+    key,
+    value,
+    updated_at: now,
+    deleted: false,
+  };
+  await db.settings.put(row);
+  await enqueue('settings', key, now);
+}
+
+export async function getSyncQueue(): Promise<SyncQueueEntry[]> {
+  return db.sync_queue.toArray();
+}
+
+export async function clearSyncQueue(ids: string[]): Promise<void> {
+  await db.sync_queue.where('id').anyOf(ids).delete();
+}
 
 export function newSession(workoutId: string, date: string): Session {
   const now = new Date().toISOString();
@@ -76,6 +132,7 @@ export function newSession(workoutId: string, date: string): Session {
 
 export async function createSession(session: Session): Promise<void> {
   await db.sessions.put(session);
+  await enqueue('sessions', session.id, session.updated_at);
 }
 
 export function newSetLog(
@@ -103,6 +160,7 @@ export function newSetLog(
 
 export async function createSetLog(log: SetLog): Promise<void> {
   await db.set_logs.put(log);
+  await enqueue('set_logs', log.id, log.updated_at);
 }
 
 export async function getSetLogsForSession(sessionId: string): Promise<SetLog[]> {
@@ -145,6 +203,7 @@ export async function endSession(sessionId: string): Promise<void> {
   session.ended_at = now;
   session.updated_at = now;
   await db.sessions.put(session);
+  await enqueue('sessions', session.id, now);
 }
 
 export async function getSessions(): Promise<Session[]> {
@@ -158,6 +217,7 @@ export async function getSessions(): Promise<Session[]> {
 export async function updateSession(session: Session): Promise<void> {
   session.updated_at = new Date().toISOString();
   await db.sessions.put(session);
+  await enqueue('sessions', session.id, session.updated_at);
 }
 
 export function newBodyMetric(type: BodyMetricType, date: string, value: number): BodyMetric {
@@ -173,11 +233,13 @@ export function newBodyMetric(type: BodyMetricType, date: string, value: number)
 
 export async function createBodyMetric(metric: BodyMetric): Promise<void> {
   await db.body_metrics.put(metric);
+  await enqueue('body_metrics', metric.id, metric.updated_at);
 }
 
 export async function updateBodyMetric(metric: BodyMetric): Promise<void> {
   metric.updated_at = new Date().toISOString();
   await db.body_metrics.put(metric);
+  await enqueue('body_metrics', metric.id, metric.updated_at);
 }
 
 export async function deleteBodyMetric(id: string): Promise<void> {
@@ -186,6 +248,7 @@ export async function deleteBodyMetric(id: string): Promise<void> {
   metric.deleted = true;
   metric.updated_at = new Date().toISOString();
   await db.body_metrics.put(metric);
+  await enqueue('body_metrics', id, metric.updated_at);
 }
 
 export async function getBodyMetrics(type: BodyMetricType): Promise<BodyMetric[]> {

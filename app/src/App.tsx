@@ -8,6 +8,7 @@ import { Settings } from './screens/Settings'
 import { Exercise } from './screens/Exercise'
 import { Session } from './screens/Session'
 import { History } from './screens/History'
+import { useSync } from './sync/useSync'
 import type { Workout } from './data/plan'
 
 export default function App() {
@@ -15,6 +16,8 @@ export default function App() {
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null)
   const [activeSession, setActiveSession] = useState<Workout | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+
+  useSync()
 
   function openExercise(slug: string) {
     setSelectedExercise(slug)

@@ -54,3 +54,16 @@ Tasks (~15 min each):
 6. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 9/9 pass after post-review fixes: middle dots, gradient swatch, 360px table scroll, 48px touch targets; deployed + committed)
+
+## M4: Auth and sync
+Done when: data written on one device appears on another, and offline edits sync later.
+
+Tasks (~15 min each):
+1. [ ] Worker scaffold + D1 migration: `api/package.json`, `api/wrangler.jsonc`, `api/tsconfig.json`, `api/src/index.ts`, `api/migrations/0001_init.sql`
+2. [ ] Deploy Worker + create D1 + set PASSPHRASE secret (wrangler, Cloudflare)
+3. [ ] Frontend sync layer: `app/src/sync/sync.ts` (outbox queue, authenticate, push, pull) + `app/src/db/db.ts` (sync_queue store + enqueue in mutation helpers)
+4. [ ] Settings screen: `app/src/screens/Settings.tsx` + `settings.css` (passphrase, sync status, sync now, theme)
+5. [ ] Wire sync into the app (flush on change, pull on load)
+6. [ ] Reviewer pass + deploy + commit
+
+Status: in progress

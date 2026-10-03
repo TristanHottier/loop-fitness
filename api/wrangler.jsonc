@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "loop-fitness-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-01-01",
+  "account_id": "91bb3fe9409e615d9e13e3a3eead606d",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "loop-fitness-db",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ]
+}
