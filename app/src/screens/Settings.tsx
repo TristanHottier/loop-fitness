@@ -13,6 +13,7 @@ import {
   saveReminderSettings,
   loadReminderSettings,
 } from '../push/push'
+import { exportToCsv } from '../lib/export'
 import './settings.css'
 
 export function Settings() {
@@ -182,6 +183,9 @@ export function Settings() {
               Sync now
             </button>
           </div>
+          <button type="button" className="settings-export" onClick={() => { void exportToCsv() }}>
+            Export CSV
+          </button>
           <p className={`settings-status ${status.state === 'error' ? 'settings-status-error' : ''}`}>
             {statusText()}
             {pending > 0 ? `, ${pending} pending` : ''}

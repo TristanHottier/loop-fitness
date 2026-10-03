@@ -91,3 +91,14 @@ Tasks (~15 min each):
 5. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 7/7 pass; one post-review fix applied: reminder window midnight-wrap; Worker + PWA deployed, VAPID secrets set, cron trigger live)
+
+## M7: Polish and QA
+Done when: reviewer pass on all checklists, CSV export, README with install steps.
+
+Tasks (~15 min each):
+1. [x] Red error color: `--color-error` token in `app/src/styles/tokens.css` (dark `#F87171`, light `#C0392B`), used by `.settings-status-error` in `app/src/screens/settings.css`
+2. [x] CSV export: `app/src/lib/export.ts` (`exportToCsv`, three labeled sections, escaped fields) + "Export CSV" button in `app/src/screens/Settings.tsx` + `.settings-export` in `settings.css`
+3. [x] README install steps: "Install on Android" section in `app/README.md`
+4. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer 7/7 pass; PWA deployed)

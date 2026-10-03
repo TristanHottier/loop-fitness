@@ -18,6 +18,12 @@ npm run build
 npm run preview
 ```
 
+## Install on Android
+
+Open `https://loop-fitness.pages.dev` in Chrome on the phone. To install, tap the install icon in the address bar, or open the Chrome menu (three dots) and choose "Add to Home screen" or "Install app".
+
+After installing, launch the app from the home screen icon. It runs in standalone mode and works offline. Web Push reminders require the app to be installed and online.
+
 ## Deploy to Cloudflare Pages
 
 The app is a static site. The build outputs to `dist`, so no Pages Functions are needed.
