@@ -16,7 +16,6 @@ export interface Exercise {
   restSeconds: number
   startBand: string
   unilateral: boolean
-  supersetGroup: string | null
   optional: boolean
   targets: string
   muscles: { primary: string[]; secondary: string[] }

@@ -1,6 +1,6 @@
 ---
 name: Rest Timer
-description: Timer logic, Wake Lock API, superset exceptions, and background handling.
+description: Timer logic, Wake Lock API, and background handling.
 ---
 
 # Timer Implementation
@@ -16,5 +16,4 @@ description: Timer logic, Wake Lock API, superset exceptions, and background han
 - **Known Limit**: The Web App cannot play audio or ring if the user manually locks the screen. State this limitation clearly in the UI.
 
 ## Exceptions
-1. **Supersets**: The timer does not start after the first exercise of a pair. It starts only after the second exercise is logged.
-2. **Unilateral Exercises**: The timer starts only after the second side is logged.
+1. **Unilateral Exercises**: The timer starts only after the second side is logged.

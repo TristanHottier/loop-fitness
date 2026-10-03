@@ -8,7 +8,7 @@ You parse workout content and generate the static `plan.json` configuration, ens
 # Workflow
 1. Read the provided workout Markdown files (`workout-1-pull.md`, etc.).
 2. Extract the structured data for each exercise: equipment, rep ranges, sets, rest times, and band default.
-3. Determine boolean flags (e.g., `unilateral`, `supersetGroup`, `optional`) based on the text.
+3. Determine boolean flags (e.g., `unilateral`, `optional`) based on the text.
 4. Construct the output `plan.json` strictly matching the required schema.
 5. Set up the `app/public/gallery/<exercise-slug>/` directory structure and a `media.json` mapping.
 

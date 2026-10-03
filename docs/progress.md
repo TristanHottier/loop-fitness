@@ -182,3 +182,17 @@ Tasks (~15 min each):
 3. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 7/7 pass; two non-blocking notes: sync-error status shows in Sync section on push failure, success note persists until next tap; PWA deployed, user to tap the reset on the phone)
+
+## M15: Remove superset system
+Done when: the superset system is fully removed from the code, data, content, and spec; the rest timer starts after every exercise (unilateral rule kept); the two superset entries in Shoulders and arms become standalone exercises.
+
+Tasks (~15 min each):
+1. [x] `app/src/data/plan.ts`: removed `supersetGroup` from the `Exercise` interface
+2. [x] `app/src/screens/Session.tsx`: removed `getSupersetRole` + the "no timer after first of a pair" guard; timer now starts after every exercise (unilateral "after second side" rule kept); removed the "Superset X." note
+3. [x] `app/src/screens/Plan.tsx`: removed the "superset X" tag
+4. [x] `app/public/plan.json`: removed the `supersetGroup` key from all 21 exercises; shoulders-arms overrides now keep only sets + restSeconds
+5. [x] `content/workout-3-shoulders-arms.md`: Superset A/B converted to four standalone exercises (wide-grip-barbell, push-down-tricep, side-pull-biceps, triceps-extension), renumbered; superset wording removed
+6. [x] Spec/docs: `docs/fitness-app-brief.md` (workout table, schema notes, rest-timer line, skill table), `.opencode/skills/rest-timer/SKILL.md`, `.opencode/skills/plan-data-and-progression/SKILL.md`, `.opencode/agents/plan-data.md`
+7. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 7/7 pass; four new standalone headers given the Sets x Reps suffix to match the file's style; PWA deployed)

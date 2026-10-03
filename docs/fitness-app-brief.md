@@ -113,11 +113,13 @@ Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only 
 | Upright row | L | 3 x 12-15 | 60 | L25-75 |
 | Pull down (underhand) | T | 3 x 12-15 | 75 | T40 |
 | Cable crossover | T | 3 x 12-15 | 60 | T40 |
-| Superset A: Wide grip barbell + Push-down tricep | T + Pilates bar | 3 rounds x 10-12 + 12-15 | 75 after each pair | T30 |
-| Superset B: Side pull biceps (each side) + Triceps extension | T, L | 3 rounds x 12-15 + 12-15 | 75 after each pair | T30, L15-50 |
+| Wide grip barbell | T + Pilates bar | 3 x 10-12 | 75 | T30 |
+| Push-down tricep | T | 3 x 12-15 | 75 | T30 |
+| Side pull biceps (each side) | T | 3 x 12-15 | 75 | T30 |
+| Triceps extension | L | 3 x 12-15 | 75 | L15-50 |
 | Bicep curls (optional finisher) | L | 2 x 20 | 45 | L15-50 |
 
-**Schema notes.** An exercise has `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `supersetGroup`, `optional`. Side pull biceps is `unilateral`: one logged set per side.
+**Schema notes.** An exercise has `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `optional`. Side pull biceps is `unilateral`: one logged set per side.
 
 **Progression suggestion rule.** After a session, for each exercise: if every set hit `repMax` with the same band, suggest the next band on the ladder (or single-arm if already at the top); if any set is under `repMin`, suggest staying on the band. Show it as a note on the exercise card next session. Also show: arm measurement due every 4 weeks, deload week every 6 to 8 weeks (half the sets, same bands).
 
@@ -141,7 +143,7 @@ Bottom navigation, four tabs: **Today**, **Plan**, **Progress**, **Settings**.
 
 - **Today**: the next workout, a quick weight entry, any due prompt (measure arms, deload).
 - **Workout session**: exercise list. Each set is a row with reps and band prefilled from the last time. Tapping the check on a row logs it and starts the rest timer for that exercise. Optional note per set.
-- **Rest timer**: sticky bar at the bottom with countdown, minus 15 s, plus 15 s and skip. Ends with vibration and a short chime. Keep the screen awake during a session (Wake Lock). The timer stores an end timestamp and recomputes on `visibilitychange`, so it stays correct if the page is throttled. Superset: no timer after the first exercise of a pair, the timer starts after the second. Unilateral: timer starts after the second side. Known limit: a web app cannot ring while the screen is locked, say this in the skill.
+- **Rest timer**: sticky bar at the bottom with countdown, minus 15 s, plus 15 s and skip. Ends with vibration and a short chime. Keep the screen awake during a session (Wake Lock). The timer stores an end timestamp and recomputes on `visibilitychange`, so it stays correct if the page is throttled. Unilateral: timer starts after the second side. Known limit: a web app cannot ring while the screen is locked, say this in the skill.
 - **Plan**: the three workouts, each exercise opens its page (instructions from `content/`, YouTube embeds, gallery images).
 - **Progress**: weight chart with a 7-day average, arm circumference chart (left and right), simple table of entries, add and edit entries.
 - **History**: past sessions, editable.
@@ -168,7 +170,7 @@ Bottom navigation, four tabs: **Today**, **Plan**, **Progress**, **Settings**.
 | notion-style-ui | Design tokens, layout rules and the banned patterns from section 9, plus a review checklist. |
 | plan-data-and-progression | `plan.json` schema, band ladders, the progression suggestion rule and the due-prompt rules. |
 | pwa-offline-sync | Service worker and manifest (vite-plugin-pwa), Dexie stores, sync queue, last-write-wins rule, install on Android. |
-| rest-timer | Timestamp-based timer, Wake Lock, vibration and chime, superset and unilateral logic, the screen-lock limit. |
+| rest-timer | Timestamp-based timer, Wake Lock, vibration and chime, unilateral logic, the screen-lock limit. |
 | cloudflare-stack | Pages deploy, Worker, D1 migrations, secrets, Cron Triggers, local dev with wrangler, free-tier limits to respect. |
 | web-push-reminders | VAPID keys, subscription flow on Android, Worker cron that sends the weigh-in and other reminders at user-set times. |
 

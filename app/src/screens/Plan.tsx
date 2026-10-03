@@ -68,9 +68,6 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
                   <span className="plan-exercise-spec">
                     <span>{specLine(exercise)}</span>
                     {exercise.optional ? <span className="plan-tag">optional</span> : null}
-                    {exercise.supersetGroup ? (
-                      <span className="plan-tag">superset {exercise.supersetGroup}</span>
-                    ) : null}
                   </span>
                 </button>
               )

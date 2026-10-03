@@ -5,7 +5,7 @@
 |---|---|
 | **Duration** | ~60 min |
 | **Equipment** | Tube bands (30 / 40 / 50 lb) with handles, Pilates bar and door anchor; loop bands |
-| **Rest between sets** | 60-90 s (supersets: rest after each pair) |
+| **Rest between sets** | 60-90 s |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s lifting |
 | **Effort** | Most sets end with 1-2 reps left in reserve; the last set of each exercise goes to failure when safe |
 
@@ -38,9 +38,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | 3 | Upright row | Loop | 3 × 12-15 |
 | 4 | Pull down (underhand) | Tube | 3 × 12-15 |
 | 5 | Cable crossover | Tube | 3 × 12-15 |
-| 6 | **Superset A:** Wide grip barbell + Push-down tricep | Tube + Pilates bar | 3 rounds × 10-12 + 12-15 |
-| 7 | **Superset B:** Side pull biceps + Triceps extension | Tube + Loop | 3 rounds × 12-15 each |
-| 8 | Bicep curls (finisher, optional) | Loop | 2 × 20 |
+| 6 | Wide grip barbell | Tube + Pilates bar | 3 × 10-12 |
+| 7 | Push-down tricep | Tube | 3 × 12-15 |
+| 8 | Side pull biceps | Tube | 3 × 12-15 per side |
+| 9 | Triceps extension | Loop | 3 × 12-15 |
+| 10 | Bicep curls (finisher, optional) | Loop | 2 × 20 |
 | | Cool-down | | 5 min |
 
 ---
@@ -158,10 +160,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 6. Superset A: Wide grip barbell + Push-down tricep
-Do 10-12 reps of the first, then go straight into 12-15 reps of the second. Rest 60-90 s after the pair. Repeat for 3 rounds.
-
-#### 6a. Wide grip barbell: Tube + Pilates bar
+### 6. Wide grip barbell: Tube + Pilates bar · 3 × 10-12
 **Targets:** biceps
 
 > *On your chart this is "Wide grip barbell". I've used it as a wide-grip curl with the Pilates bar.*
@@ -177,7 +176,9 @@ Do 10-12 reps of the first, then go straight into 12-15 reps of the second. Rest
 
 **Common mistakes:** swinging, elbows drifting forward.
 
-#### 6b. Push-down tricep: Tube
+---
+
+### 7. Push-down tricep: Tube · 3 × 12-15
 **Targets:** triceps
 
 **Setup**
@@ -192,10 +193,7 @@ Do 10-12 reps of the first, then go straight into 12-15 reps of the second. Rest
 
 ---
 
-### 7. Superset B: Side pull biceps + Triceps extension
-Do 12-15 reps per side of the first, then 12-15 reps of the second. Rest 60-90 s after the pair. Repeat for 3 rounds.
-
-#### 7a. Side pull biceps: Tube
+### 8. Side pull biceps: Tube · 3 × 12-15 per side
 **Targets:** biceps (peak)
 
 > *On your chart this is "Side pull biceps". I've used it as a single-arm curl with the arm out to the side, like a cable biceps pose.*
@@ -211,7 +209,9 @@ Do 12-15 reps per side of the first, then 12-15 reps of the second. Rest 60-90 s
 
 **Common mistakes:** dropping the elbow, shrugging.
 
-#### 7b. Triceps extension: Loop
+---
+
+### 9. Triceps extension: Loop · 3 × 12-15
 **Targets:** triceps (long head)
 
 **Setup**
@@ -226,7 +226,7 @@ Do 12-15 reps per side of the first, then 12-15 reps of the second. Rest 60-90 s
 
 ---
 
-### 8. Bicep curls (finisher, optional): Loop · 2 × 20
+### 10. Bicep curls (finisher, optional): Loop · 2 × 20
 **Targets:** biceps (pump)
 
 **Setup**

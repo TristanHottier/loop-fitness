@@ -14,7 +14,6 @@
       "restSeconds": 90,
       "startBand": "T40",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "lats (back width), biceps",
       "muscles": {
@@ -48,7 +47,6 @@
       "restSeconds": 90,
       "startBand": "T40",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "mid-back, lats, rear delts, biceps",
       "muscles": {
@@ -81,7 +79,6 @@
       "restSeconds": 90,
       "startBand": "L35-95",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "mid-back, lats, rear delts, biceps",
       "muscles": {
@@ -114,7 +111,6 @@
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "lats (isolation)",
       "muscles": {
@@ -147,7 +143,6 @@
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "rear delts, upper back",
       "muscles": {
@@ -179,7 +174,6 @@
       "restSeconds": 75,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "biceps",
       "muscles": {
@@ -211,7 +205,6 @@
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "biceps, brachialis (arm thickness)",
       "muscles": {
@@ -243,7 +236,6 @@
       "restSeconds": 90,
       "startBand": "L25-75",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "chest, front delts, triceps",
       "muscles": {
@@ -276,7 +268,6 @@
       "restSeconds": 75,
       "startBand": "T40",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "inner chest, triceps",
       "muscles": {
@@ -308,7 +299,6 @@
       "restSeconds": 90,
       "startBand": "T40",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "shoulders (front and side delts), triceps",
       "muscles": {
@@ -341,7 +331,6 @@
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "side delts (shoulder width)",
       "muscles": {
@@ -373,7 +362,6 @@
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "triceps",
       "muscles": {
@@ -406,7 +394,6 @@
       "restSeconds": 60,
       "startBand": "L15-50",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "triceps (long head)",
       "muscles": {
@@ -438,7 +425,6 @@
       "restSeconds": 60,
       "startBand": "L5-30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "side delts (the main driver of shoulder width)",
       "muscles": {
@@ -470,7 +456,6 @@
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "rear delts, upper back",
       "muscles": {
@@ -502,7 +487,6 @@
       "restSeconds": 60,
       "startBand": "L25-75",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "side delts, upper traps",
       "muscles": {
@@ -535,7 +519,6 @@
       "restSeconds": 75,
       "startBand": "T40",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "lower lats, biceps",
       "muscles": {
@@ -567,7 +550,6 @@
       "restSeconds": 60,
       "startBand": "T40",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": false,
       "targets": "chest (lower and mid), front delts",
       "muscles": {
@@ -599,7 +581,6 @@
       "restSeconds": 75,
       "startBand": "T30",
       "unilateral": false,
-      "supersetGroup": "A",
       "optional": false,
       "targets": "biceps",
       "muscles": {
@@ -631,7 +612,6 @@
       "restSeconds": 75,
       "startBand": "T30",
       "unilateral": true,
-      "supersetGroup": "B",
       "optional": false,
       "targets": "biceps (peak)",
       "muscles": {
@@ -663,7 +643,6 @@
       "restSeconds": 45,
       "startBand": "L15-50",
       "unilateral": false,
-      "supersetGroup": null,
       "optional": true,
       "targets": "biceps (pump)",
       "muscles": {
@@ -732,8 +711,8 @@
         "bicep-curls"
       ],
       "overrides": {
-        "push-down-tricep": { "sets": 3, "restSeconds": 75, "supersetGroup": "A" },
-        "triceps-extension": { "sets": 3, "restSeconds": 75, "supersetGroup": "B" }
+        "push-down-tricep": { "sets": 3, "restSeconds": 75 },
+        "triceps-extension": { "sets": 3, "restSeconds": 75 }
       }
     }
   ]

@@ -19,21 +19,6 @@ import './session.css'
 
 type InputState = { reps: string; band: string; note: string }
 
-// Returns 'last' if this slug is the final exercise of its superset group,
-// 'not-last' if it is an earlier exercise in the group, or null if it is not
-// part of a superset. The rest timer starts only after the last exercise of a
-// group (and, for unilateral exercises, only after the second side).
-function getSupersetRole(plan: PlanData, workout: Workout, slug: string): 'last' | 'not-last' | null {
-  const ex = resolveExercise(plan, workout, slug)
-  if (!ex.supersetGroup) return null
-  const groupSlugs = workout.exercises.filter((s) => {
-    const e = resolveExercise(plan, workout, s)
-    return e.supersetGroup === ex.supersetGroup
-  })
-  const idx = groupSlugs.indexOf(slug)
-  return idx === groupSlugs.length - 1 ? 'last' : 'not-last'
-}
-
 export function Session({
   workout,
   onExit,
@@ -143,10 +128,6 @@ export function Session({
     setLogged((prev) => ({ ...prev, [key]: true }))
 
     const ex = resolveExercise(activePlan, workout, slug)
-    const role = getSupersetRole(activePlan, workout, slug)
-
-    // Superset: no timer after the first exercise of a pair.
-    if (role === 'not-last') return
 
     // Unilateral: the timer starts only after the second side (R) is logged.
     if (ex.unilateral && side !== 'R') return
@@ -221,7 +202,6 @@ export function Session({
               />
             </button>
             {ex.unilateral && <p className="session-note">One set per side.</p>}
-            {ex.supersetGroup && <p className="session-note">Superset {ex.supersetGroup}.</p>}
             {suggestions[slug] && (
               <p
                 className={

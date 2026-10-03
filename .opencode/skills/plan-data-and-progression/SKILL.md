@@ -8,7 +8,7 @@ description: JSON schema rules, band ladders, progression logic, and due prompts
 - **Loop (L)**: `5-30`, `15-50`, `25-75`, `35-95`, `50-145`
 
 # Schema Notes
-Each exercise requires: `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `supersetGroup`, `optional`.
+Each exercise requires: `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `optional`.
 *Note: Unilateral exercises (e.g., Side pull biceps) require one logged set per side.*
 
 # Progression Suggestion Rule
