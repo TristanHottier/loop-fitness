@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   getSessions,
   updateSession,
-  getSetLogsForSession,
   type Session,
-  type SetLog,
 } from '../db/db'
 import { loadPlan, type PlanData } from '../data/plan'
 import { formatDuration } from '../lib/format'
@@ -12,13 +10,13 @@ import './history.css'
 
 interface HistoryProps {
   onBack: () => void
+  onOpenSession: (id: string) => void
+  version?: number
 }
 
-export function History({ onBack }: HistoryProps) {
+export function History({ onBack, onOpenSession, version }: HistoryProps) {
   const [sessions, setSessions] = useState<Session[]>([])
   const [plan, setPlan] = useState<PlanData | null>(null)
-  const [expanded, setExpanded] = useState<string | null>(null)
-  const [details, setDetails] = useState<Record<string, SetLog[]>>({})
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({})
 
   useEffect(() => {
@@ -33,28 +31,11 @@ export function History({ onBack }: HistoryProps) {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [version])
 
   function workoutName(workoutId: string): string {
     if (!plan) return workoutId
     return plan.workouts.find((w) => w.id === workoutId)?.name ?? workoutId
-  }
-
-  function exerciseName(slug: string): string {
-    if (!plan) return slug
-    return plan.exercises[slug]?.name ?? slug
-  }
-
-  async function toggle(session: Session) {
-    if (expanded === session.id) {
-      setExpanded(null)
-      return
-    }
-    setExpanded(session.id)
-    if (!details[session.id]) {
-      const logs = await getSetLogsForSession(session.id)
-      setDetails((prev) => ({ ...prev, [session.id]: logs }))
-    }
   }
 
   function durationSeconds(session: Session): number | null {
@@ -92,7 +73,6 @@ export function History({ onBack }: HistoryProps) {
       ) : (
         <div className="history-list">
           {sessions.map((session) => {
-            const logs = details[session.id] ?? []
             const secs = durationSeconds(session)
             return (
               <div className="history-card" key={session.id}>
@@ -102,36 +82,16 @@ export function History({ onBack }: HistoryProps) {
                   </span>
                   <span className="history-card-date">{session.date}</span>
                 </div>
-                <p className="history-card-meta">
-                  {logs.length > 0 ? `${logs.length} sets logged` : 'No sets logged'}
-                  {secs !== null ? `, ${formatDuration(secs)}` : ''}
-                </p>
+                {secs !== null ? (
+                  <p className="history-card-meta">{formatDuration(secs)}</p>
+                ) : null}
                 <button
                   type="button"
                   className="history-card-toggle"
-                  onClick={() => toggle(session)}
+                  onClick={() => onOpenSession(session.id)}
                 >
-                  {expanded === session.id ? 'Hide sets' : 'Show sets'}
+                  Show sets
                 </button>
-                {expanded === session.id && (
-                  <div className="history-sets">
-                    {logs.length === 0 ? (
-                      <p className="history-empty">No sets logged.</p>
-                    ) : (
-                      logs.map((log) => (
-                        <div className="history-set-row" key={log.id}>
-                          <span className="history-set-exercise">
-                            {exerciseName(log.exercise_slug)}
-                            {log.side ? ` (${log.side})` : ''}
-                          </span>
-                          <span className="history-set-detail">
-                            {log.reps} reps, {log.band}
-                          </span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
                 <div className="history-note">
                   <label className="history-note-label" htmlFor={`note-${session.id}`}>
                     Note

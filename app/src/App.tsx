@@ -8,6 +8,7 @@ import { Settings } from './screens/Settings'
 import { Exercise } from './screens/Exercise'
 import { Session } from './screens/Session'
 import { History } from './screens/History'
+import { SessionDetail } from './screens/SessionDetail'
 import { useSync } from './sync/useSync'
 import type { Workout } from './data/plan'
 
@@ -17,6 +18,8 @@ export default function App() {
   const [activeSession, setActiveSession] = useState<Workout | null>(null)
   const [sessionExercise, setSessionExercise] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
+  const [historySession, setHistorySession] = useState<string | null>(null)
+  const [historyVersion, setHistoryVersion] = useState(0)
 
   useSync()
 
@@ -38,6 +41,7 @@ export default function App() {
     setActiveSession(null)
     setSessionExercise(null)
     setShowHistory(false)
+    setHistorySession(null)
   }
 
   return (
@@ -62,7 +66,24 @@ export default function App() {
         ) : selectedExercise ? (
           <Exercise slug={selectedExercise} onBack={() => setSelectedExercise(null)} />
         ) : showHistory ? (
-          <History onBack={() => setShowHistory(false)} />
+          <>
+            <div style={historySession ? { display: 'none' } : undefined}>
+              <History
+                onBack={() => setShowHistory(false)}
+                onOpenSession={(id) => setHistorySession(id)}
+                version={historyVersion}
+              />
+            </div>
+            {historySession ? (
+              <SessionDetail
+                sessionId={historySession}
+                onBack={() => {
+                  setHistorySession(null)
+                  setHistoryVersion((v) => v + 1)
+                }}
+              />
+            ) : null}
+          </>
         ) : tab === 'today' ? (
           <Today onStartWorkout={startWorkout} />
         ) : tab === 'plan' ? (

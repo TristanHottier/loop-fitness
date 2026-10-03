@@ -136,3 +136,15 @@ Tasks (~15 min each):
 4. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 7/7 pass; two non-blocking notes: updateBodyMetric/deleteBodyMetric now dead in db.ts, pre-existing 360px label clip; PWA deployed)
+
+## M11: History "Show sets" opens a session-like editable page
+Done when: "Show sets" on a past session opens a page that looks like an in-progress workout, with editable reps/band/note, a Save button (not Finish), and no Check/Done buttons.
+
+Tasks (~15 min each):
+1. [x] `app/src/db/db.ts`: `getSession`, `updateSetLog`, `deleteSetLog` helpers (soft-delete + sync outbox)
+2. [x] `app/src/screens/SessionDetail.tsx` + `session-detail.css`: session-like page, Save button, upsert/soft-delete save logic, no check/done/timer/suggestions
+3. [x] `app/src/screens/History.tsx` + `history.css`: "Show sets" button opens the detail page; `version` prop re-fetches on return; removed inline set expansion
+4. [x] `app/src/App.tsx`: `historySession`/`historyVersion` state; History stays mounted under the detail page
+5. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer 8/8 pass; three non-blocking notes: implicit session.css class reuse, in-place log mutation, .history-card-toggle retained; PWA deployed)

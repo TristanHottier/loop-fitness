@@ -163,6 +163,27 @@ export async function createSetLog(log: SetLog): Promise<void> {
   await enqueue('set_logs', log.id, log.updated_at);
 }
 
+export async function updateSetLog(log: SetLog): Promise<void> {
+  log.updated_at = new Date().toISOString();
+  await db.set_logs.put(log);
+  await enqueue('set_logs', log.id, log.updated_at);
+}
+
+export async function deleteSetLog(id: string): Promise<void> {
+  const log = await db.set_logs.get(id);
+  if (!log) return;
+  log.deleted = true;
+  log.updated_at = new Date().toISOString();
+  await db.set_logs.put(log);
+  await enqueue('set_logs', id, log.updated_at);
+}
+
+export async function getSession(id: string): Promise<Session | null> {
+  const session = await db.sessions.get(id);
+  if (!session || session.deleted) return null;
+  return session;
+}
+
 export async function getSetLogsForSession(sessionId: string): Promise<SetLog[]> {
   const logs = await db.set_logs
     .where('session_id')

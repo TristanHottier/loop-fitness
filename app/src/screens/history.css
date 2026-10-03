@@ -93,30 +93,6 @@
   outline-offset: -2px;
 }
 
-.history-sets {
-  margin-top: 12px;
-  border-top: 1px solid var(--color-border);
-  padding-top: 12px;
-}
-
-.history-set-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--color-text);
-  padding: 4px 0;
-  font-variant-numeric: tabular-nums;
-}
-
-.history-set-exercise {
-  color: var(--color-text);
-}
-
-.history-set-detail {
-  color: var(--color-text-secondary);
-}
-
 .history-note {
   margin-top: 12px;
 }
