@@ -10,5 +10,8 @@
       "database_name": "loop-fitness-db",
       "database_id": "fab09a4e-dfa9-496f-90fc-2a65376262a1"
     }
-  ]
+  ],
+  "triggers": {
+    "crons": ["*/15 * * * *"]
+  }
 }

@@ -79,3 +79,15 @@ Tasks (~15 min each):
 5. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 6/6 pass; two minor fixes applied post-review: latest-session keyed on session date, stay-message wording; deployed + committed)
+
+## M6: Reminders
+Done when: weigh-in reminder and other toggles work through Web Push.
+
+Tasks (~15 min each):
+1. [x] VAPID keys + Web Crypto push lib: `@mmmike/web-push` in `api/`, key pair generated, `VAPID_PUBLIC_KEY`/`VAPID_PRIVATE_KEY` Worker secrets set
+2. [x] Worker push endpoints + cron: `api/src/index.ts` (`/push/vapid-public-key`, `/push/subscribe`, `/push/unsubscribe`, `runReminders` + `scheduled`), cron `*/15 * * * *` in `api/wrangler.jsonc`
+3. [x] Custom service worker: `app/src/sw.ts` (push + notificationclick handlers), `vite.config.ts` switched to `injectManifest`
+4. [x] Push client + Settings Reminders section: `app/src/push/push.ts`, `app/src/screens/Settings.tsx` + `settings.css` (weigh-in toggle + time, default off)
+5. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer 7/7 pass; one post-review fix applied: reminder window midnight-wrap; Worker + PWA deployed, VAPID secrets set, cron trigger live)

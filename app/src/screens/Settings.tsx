@@ -7,6 +7,12 @@ import {
   pendingCount,
   type SyncStatus,
 } from '../sync/sync'
+import {
+  enablePush,
+  disablePush,
+  saveReminderSettings,
+  loadReminderSettings,
+} from '../push/push'
 import './settings.css'
 
 export function Settings() {
@@ -16,10 +22,19 @@ export function Settings() {
   const [status, setStatus] = useState<SyncStatus>({ state: 'idle' })
   const [pending, setPending] = useState(0)
 
+  const [weighInEnabled, setWeighInEnabled] = useState(false)
+  const [weighInTime, setWeighInTime] = useState('08:00')
+  const [reminderNote, setReminderNote] = useState('')
+
   useEffect(() => {
     let cancelled = false
     pendingCount().then((n) => {
       if (!cancelled) setPending(n)
+    })
+    loadReminderSettings().then((s) => {
+      if (cancelled) return
+      setWeighInEnabled(s.enabled)
+      setWeighInTime(s.time)
     })
     return () => {
       cancelled = true
@@ -51,6 +66,35 @@ export function Settings() {
     setPending(await pendingCount())
   }
 
+  async function toggleWeighIn() {
+    const next = !weighInEnabled
+    setWeighInEnabled(next)
+    setReminderNote('')
+    if (next) {
+      const result = await enablePush()
+      if (result.status === 'denied') {
+        setWeighInEnabled(false)
+        setReminderNote('Notification permission was denied. Allow notifications in the browser.')
+        return
+      }
+      if (result.status === 'unsupported') {
+        setWeighInEnabled(false)
+        setReminderNote('Push notifications are not supported in this browser.')
+        return
+      }
+    } else {
+      await disablePush()
+    }
+    await saveReminderSettings(next, weighInTime)
+  }
+
+  async function changeWeighInTime(time: string) {
+    setWeighInTime(time)
+    if (weighInEnabled) {
+      await saveReminderSettings(true, time)
+    }
+  }
+
   function statusText(): string {
     switch (status.state) {
       case 'not-configured':
@@ -78,6 +122,40 @@ export function Settings() {
           <button type="button" className="settings-theme-toggle" onClick={toggleTheme}>
             {theme === 'dark' ? 'Light' : 'Dark'}
           </button>
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h2 className="settings-section-title">Reminders</h2>
+        <div className="settings-sync-card">
+          <div className="settings-row">
+            <span className="settings-label">Weigh-in reminder</span>
+            <button
+              type="button"
+              className={
+                'settings-theme-toggle ' + (weighInEnabled ? 'settings-toggle-on' : '')
+              }
+              onClick={toggleWeighIn}
+            >
+              {weighInEnabled ? 'On' : 'Off'}
+            </button>
+          </div>
+          <div className="settings-row">
+            <label className="settings-label" htmlFor="weighin-time">
+              Time
+            </label>
+            <input
+              id="weighin-time"
+              className="settings-time-input"
+              type="time"
+              value={weighInTime}
+              onChange={(e) => changeWeighInTime(e.target.value)}
+            />
+          </div>
+          {reminderNote && <p className="settings-note settings-status-error">{reminderNote}</p>}
+          <p className="settings-note">
+            Sent as a push notification. The app must be installed and online.
+          </p>
         </div>
       </section>
 

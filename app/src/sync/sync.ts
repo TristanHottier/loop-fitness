@@ -33,6 +33,12 @@ export function isConfigured(): boolean {
   return API_BASE.length > 0
 }
 
+// The Worker base URL, exposed so other modules (e.g. the push client) can
+// build endpoint URLs without duplicating the default/override logic.
+export function getApiBase(): string {
+  return API_BASE
+}
+
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }

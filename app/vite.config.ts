@@ -6,28 +6,18 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // injectManifest: we write the service worker (src/sw.ts) so it can handle
+      // Web Push reminders. VitePWA injects the precache manifest into it.
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.ts',
       // The manifest lives in public/manifest.webmanifest and is copied to dist as-is.
       manifest: false,
-      workbox: {
+      injectRegister: 'auto',
+      // In injectManifest mode the workbox build options live under `injectManifest`,
+      // not `workbox`. globPatterns controls what gets precached for offline.
+      injectManifest: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,webmanifest,json}'],
-        navigateFallback: 'index.html',
-        runtimeCaching: [
-          {
-            urlPattern: /^https?:\/\/.*\.(png|jpg|jpeg|webp|gif|svg)$/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images',
-              expiration: {
-                maxEntries: 64,
-                maxAgeSeconds: 60 * 60 * 24 * 30,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-        ],
       },
     }),
   ],
