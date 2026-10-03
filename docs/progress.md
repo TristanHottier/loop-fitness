@@ -125,3 +125,14 @@ Tasks (~15 min each):
 5. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer pass with one minor flag, fixed: legend swatch radius 3px to var(--radius-sm); PWA deployed)
+
+## M10: Progress cleanup + chart axis fix
+Done when: the Progress page shows only the charts and the add-entry box, and the arm chart y-axis reads correctly (no mod-10 wrap).
+
+Tasks (~15 min each):
+1. [x] `app/src/components/Chart.tsx`: "nice numbers" y-axis (1/2/5x10^n step, min floored / max ceiled to step multiples; data plotted against nice bounds; single 29 cm entry reads as 29)
+2. [x] `app/src/screens/Progress.tsx`: removed the entries table (Edit/Delete) and dead state/handlers; kept the three charts + add-entry form
+3. [x] `app/src/screens/progress.css`: removed unused table styles
+4. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer 7/7 pass; two non-blocking notes: updateBodyMetric/deleteBodyMetric now dead in db.ts, pre-existing 360px label clip; PWA deployed)

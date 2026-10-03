@@ -24,6 +24,39 @@ function parseDate(d: string): number {
   return new Date(d + 'T00:00:00Z').getTime()
 }
 
+// Pick the step from the 1, 2, 5 x 10^n family closest to range/4,
+// so the axis lands on about 4 to 5 intervals.
+function niceStep(range: number, targetIntervals = 4): number {
+  if (range <= 0) return 1
+  const raw = range / targetIntervals
+  const mag = 10 ** Math.floor(Math.log10(raw))
+  const candidates = [1, 2, 5, 10].map((c) => c * mag)
+  let best = candidates[0]
+  let bestDist = Infinity
+  for (const c of candidates) {
+    const dist = Math.abs(Math.log10(c) - Math.log10(raw))
+    if (dist < bestDist) {
+      bestDist = dist
+      best = c
+    }
+  }
+  return best
+}
+
+// Floor/ceil to a multiple of step, snapping near-integers to avoid
+// floating-point drift (e.g. 28.4 / 0.2 = 141.999...).
+function floorStep(v: number, step: number): number {
+  const q = v / step
+  const r = Math.round(q)
+  return (Math.abs(q - r) < 1e-9 ? r : Math.floor(q)) * step
+}
+
+function ceilStep(v: number, step: number): number {
+  const q = v / step
+  const r = Math.round(q)
+  return (Math.abs(q - r) < 1e-9 ? r : Math.ceil(q)) * step
+}
+
 export function Chart({ title, points, unit, showAverage }: ChartProps) {
   const sorted = [...points].sort((a, b) => a.date.localeCompare(b.date))
 
@@ -40,12 +73,15 @@ export function Chart({ title, points, unit, showAverage }: ChartProps) {
   const innerH = H - PAD_T - PAD_B
 
   const values = sorted.map((p) => p.value)
-  let min = Math.min(...values)
-  let max = Math.max(...values)
-  if (min === max) {
-    min -= 1
-    max += 1
+  let dataMin = Math.min(...values)
+  let dataMax = Math.max(...values)
+  if (dataMin === dataMax) {
+    dataMin -= 1
+    dataMax += 1
   }
+  const step = niceStep(dataMax - dataMin)
+  const min = floorStep(dataMin, step)
+  const max = ceilStep(dataMax, step)
 
   const n = sorted.length
   const xFor = (i: number) =>
@@ -76,10 +112,11 @@ export function Chart({ title, points, unit, showAverage }: ChartProps) {
     .map((a, i) => `${i === 0 ? 'M' : 'L'} ${a.x.toFixed(1)} ${a.y.toFixed(1)}`)
     .join(' ')
 
-  const gridCount = 4
+  const gridCount = Math.max(1, Math.round((max - min) / step))
   const gridLines = Array.from({ length: gridCount + 1 }, (_, g) => {
-    const v = min + ((max - min) * g) / gridCount
-    return { y: yFor(v), label: `${v.toFixed(1)}${unit ? ' ' + unit : ''}` }
+    const v = min + g * step
+    const label = `${Number(v.toFixed(1))}${unit ? ' ' + unit : ''}`
+    return { y: yFor(v), label }
   })
 
   const tickCount = Math.min(4, n)

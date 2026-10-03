@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import {
   newBodyMetric,
   createBodyMetric,
-  updateBodyMetric,
-  deleteBodyMetric,
   getBodyMetrics,
   type BodyMetric,
   type BodyMetricType,
@@ -39,8 +37,6 @@ function toPoints(metrics: BodyMetric[]): ChartPoint[] {
 export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
   const [metrics, setMetrics] = useState<BodyMetric[]>([])
   const [loading, setLoading] = useState(true)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editValue, setEditValue] = useState('')
 
   // Add-entry form state.
   const [formType, setFormType] = useState<BodyMetricType>('weight_kg')
@@ -80,25 +76,6 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
     await refresh()
   }
 
-  function startEdit(metric: BodyMetric) {
-    setEditingId(metric.id)
-    setEditValue(String(metric.value))
-  }
-
-  async function saveEdit(metric: BodyMetric) {
-    const value = parseFloat(editValue)
-    if (!Number.isFinite(value)) return
-    await updateBodyMetric({ ...metric, value })
-    setEditingId(null)
-    setEditValue('')
-    await refresh()
-  }
-
-  async function removeEntry(metric: BodyMetric) {
-    await deleteBodyMetric(metric.id)
-    await refresh()
-  }
-
   if (loading) {
     return (
       <div className="screen">
@@ -107,8 +84,6 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
       </div>
     )
   }
-
-  const tableRows = [...metrics].sort((a, b) => b.date.localeCompare(a.date))
 
   return (
     <div className="screen progress">
@@ -130,62 +105,6 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
 
       <section className="progress-section">
         <h2 className="progress-section-title">Entries</h2>
-        {tableRows.length === 0 ? (
-          <p className="progress-empty">No entries yet.</p>
-        ) : (
-          <div className="progress-table-wrap">
-            <table className="progress-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th className="progress-table-value">Value</th>
-                  <th className="progress-table-actions">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableRows.map((m) => (
-                  <tr key={m.id}>
-                    <td className="progress-table-date">{m.date}</td>
-                    <td>{TYPE_LABELS[m.type]}</td>
-                    <td className="progress-table-value">
-                      {editingId === m.id ? (
-                        <input
-                          className="progress-input progress-input-value"
-                          type="number"
-                          inputMode="decimal"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onBlur={() => saveEdit(m)}
-                        />
-                      ) : (
-                        `${m.value} ${TYPE_UNITS[m.type]}`
-                      )}
-                    </td>
-                    <td className="progress-table-actions">
-                      {editingId === m.id ? (
-                        <button
-                          type="button"
-                          className="progress-edit"
-                          onClick={() => saveEdit(m)}
-                        >
-                          Save
-                        </button>
-                      ) : (
-                        <button type="button" className="progress-edit" onClick={() => startEdit(m)}>
-                          Edit
-                        </button>
-                      )}
-                      <button type="button" className="progress-delete" onClick={() => removeEntry(m)}>
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
 
         <form
           className="progress-form"
