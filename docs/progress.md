@@ -102,3 +102,14 @@ Tasks (~15 min each):
 4. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 7/7 pass; PWA deployed)
+
+## M8: In-workout exercise navigation
+Done when: during a session, tapping an exercise name opens its explanation page, and Back returns to the session with all state (inputs, logged sets, rest timer) preserved.
+
+Tasks (~15 min each):
+1. [x] `app/src/App.tsx`: `sessionExercise` state; session stays mounted in a `display:none` wrapper while the exercise overlay is shown; overlay renders `<Exercise>` on top; `selectTab`/`onExit` clear the overlay
+2. [x] `app/src/screens/Session.tsx`: `onOpenExercise` prop; exercise title is a tappable button with a chevron affordance
+3. [x] `app/src/screens/session.css`: tappable title button styling (48px target, flat, sentence case)
+4. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer 7/7 pass; PWA deployed)

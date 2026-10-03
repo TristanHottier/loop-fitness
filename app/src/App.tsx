@@ -15,6 +15,7 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('today')
   const [selectedExercise, setSelectedExercise] = useState<string | null>(null)
   const [activeSession, setActiveSession] = useState<Workout | null>(null)
+  const [sessionExercise, setSessionExercise] = useState<string | null>(null)
   const [showHistory, setShowHistory] = useState(false)
 
   useSync()
@@ -35,6 +36,7 @@ export default function App() {
     setTab(next)
     setSelectedExercise(null)
     setActiveSession(null)
+    setSessionExercise(null)
     setShowHistory(false)
   }
 
@@ -42,7 +44,21 @@ export default function App() {
     <div className="app-shell">
       <main className="app-content">
         {activeSession ? (
-          <Session workout={activeSession} onExit={() => setActiveSession(null)} />
+          <>
+            <div style={sessionExercise ? { display: 'none' } : undefined}>
+              <Session
+                workout={activeSession}
+                onExit={() => {
+                  setActiveSession(null)
+                  setSessionExercise(null)
+                }}
+                onOpenExercise={(slug) => setSessionExercise(slug)}
+              />
+            </div>
+            {sessionExercise ? (
+              <Exercise slug={sessionExercise} onBack={() => setSessionExercise(null)} />
+            ) : null}
+          </>
         ) : selectedExercise ? (
           <Exercise slug={selectedExercise} onBack={() => setSelectedExercise(null)} />
         ) : showHistory ? (

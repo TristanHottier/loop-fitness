@@ -11,6 +11,7 @@ import {
   endSession,
   type Session as SessionRecord,
 } from '../db/db'
+import { ChevronRight } from 'lucide-react'
 import { RestTimer } from '../components/RestTimer'
 import { todayISODate } from '../lib/format'
 import { suggestForExercise, type BandSuggestion } from '../lib/suggestions'
@@ -33,7 +34,15 @@ function getSupersetRole(plan: PlanData, workout: Workout, slug: string): 'last'
   return idx === groupSlugs.length - 1 ? 'last' : 'not-last'
 }
 
-export function Session({ workout, onExit }: { workout: Workout; onExit: () => void }) {
+export function Session({
+  workout,
+  onExit,
+  onOpenExercise,
+}: {
+  workout: Workout
+  onExit: () => void
+  onOpenExercise: (slug: string) => void
+}) {
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [session, setSession] = useState<SessionRecord | null>(null)
   const [inputs, setInputs] = useState<Record<string, InputState>>({})
@@ -198,7 +207,19 @@ export function Session({ workout, onExit }: { workout: Workout; onExit: () => v
         const ex = resolveExercise(plan, workout, slug)
         return (
           <section className="session-exercise" key={slug}>
-            <h2 className="session-exercise-title">{ex.name}</h2>
+            <button
+              type="button"
+              className="session-exercise-title"
+              onClick={() => onOpenExercise(slug)}
+            >
+              <span className="session-exercise-title-text">{ex.name}</span>
+              <ChevronRight
+                className="session-exercise-title-chevron"
+                size={18}
+                strokeWidth={1.75}
+                aria-hidden="true"
+              />
+            </button>
             {ex.unilateral && <p className="session-note">One set per side.</p>}
             {ex.supersetGroup && <p className="session-note">Superset {ex.supersetGroup}.</p>}
             {suggestions[slug] && (
