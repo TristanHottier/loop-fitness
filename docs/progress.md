@@ -51,6 +51,6 @@ Tasks (~15 min each):
 3. [x] Progress screen: `app/src/screens/Progress.tsx` + `progress.css` (weight + arm charts, entries table, add/edit)
 4. [x] History screen: `app/src/screens/History.tsx` + `history.css` (past sessions, editable)
 5. [x] Wire History into navigation (`app/src/App.tsx`)
-6. [ ] Reviewer pass + deploy + commit
+6. [x] Reviewer pass + deploy + commit
 
-Status: in progress (tasks 1-5 done; build + typecheck pass)
+Status: complete (reviewer 9/9 pass after post-review fixes: middle dots, gradient swatch, 360px table scroll, 48px touch targets; deployed + committed)
