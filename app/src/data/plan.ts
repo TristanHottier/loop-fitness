@@ -19,6 +19,7 @@ export interface Exercise {
   supersetGroup: string | null
   optional: boolean
   targets: string
+  muscles: { primary: string[]; secondary: string[] }
   instructions: ExerciseInstructions
 }
 

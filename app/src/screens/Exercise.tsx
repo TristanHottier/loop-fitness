@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { loadMedia, loadPlan, resolveExercise } from '../data/plan'
 import type { Exercise, MediaMap, PlanData } from '../data/plan'
+import { MuscleMap } from '../components/MuscleMap'
 import './exercise.css'
 
 function specLine(exercise: Exercise): string {
@@ -89,6 +90,11 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
       <section className="exercise-section">
         <h2>Targets</h2>
         <p>{exercise.targets}</p>
+      </section>
+
+      <section className="exercise-section">
+        <h2>Muscles</h2>
+        <MuscleMap primary={exercise.muscles.primary} secondary={exercise.muscles.secondary} />
       </section>
 
       <section className="exercise-section">

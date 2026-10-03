@@ -1,0 +1,98 @@
+/* Muscle map styles.
+   Reference: docs/fitness-app-brief.md, section 9.
+   Flat surfaces, 1px borders, 4 to 6px radius, no shadows, no gradients. */
+
+.muscle-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.muscle-figures {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.muscle-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.muscle-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.muscle-figure-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* Body silhouette */
+
+.muscle-body {
+  fill: var(--color-surface);
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+/* Muscle shapes */
+
+.muscle {
+  stroke: var(--color-bg);
+  stroke-width: 1;
+}
+
+.muscle-idle {
+  fill: var(--color-border);
+}
+
+.muscle-secondary {
+  fill: var(--color-text-secondary);
+  opacity: 0.55;
+}
+
+.muscle-primary {
+  fill: var(--color-accent);
+}
+
+/* Legend */
+
+.muscle-legend {
+  display: flex;
+  gap: 16px;
+}
+
+.muscle-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.muscle-legend-swatch {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.muscle-legend-swatch-primary {
+  background-color: var(--color-accent);
+}
+
+.muscle-legend-swatch-secondary {
+  background-color: var(--color-text-secondary);
+  opacity: 0.55;
+}

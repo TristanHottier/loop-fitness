@@ -113,3 +113,15 @@ Tasks (~15 min each):
 4. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 7/7 pass; PWA deployed)
+
+## M9: Muscle diagram on exercise pages
+Done when: every exercise page shows a flat Garmin-Connect-style body diagram highlighting primary and secondary muscles.
+
+Tasks (~15 min each):
+1. [x] `app/public/plan.json`: `muscles: { primary, secondary }` on all 21 exercises (controlled 10-key vocabulary)
+2. [x] `app/src/data/plan.ts`: `muscles` added to the `Exercise` interface
+3. [x] `app/src/components/MuscleMap.tsx` + `muscle-map.css`: flat front + back SVG figures, accent = primary, muted = secondary, legend
+4. [x] `app/src/screens/Exercise.tsx`: "Muscles" section after "Targets"
+5. [x] Reviewer pass + deploy + commit
+
+Status: complete (reviewer pass with one minor flag, fixed: legend swatch radius 3px to var(--radius-sm); PWA deployed)
