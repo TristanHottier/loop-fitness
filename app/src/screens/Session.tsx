@@ -7,11 +7,13 @@ import {
   createSetLog,
   getLatestBandForExercise,
   getLatestRepsForExercise,
+  getLatestSessionLogsForExercise,
   endSession,
   type Session as SessionRecord,
 } from '../db/db'
 import { RestTimer } from '../components/RestTimer'
 import { todayISODate } from '../lib/format'
+import { suggestForExercise, type BandSuggestion } from '../lib/suggestions'
 import './session.css'
 
 type InputState = { reps: string; band: string; note: string }
@@ -39,6 +41,7 @@ export function Session({ workout, onExit }: { workout: Workout; onExit: () => v
   const [error, setError] = useState<string | null>(null)
   const [activeTimer, setActiveTimer] = useState<{ seconds: number; label: string } | null>(null)
   const [timerKey, setTimerKey] = useState(0)
+  const [suggestions, setSuggestions] = useState<Record<string, BandSuggestion | null>>({})
 
   useEffect(() => {
     let cancelled = false
@@ -80,6 +83,15 @@ export function Session({ workout, onExit }: { workout: Workout; onExit: () => v
           }
         }
         setInputs(init)
+
+        const sugg: Record<string, BandSuggestion | null> = {}
+        for (const slug of workout.exercises) {
+          const ex = resolveExercise(p, workout, slug)
+          const prevLogs = await getLatestSessionLogsForExercise(slug)
+          sugg[slug] = suggestForExercise(ex, prevLogs, p)
+        }
+        if (cancelled) return
+        setSuggestions(sugg)
       } catch {
         if (!cancelled) setError('Could not start the session.')
       }
@@ -189,6 +201,16 @@ export function Session({ workout, onExit }: { workout: Workout; onExit: () => v
             <h2 className="session-exercise-title">{ex.name}</h2>
             {ex.unilateral && <p className="session-note">One set per side.</p>}
             {ex.supersetGroup && <p className="session-note">Superset {ex.supersetGroup}.</p>}
+            {suggestions[slug] && (
+              <p
+                className={
+                  'session-suggestion ' +
+                  (suggestions[slug]!.kind === 'progress' ? 'session-suggestion-progress' : '')
+                }
+              >
+                {suggestions[slug]!.message}
+              </p>
+            )}
             {Array.from({ length: ex.sets }, (_, idx) => idx + 1).map((setIndex) => {
               if (ex.unilateral) {
                 return (

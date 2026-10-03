@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { loadPlan, type PlanData, type Workout } from '../data/plan'
+import { getFirstSessionDate, getLastArmMeasurementDate } from '../db/db'
+import { armMeasurementDue, deloadDue } from '../lib/suggestions'
 import './today.css'
 
 // JS getDay(): 0=Sunday ... 6=Saturday. Map the training days to their workout.
@@ -12,6 +14,8 @@ const DAY_TO_WORKOUT: Record<number, string> = {
 export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) => void }) {
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [failed, setFailed] = useState(false)
+  const [armDue, setArmDue] = useState(false)
+  const [deload, setDeload] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -21,6 +25,15 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
       })
       .catch(() => {
         if (!cancelled) setFailed(true)
+      })
+    Promise.all([getLastArmMeasurementDate(), getFirstSessionDate()])
+      .then(([lastArm, firstSession]) => {
+        if (cancelled) return
+        setArmDue(armMeasurementDue(lastArm))
+        setDeload(deloadDue(firstSession))
+      })
+      .catch(() => {
+        // The prompts are non-critical; ignore db errors.
       })
     return () => {
       cancelled = true
@@ -75,6 +88,24 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
         </section>
       ) : (
         <p className="today-rest">Rest day. No workout scheduled today.</p>
+      )}
+
+      {(armDue || deload) && (
+        <section className="today-prompts">
+          <h2>Due</h2>
+          <div className="today-prompt-list">
+            {armDue && (
+              <p className="today-prompt">
+                Arm measurement due. Log it on the Progress screen.
+              </p>
+            )}
+            {deload && (
+              <p className="today-prompt">
+                Deload week. Do half the sets, same bands.
+              </p>
+            )}
+          </div>
+        </section>
       )}
 
       {others.length > 0 && (

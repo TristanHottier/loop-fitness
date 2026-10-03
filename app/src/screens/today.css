@@ -56,6 +56,29 @@
   color: var(--color-text-secondary);
 }
 
+.today-prompts {
+  margin-top: 24px;
+}
+
+.today-prompts h2 {
+  margin-bottom: 8px;
+}
+
+.today-prompt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.today-prompt {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
 .today-others {
   margin-top: 24px;
 }

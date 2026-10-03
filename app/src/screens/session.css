@@ -64,6 +64,17 @@
   color: var(--color-text-secondary);
 }
 
+.session-suggestion {
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.session-suggestion-progress {
+  color: var(--color-accent);
+}
+
 .session-set {
   display: flex;
   flex-wrap: wrap;

@@ -67,3 +67,15 @@ Tasks (~15 min each):
 6. [x] Reviewer pass + deploy + commit
 
 Status: complete (D1 created + migration applied, Worker deployed at loop-fitness-api.tristan-ho2tier.workers.dev, PASSPHRASE secret set, sync round-trip verified end-to-end; PWA redeployed with sync URL; committed)
+
+## M5: Suggestions
+Done when: next-band suggestions, measurement and deload prompts.
+
+Tasks (~15 min each):
+1. [x] Suggestion logic: `app/src/lib/suggestions.ts` (nextBand, suggestForExercise, armMeasurementDue, deloadDue)
+2. [x] Show next-band suggestion on the exercise card in `app/src/screens/Session.tsx`
+3. [x] Show due prompts (arm measurement, deload) on `app/src/screens/Today.tsx`
+4. [x] CSS for suggestion/prompt notes (session.css, today.css)
+5. [ ] Reviewer pass + deploy + commit
+
+Status: in progress (tasks 1-4 done; build + typecheck pass)

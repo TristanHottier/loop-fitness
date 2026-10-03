@@ -196,6 +196,28 @@ export async function getLatestRepsForExercise(exerciseSlug: string): Promise<nu
   return latest.reps;
 }
 
+// The set logs from the most recent session for a given exercise, used to
+// compute the next-session progression suggestion. Keyed on the session date
+// (not the log updated_at) so editing an old session does not change which
+// session the suggestion is computed from.
+export async function getLatestSessionLogsForExercise(
+  exerciseSlug: string
+): Promise<SetLog[]> {
+  const logs = await db.set_logs
+    .filter((log) => !log.deleted && log.exercise_slug === exerciseSlug)
+    .toArray();
+  if (logs.length === 0) return [];
+  const sessionIds = [...new Set(logs.map((log) => log.session_id))];
+  const sessions = await db.sessions.where('id').anyOf(sessionIds).toArray();
+  const dateById = new Map(sessions.map((s) => [s.id, s.date]));
+  const latestSession = logs.reduce((a, b) => {
+    const aDate = dateById.get(a.session_id) ?? '';
+    const bDate = dateById.get(b.session_id) ?? '';
+    return aDate >= bDate ? a : b;
+  }).session_id;
+  return logs.filter((log) => log.session_id === latestSession);
+}
+
 export async function endSession(sessionId: string): Promise<void> {
   const session = await db.sessions.get(sessionId);
   if (!session) return;
@@ -212,6 +234,24 @@ export async function getSessions(): Promise<Session[]> {
     .toArray();
   sessions.sort((a, b) => b.date.localeCompare(a.date));
   return sessions;
+}
+
+// The date of the earliest logged session, or null. Used for the deload cycle.
+export async function getFirstSessionDate(): Promise<string | null> {
+  const sessions = await db.sessions
+    .filter((session) => !session.deleted)
+    .toArray();
+  if (sessions.length === 0) return null;
+  return sessions.reduce((a, b) => (a.date <= b.date ? a : b)).date;
+}
+
+// The date of the most recent arm measurement (left or right), or null.
+export async function getLastArmMeasurementDate(): Promise<string | null> {
+  const metrics = await db.body_metrics
+    .filter((m) => !m.deleted && (m.type === 'arm_left_cm' || m.type === 'arm_right_cm'))
+    .toArray();
+  if (metrics.length === 0) return null;
+  return metrics.reduce((a, b) => (a.date >= b.date ? a : b)).date;
 }
 
 export async function updateSession(session: Session): Promise<void> {
