@@ -294,6 +294,27 @@ export async function updateSession(session: Session): Promise<void> {
   await enqueue('sessions', session.id, session.updated_at);
 }
 
+// Soft-delete every session and set log, and enqueue each so the reset
+// propagates to the server. Body metrics, nutrition, and settings are
+// untouched.
+export async function resetSessionHistory(): Promise<void> {
+  const now = new Date().toISOString();
+  const sessions = await db.sessions.filter((s) => !s.deleted).toArray();
+  for (const s of sessions) {
+    s.deleted = true;
+    s.updated_at = now;
+    await db.sessions.put(s);
+    await enqueue('sessions', s.id, now);
+  }
+  const logs = await db.set_logs.filter((l) => !l.deleted).toArray();
+  for (const l of logs) {
+    l.deleted = true;
+    l.updated_at = now;
+    await db.set_logs.put(l);
+    await enqueue('set_logs', l.id, now);
+  }
+}
+
 export function newBodyMetric(type: BodyMetricType, date: string, value: number): BodyMetric {
   return {
     id: crypto.randomUUID(),

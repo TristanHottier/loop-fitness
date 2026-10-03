@@ -14,6 +14,7 @@ import {
   loadReminderSettings,
 } from '../push/push'
 import { exportToCsv } from '../lib/export'
+import { resetSessionHistory } from '../db/db'
 import './settings.css'
 
 export function Settings() {
@@ -26,6 +27,10 @@ export function Settings() {
   const [weighInEnabled, setWeighInEnabled] = useState(false)
   const [weighInTime, setWeighInTime] = useState('08:00')
   const [reminderNote, setReminderNote] = useState('')
+
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
+  const [resetBusy, setResetBusy] = useState(false)
+  const [resetNote, setResetNote] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -93,6 +98,25 @@ export function Settings() {
     setWeighInTime(time)
     if (weighInEnabled) {
       await saveReminderSettings(true, time)
+    }
+  }
+
+  async function confirmReset() {
+    setResetBusy(true)
+    setResetNote('')
+    try {
+      await resetSessionHistory()
+      if (getToken() !== null) {
+        const result = await syncNow()
+        setStatus(result)
+        setPending(await pendingCount())
+      }
+      setResetNote('Session history reset.')
+      setResetConfirmOpen(false)
+    } catch {
+      setResetNote('Reset failed. Try again.')
+    } finally {
+      setResetBusy(false)
     }
   }
 
@@ -193,6 +217,55 @@ export function Settings() {
           <p className="settings-note">
             Changes are saved on this device and sync when connected.
           </p>
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h2 className="settings-section-title">Data</h2>
+        <div className="settings-sync-card">
+          <button
+            type="button"
+            className="settings-reset"
+            onClick={() => {
+              setResetNote('')
+              setResetConfirmOpen(true)
+            }}
+            disabled={resetBusy}
+          >
+            Reset session history
+          </button>
+          {resetConfirmOpen && (
+            <div className="settings-reset-confirm">
+              <p className="settings-reset-note">
+                This deletes all past sessions and their sets. This cannot be undone.
+              </p>
+              <div className="settings-sync-actions">
+                <button
+                  type="button"
+                  className="settings-sync-now"
+                  onClick={confirmReset}
+                  disabled={resetBusy}
+                >
+                  Confirm reset
+                </button>
+                <button
+                  type="button"
+                  className="settings-connect"
+                  onClick={() => setResetConfirmOpen(false)}
+                  disabled={resetBusy}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          {resetNote && (
+            <p
+              className={`settings-status ${resetNote === 'Session history reset.' ? '' : 'settings-status-error'}`}
+            >
+              {resetNote}
+            </p>
+          )}
         </div>
       </section>
     </div>

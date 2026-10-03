@@ -162,3 +162,23 @@ Tasks (~15 min each):
 7. [x] Reviewer pass + D1 migration applied + Worker + PWA deploy + commit
 
 Status: complete (reviewer 8/8 pass; two non-blocking notes: empty input stores 0, multi-row date picks newest; D1 migration 0002 applied, Worker + PWA deployed)
+
+## M13: Logo into PWA icons + .gitignore housekeeping
+Done when: the PWA icon slots use the real logo (not the blue-square placeholders) and setup.sh is ignored.
+
+Tasks (~15 min each):
+1. [x] `app/public/icons/icon-192.png` + `icon-512.png`: replaced the blue-square placeholders with the real logo (from `loop-fitness-logo-192.png` / `loop-fitness-logo-512.png` at the repo root)
+2. [x] `.gitignore`: added `setup.sh` and untracked it
+3. [x] Build + PWA deploy + commit
+
+Status: complete (PWA deployed; manifest already pointed at /icons/icon-192.png and /icons/icon-512.png)
+
+## M14: Reset session history
+Done when: a "Reset session history" button in Settings (with a confirm step) soft-deletes all sessions and set logs, enqueues them to the sync outbox, and propagates to the server when connected.
+
+Tasks (~15 min each):
+1. [x] `app/src/db/db.ts`: `resetSessionHistory()` helper (soft-delete sessions + set_logs, enqueue each; leaves body_metrics/nutrition/settings untouched)
+2. [x] `app/src/screens/Settings.tsx` + `settings.css`: "Data" section with "Reset session history" button, confirm row (calm note + Confirm reset / Cancel), success note, in-flight disable
+3. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 7/7 pass; two non-blocking notes: sync-error status shows in Sync section on push failure, success note persists until next tap; PWA deployed, user to tap the reset on the phone)
