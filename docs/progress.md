@@ -59,11 +59,11 @@ Status: complete (reviewer 9/9 pass after post-review fixes: middle dots, gradie
 Done when: data written on one device appears on another, and offline edits sync later.
 
 Tasks (~15 min each):
-1. [ ] Worker scaffold + D1 migration: `api/package.json`, `api/wrangler.jsonc`, `api/tsconfig.json`, `api/src/index.ts`, `api/migrations/0001_init.sql`
-2. [ ] Deploy Worker + create D1 + set PASSPHRASE secret (wrangler, Cloudflare)
-3. [ ] Frontend sync layer: `app/src/sync/sync.ts` (outbox queue, authenticate, push, pull) + `app/src/db/db.ts` (sync_queue store + enqueue in mutation helpers)
-4. [ ] Settings screen: `app/src/screens/Settings.tsx` + `settings.css` (passphrase, sync status, sync now, theme)
-5. [ ] Wire sync into the app (flush on change, pull on load)
-6. [ ] Reviewer pass + deploy + commit
+1. [x] Worker scaffold + D1 migration: `api/package.json`, `api/wrangler.jsonc`, `api/tsconfig.json`, `api/src/index.ts`, `api/migrations/0001_init.sql`
+2. [ ] Deploy Worker + create D1 + set PASSPHRASE secret (wrangler, Cloudflare) — BLOCKED: API token is Pages-only, no D1/Workers permissions
+3. [x] Frontend sync layer: `app/src/sync/sync.ts` (outbox queue, authenticate, push, pull) + `app/src/db/db.ts` (sync_queue store + enqueue in mutation helpers)
+4. [x] Settings screen: `app/src/screens/Settings.tsx` + `settings.css` (passphrase, sync status, sync now, theme)
+5. [x] Wire sync into the app (flush on change, pull on load)
+6. [x] Reviewer pass + deploy + commit (code reviewer 8/8 pass; frontend deployed + committed; Worker deploy pending token)
 
-Status: in progress
+Status: code complete, reviewer pass; BLOCKED on Cloudflare D1/Worker deploy (Pages-only token)
