@@ -1,7 +1,7 @@
-import { CalendarCheck, ClipboardList, LineChart, Settings } from 'lucide-react'
+import { CalendarCheck, ClipboardList, LineChart, Settings, Utensils } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-export type Tab = 'today' | 'plan' | 'progress' | 'settings'
+export type Tab = 'today' | 'plan' | 'progress' | 'nutrition' | 'settings'
 
 interface TabDef {
   id: Tab
@@ -13,6 +13,7 @@ const TABS: TabDef[] = [
   { id: 'today', label: 'Today', icon: CalendarCheck },
   { id: 'plan', label: 'Plan', icon: ClipboardList },
   { id: 'progress', label: 'Progress', icon: LineChart },
+  { id: 'nutrition', label: 'Nutrition', icon: Utensils },
   { id: 'settings', label: 'Settings', icon: Settings },
 ]
 

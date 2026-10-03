@@ -48,9 +48,18 @@ export interface Setting {
   deleted: boolean;
 }
 
+export interface NutritionEntry {
+  id: string;
+  date: string; // YYYY-MM-DD
+  calories: number;
+  protein: number;
+  updated_at: string; // ISO
+  deleted: boolean;
+}
+
 export interface SyncQueueEntry {
   id: string;
-  table: string; // 'sessions' | 'set_logs' | 'body_metrics' | 'settings'
+  table: string; // 'sessions' | 'set_logs' | 'body_metrics' | 'settings' | 'nutrition'
   record_id: string;
   updated_at: string; // ISO
 }
@@ -60,6 +69,7 @@ class FitnessDB extends Dexie {
   set_logs!: Table<SetLog>;
   body_metrics!: Table<BodyMetric>;
   settings!: Table<Setting>;
+  nutrition!: Table<NutritionEntry>;
   sync_queue!: Table<SyncQueueEntry>;
 
   constructor() {
@@ -74,6 +84,9 @@ class FitnessDB extends Dexie {
     this.version(3).stores({
       settings: 'key',
       sync_queue: 'id, table, record_id',
+    });
+    this.version(4).stores({
+      nutrition: 'id, date',
     });
   }
 }
@@ -331,4 +344,53 @@ export async function getLatestBodyMetric(type: BodyMetricType): Promise<BodyMet
       ? b
       : a
   );
+}
+
+export function newNutritionEntry(date: string, calories: number, protein: number): NutritionEntry {
+  return {
+    id: crypto.randomUUID(),
+    date,
+    calories,
+    protein,
+    updated_at: new Date().toISOString(),
+    deleted: false,
+  };
+}
+
+export async function createNutritionEntry(entry: NutritionEntry): Promise<void> {
+  await db.nutrition.put(entry);
+  await enqueue('nutrition', entry.id, entry.updated_at);
+}
+
+export async function updateNutritionEntry(entry: NutritionEntry): Promise<void> {
+  entry.updated_at = new Date().toISOString();
+  await db.nutrition.put(entry);
+  await enqueue('nutrition', entry.id, entry.updated_at);
+}
+
+export async function deleteNutritionEntry(id: string): Promise<void> {
+  const entry = await db.nutrition.get(id);
+  if (!entry) return;
+  entry.deleted = true;
+  entry.updated_at = new Date().toISOString();
+  await db.nutrition.put(entry);
+  await enqueue('nutrition', id, entry.updated_at);
+}
+
+export async function getNutritionEntries(): Promise<NutritionEntry[]> {
+  const entries = await db.nutrition
+    .filter((e) => !e.deleted)
+    .toArray();
+  entries.sort((a, b) => a.date.localeCompare(b.date));
+  return entries;
+}
+
+export async function getNutritionEntryByDate(date: string): Promise<NutritionEntry | null> {
+  const entries = await db.nutrition
+    .where('date')
+    .equals(date)
+    .filter((e) => !e.deleted)
+    .toArray();
+  if (entries.length === 0) return null;
+  return entries.reduce((a, b) => (a.updated_at >= b.updated_at ? a : b));
 }

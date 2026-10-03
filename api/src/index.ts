@@ -5,7 +5,7 @@
 
 import { sendPushNotification, WebPushError, type PushSubscriptionData } from '@mmmike/web-push/send'
 
-const TABLES = ['sessions', 'set_logs', 'body_metrics', 'settings'] as const
+const TABLES = ['sessions', 'set_logs', 'body_metrics', 'settings', 'nutrition'] as const
 type TableName = (typeof TABLES)[number]
 
 // Column lists per table (must match api/migrations/0001_init.sql).
@@ -14,6 +14,7 @@ const TABLE_COLUMNS: Record<TableName, string[]> = {
   set_logs: ['id', 'session_id', 'exercise_slug', 'set_index', 'side', 'reps', 'band', 'note', 'updated_at', 'deleted'],
   body_metrics: ['id', 'date', 'type', 'value', 'updated_at', 'deleted'],
   settings: ['key', 'value', 'updated_at', 'deleted'],
+  nutrition: ['id', 'date', 'calories', 'protein', 'updated_at', 'deleted'],
 }
 
 interface Env {

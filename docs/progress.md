@@ -148,3 +148,17 @@ Tasks (~15 min each):
 5. [x] Reviewer pass + deploy + commit
 
 Status: complete (reviewer 8/8 pass; three non-blocking notes: implicit session.css class reuse, in-place log mutation, .history-card-toggle retained; PWA deployed)
+
+## M12: Nutrition tracking page
+Done when: a 5th "Nutrition" tab shows calorie and protein charts, a daily goal-reached indicator, and editable goals (defaults 2800 kcal / 150 g).
+
+Tasks (~15 min each):
+1. [x] `api/migrations/0002_nutrition.sql`: `nutrition` table (id, date, calories, protein, updated_at, deleted) + date index
+2. [x] `api/src/index.ts`: `nutrition` added to `TABLES` + `TABLE_COLUMNS` (generic push/pull picks it up)
+3. [x] `app/src/db/db.ts`: `NutritionEntry` + `nutrition` Dexie store (v4) + create/update/delete/get helpers (sync outbox)
+4. [x] `app/src/sync/sync.ts`: `nutrition` in fetch/merge/pull
+5. [x] `app/src/components/BottomNav.tsx` + `app/src/App.tsx`: 5th "Nutrition" tab (Utensils icon)
+6. [x] `app/src/screens/Nutrition.tsx` + `nutrition.css`: Today goal card (goal reached / N to go), calorie + protein charts, add-entry form (upsert on date), editable goals (2800/150 defaults, persisted via settings)
+7. [x] Reviewer pass + D1 migration applied + Worker + PWA deploy + commit
+
+Status: complete (reviewer 8/8 pass; two non-blocking notes: empty input stores 0, multi-row date picks newest; D1 migration 0002 applied, Worker + PWA deployed)

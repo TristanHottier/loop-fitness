@@ -4,6 +4,7 @@ import type { Tab } from './components/BottomNav'
 import { Today } from './screens/Today'
 import { Plan } from './screens/Plan'
 import { Progress } from './screens/Progress'
+import { Nutrition } from './screens/Nutrition'
 import { Settings } from './screens/Settings'
 import { Exercise } from './screens/Exercise'
 import { Session } from './screens/Session'
@@ -90,6 +91,8 @@ export default function App() {
           <Plan onOpenExercise={openExercise} />
         ) : tab === 'progress' ? (
           <Progress onOpenHistory={openHistory} />
+        ) : tab === 'nutrition' ? (
+          <Nutrition />
         ) : (
           <Settings />
         )}

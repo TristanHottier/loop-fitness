@@ -11,6 +11,7 @@ import {
   type SetLog,
   type BodyMetric,
   type Setting,
+  type NutritionEntry,
 } from '../db/db'
 
 const TOKEN_KEY = 'loop.token'
@@ -99,6 +100,10 @@ async function fetchRecord(table: string, recordId: string): Promise<Record<stri
       const r = await db.settings.get(recordId)
       return r ? (r as unknown as Record<string, unknown>) : null
     }
+    case 'nutrition': {
+      const r = await db.nutrition.get(recordId)
+      return r ? (r as unknown as Record<string, unknown>) : null
+    }
     default:
       return null
   }
@@ -173,6 +178,13 @@ async function mergeRecord(table: string, record: Record<string, unknown>): Prom
       }
       break
     }
+    case 'nutrition': {
+      const local = await db.nutrition.get(String(record.id))
+      if (!local || local.updated_at <= incomingUpdatedAt) {
+        await db.nutrition.put(record as unknown as NutritionEntry)
+      }
+      break
+    }
   }
 }
 
@@ -190,7 +202,7 @@ export async function pull(): Promise<number> {
   }
   const data = (await res.json()) as Record<string, Record<string, unknown>[]>
   let count = 0
-  for (const table of ['sessions', 'set_logs', 'body_metrics', 'settings']) {
+  for (const table of ['sessions', 'set_logs', 'body_metrics', 'settings', 'nutrition']) {
     const rows = data[table] ?? []
     for (const row of rows) {
       await mergeRecord(table, row)
