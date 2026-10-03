@@ -19,3 +19,6 @@ loop-fitness/
 # Environment / secrets
 .env
 .env.*
+
+# Local setup script
+setup.sh
