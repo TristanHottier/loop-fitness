@@ -16,8 +16,11 @@ import {
 const TOKEN_KEY = 'loop.token'
 const LAST_PULL_KEY = 'loop.last_pull_at'
 
-// The Worker base URL. Empty means sync is not configured (offline-only mode).
-const API_BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '')
+// The Worker base URL. The URL is public (the passphrase gates access, not the
+// URL), so it ships as a default. VITE_API_URL can override it for local dev;
+// set it to an empty string to run in offline-only mode.
+const DEFAULT_API_BASE = 'https://loop-fitness-api.tristan-ho2tier.workers.dev'
+const API_BASE = (import.meta.env.VITE_API_URL ?? DEFAULT_API_BASE).replace(/\/$/, '')
 
 export type SyncStatus =
   | { state: 'idle' }
