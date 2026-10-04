@@ -28,6 +28,8 @@ function hueFor(workoutId: string): string {
       return 'var(--hue-push)'
     case 'shoulders-arms':
       return 'var(--hue-shoulders)'
+    case 'legs-forearms':
+      return 'var(--hue-legs)'
     default:
       return 'var(--color-accent)'
   }

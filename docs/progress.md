@@ -240,3 +240,17 @@ Tasks:
 Decisions (approved): rear delts fall back to the back `deltoids` region, mid back falls back to the back `upperBack` region, brachialis falls back to the front `biceps` region. Minimal scope: no volume heatmap, time range control, bottom sheet, muscle list, extra placements, or gender selection.
 
 Status: complete (reviewer clean pass after the attribution fix; PWA deployed, commit 16a39ac)
+
+## M19: Workout 4 (legs and forearms) + content edits
+Done when: the new Saturday workout (quads, glutes, calves, forearms) is in `plan.json` with gallery folders and media entries, the UI wires up the 4th workout (hue, day mapping, subtitle, muscle map), and the user's edits to the other content files are reflected.
+
+Tasks:
+1. [x] `app/public/plan.json`: added workout 4 (`legs-forearms`, Saturday) with 8 new exercises (squat, lunges, glute-bridge, glute-kickbacks, ankle-plantarflexion, reverse-curl, wrist-curl, wrist-extension); now 4 workouts, 29 exercises; 5 new muscle keys (quads, glutes, hamstrings, calves, forearms)
+2. [x] `app/public/media.json`: 8 new entries (all `youtube: null, images: []`); `app/public/gallery/`: 8 new folders with `.gitkeep` (29 total)
+3. [x] `app/src/styles/tokens.css`: `--hue-legs` token (dark `#9B7BC8`, light `#6B4FA0`)
+4. [x] `app/src/screens/{Today,Plan,Session,Exercise}.tsx`: `legs-forearms` case in all 4 `hueFor` switches; `Today.tsx` `DAY_TO_WORKOUT` adds `6: 'Saturday'`; `Plan.tsx` subtitle now "Your four weekly workouts and exercises."
+5. [x] `app/src/components/MuscleMap.tsx`: `KEY_TO_REGION` extended with quads (quadriceps, front), glutes (gluteal, back), hamstrings (hamstring, back), calves (calves, front+back), forearms (forearm, front+back)
+6. [x] `content/`: user's edits to `00-program-guide.md`, `workout-1-pull.md`, `workout-2-push.md`, `workout-3-shoulders-arms.md` (cosmetic: emojis removed, title case normalized, equipment reformatted, "Bar setups used today" sections, safety wording) + new `workout-4-legs-forearms.md`
+7. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 11/11 pass; PWA deployed)

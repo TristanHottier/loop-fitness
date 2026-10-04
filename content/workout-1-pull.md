@@ -1,169 +1,186 @@
-# 🔙 Workout 1: Pull Day
+# Workout 1: Pull day
 ### Back width and thickness, rear delts, biceps
 
 | | |
 |---|---|
-| **Duration** | ~60 min |
-| **Equipment** | Tube bands (30 / 40 / 50 lb) with handles, Pilates bar and door anchor; loop bands |
+| **Duration** | About 60 min |
+| **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), door anchor, loop bands |
 | **Rest between sets** | 60-90 s |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s lifting |
-| **Effort** | Most sets end with 1-2 reps left in reserve; the last set of each exercise goes to failure when safe |
+| **Effort** | Most sets end with 1-2 reps left in reserve. The last set of each exercise goes to failure when it is safe |
 
-> **Safety check:** inspect every band for nicks, cracks or thinning before each session, and never use a damaged one. When using the door anchor, the door must be **closed and latched**, and it should open **away from you** so the band's pull wedges it shut. See the Program Guide for how to progress.
+> **Safety check:** inspect every band for nicks, cracks or thinning before each session, and never use a damaged one. Check that every clip on the bar and the anchor is fully closed. When using the door anchor, the door must be **closed and latched**, and it should open **away from you** so the pull wedges it shut.
+
+## Bar setups used today
+
+| Setup | How |
+|---|---|
+| **Door and bar** | Door anchor on the door. A tube runs from the anchor to each end of the bar (matching tubes, see the Program Guide for tube pairing). |
+| **Bar in hands, feet in handles** | A tube clipped to each end of the bar. Put a foot in the handle at the other end of each tube. Stand wider for more tension. |
+| **Bar under feet** | Lay the bar on the floor and stand on it. A tube on each end, hold the handle at the far end of each tube. |
 
 ---
 
-## 🎚 Band selection guide
+## Band selection guide
 
 Ratings are the resistance at **full stretch**, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
 
 | Exercise | Start with |
 |---|---|
-| Pull down, Seated row | Tube 40-50 lb (stack if clips allow) |
+| Pull down, Seated row | Tube 40 lb |
 | Bend over rows | Loop 35-95 or 50-145 |
-| Push down, Reverse fly | Tube 30 lb |
-| Close grip barbell, Curl biceps | Tube 30-40 lb (stack for more) |
+| Push down (straight-arm) | Tube 30 lb |
+| Reverse fly | Tube 30 lb |
+| Close grip barbell, Curl biceps | Tube 30 lb |
 
 ---
 
-## ⏱ Session overview
+## Session overview
 
 | # | Exercise | Equipment | Sets × Reps |
 |---|---|---|---|
 | | Warm-up | | 8 min |
-| 1 | Pull down | Tube | 4 × 10-15 |
-| 2 | Seated row | Tube | 4 × 10-15 |
+| 1 | Pull down | Tube, bar, door (top) | 4 × 10-15 |
+| 2 | Seated row | Tube, bar, door (bottom) | 4 × 10-15 |
 | 3 | Bend over rows | Loop | 4 × 10-15 |
-| 4 | Push down (straight-arm) | Tube | 3 × 15 |
-| 5 | Reverse fly | Tube | 3 × 15-20 |
-| 6 | Close grip barbell | Tube + Pilates bar | 4 × 10-12 |
-| 7 | Curl biceps (neutral grip) | Tube | 3 × 12-15 |
+| 4 | Push down (straight-arm) | Tube, bar, door (top) | 3 × 15 |
+| 5 | Reverse fly | Tube, bar under feet | 3 × 15-20 |
+| 6 | Close grip barbell | Tube, bar in hands | 4 × 10-12 |
+| 7 | Curl biceps (neutral grip) | Tube, bar under feet | 3 × 12-15 |
 | | Cool-down | | 5 min |
 
 ---
 
-## 🔥 Warm-up (8 min)
+## Warm-up (8 min)
 
 1. **Arm circles**, 10 forward and 10 backward
-2. **Pull down, light** (30 lb tube), 1 × 15
-3. **Cat-cow**, 10 slow reps
+2. **Cat-cow**, 10 slow reps
+3. **Pull down, light** (30 lb), 1 × 15
 4. **Reverse fly, light**, 1 × 15
-5. **Curl biceps, light**, 1 × 12
+5. **Close grip barbell, light**, 1 × 12
 
 ---
 
-## 💪 The exercises
+## The exercises
 
-### 1. Pull down: Tube · 4 × 10-15
+### 1. Pull down: tube, Pilates bar and door, 4 × 10-15
 **Targets:** lats (back width), biceps
 
 **Setup**
-- Door anchor at the **top** of the door. Clip the tube(s) to it, with the Pilates bar (wide grip) or two handles.
-- Kneel or stand facing the door, far enough back that the band is taut with your arms overhead.
-- Grip slightly wider than shoulder width and lean back about 10-15°.
+- Door anchor at the **top** of the door, a tube from the anchor to each end of the bar.
+- Kneel (or stand) facing the door, far enough back that the tubes are taut with your arms overhead.
+- Grip the bar overhand, wide (about 1.5 times shoulder width), and lean back 10-15°.
 
 **Execution**
 1. Pull your shoulder blades down.
-2. Drive your elbows down and toward your hips until your hands reach upper-chest level.
+2. Drive your elbows down toward your hips until the bar reaches your upper chest.
 3. Squeeze your lats for 1 s.
 4. Return in 3 s to a full overhead stretch.
 
-**Key cues:** "Elbows to hips." Think of your hands as hooks.
+**Cues:** "Elbows to hips." Think of your hands as hooks.
 
-**Common mistakes:** leaning back to row the weight, shrugging, cutting the top stretch short.
+**Mistakes:** leaning back and rowing the bar, shrugging, cutting the top stretch short.
 
-**Progress:** step back, stack tubes, or go single-arm with one handle.
+**Progress:** step back, stack tubes, or switch to handles and go single-arm.
 
 ---
 
-### 2. Seated row: Tube · 4 × 10-15
+### 2. Seated row: tube, Pilates bar and door, 4 × 10-15
 **Targets:** mid-back, lats, rear delts, biceps
 
 **Setup**
-- Door anchor at the **lowest** point of the door, with the tube and two handles (or the Pilates bar).
-- Sit on the floor facing the door with legs extended and knees soft, far enough back that the band is taut.
-- Sit tall with arms extended.
+- Door anchor at the **lowest** point of the door, a tube from the anchor to each end of the bar.
+- Sit on the floor facing the door with legs extended and knees soft, far enough back that the tubes are taut.
+- Hold the bar overhand, shoulder-width, sitting tall with arms extended.
 
 **Execution**
-1. Pull the handles to your lower ribs, elbows at about 45° from your torso.
+1. Pull the bar to your lower ribs, keeping your elbows close to your sides.
 2. Squeeze your shoulder blades together for 1 s.
-3. Return in 3 s to full arm extension, keeping your back flat.
+3. Return in 3 s to full arm extension without rounding your back.
 
-**Key cues:** "Chest tall, elbows back."
+**Cues:** "Chest tall, elbows back."
 
-**Common mistakes:** rounding the back, leaning back to cheat, shrugging.
+**Mistakes:** rounding the back, leaning back to cheat, shrugging.
 
-**Progress:** stack tubes, or sit farther back.
+**Progress:** sit farther back, stack tubes, or use an underhand grip to bring in more biceps.
 
 ---
 
-### 3. Bend over rows: Loop · 4 × 10-15
+### 3. Bend over rows: loop, 4 × 10-15
 **Targets:** mid-back, lats, rear delts, biceps
 
 **Setup**
-- Stand on the middle of a heavy loop band (35-95 or 50-145) with feet shoulder-width apart.
+- Stand on the middle of a heavy loop band (35-95 or 50-145), feet shoulder-width apart.
 - Hold the top of the loop with both hands, palms facing in.
-- Hinge at the hips until your torso is at about 45°, with a flat back and soft knees.
+- Hinge at the hips until your torso is at about 45°, back flat, knees soft.
 
 **Execution**
 1. Pull the band toward your lower ribs, driving your elbows back.
 2. Squeeze your shoulder blades for 1 s.
 3. Lower in 3 s to full arm extension.
 
-**Key cues:** Your torso stays still. "Elbows to the back pockets."
+**Cues:** Your torso stays still. "Elbows to the back pockets."
 
-**Common mistakes:** standing up during the rep, rounding the lower back, jerking with the hips.
+**Mistakes:** standing up during the rep, rounding the lower back, jerking with the hips.
 
-**Progress:** widen your stance or grip lower on the loop for more tension; move to the next loop.
+**Progress:** widen your stance, grip lower on the loop, or move to the next loop.
 
 ---
 
-### 4. Push down (straight-arm): Tube · 3 × 15
+### 4. Push down (straight-arm): tube, Pilates bar and door, 3 × 15
 **Targets:** lats (isolation)
 
-> *On your chart this is "Push down". I've used it as the straight-arm lat pushdown.*
+> *On your chart this is "Push down". I use it as the straight-arm lat push down.*
 
 **Setup**
-- Door anchor at the **top** of the door, with the tube (30 lb) and two handles.
-- Face the door, step back until taut, and hinge slightly at the hips (~20°).
-- Hold the handles in front of you at about head height, arms straight with a slight elbow bend.
+- Door anchor at the **top** of the door, a tube from the anchor to each end of the bar (30 lb).
+- Face the door, step back until taut, and hinge slightly at the hips (about 20°).
+- Hold the bar overhand, shoulder-width, in front of you at head height, arms straight with a slight elbow bend.
 
 **Execution**
-1. Sweep both arms down in a wide arc until your hands reach your thighs.
+1. Sweep the bar down in an arc until it reaches your thighs, arms straight.
 2. Squeeze your lats hard for 1 s.
 3. Return in 3 s.
 
-**Key cues:** Keep the elbow angle fixed the whole time.
+**Cues:** Keep your elbow angle fixed the whole time.
 
-**Common mistakes:** bending the elbows (this turns it into a triceps pushdown), swinging from the hips.
+**Mistakes:** bending the elbows (this turns it into a triceps push down), swinging from the hips.
+
+**Progress:** step back or stack tubes.
 
 ---
 
-### 5. Reverse fly: Tube · 3 × 15-20
-**Targets:** rear delts, upper back
+### 5. Reverse fly: tube and Pilates bar under feet, 3 × 15-20
+**Targets:** rear delts, mid-back
+
+> *Setup as you described: bar under feet, tubes crossed, small bend over.*
 
 **Setup**
-- Door anchor at **chest height**, with the tube and two handles.
-- Face the door, hold the handles with arms straight in front of you at chest height, and step back until taut.
+- Lay the bar on the floor and stand on it, feet shoulder-width apart.
+- A tube clipped to each end of the bar, a handle at the far end of each.
+- **Cross the tubes:** the tube from the left end goes to your right hand, the tube from the right end goes to your left hand.
+- Bend over a little (torso about 30° forward), arms hanging with a slight elbow bend.
 
 **Execution**
-1. Open your arms out to the sides in a horizontal arc until your hands are in line with your shoulders.
-2. Squeeze your shoulder blades and rear delts for 1 s.
-3. Return in 3 s.
+1. Bring your arms up and out to the sides by squeezing your shoulder blades together, until your hands reach shoulder height.
+2. Hold for 1 s.
+3. Lower in 3 s.
 
-**Key cues:** Lead with your elbows and keep a slight bend in them.
+**Cues:** "Spread the wings." Lead with your elbows.
 
-**Common mistakes:** shrugging, using your torso for momentum.
+**Mistakes:** standing up as you lift, shrugging, using momentum.
+
+**Progress:** choke up on the tubes, use heavier tubes, or stand with feet wider.
 
 ---
 
-### 6. Close grip barbell: Tube + Pilates bar · 4 × 10-12
+### 6. Close grip barbell: tube and Pilates bar in hands, 4 × 10-12
 **Targets:** biceps
 
-> *On your chart this is "Close grip barbell". I've used it as a narrow-grip curl with the Pilates bar.*
+> *On your chart this is "Close grip barbell". I use it as a narrow-grip curl with the Pilates bar.*
 
 **Setup**
-- Clip the tube(s) to the Pilates bar and stand on the middle of the tube(s), feet shoulder-width apart.
+- Clip a tube to each end of the bar (30 lb) and put your feet in the handles at the other ends.
 - Grip the bar palms up with hands about 15 cm apart, elbows at your sides.
 
 **Execution**
@@ -171,19 +188,19 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 2. Squeeze your biceps for 1 s.
 3. Lower in 3 s to full arm extension.
 
-**Key cues:** Elbows pinned to your ribs. Only your forearms move.
+**Cues:** Elbows pinned to your ribs. Only your forearms move.
 
-**Common mistakes:** swinging the torso, elbows drifting forward.
+**Mistakes:** swinging the torso, elbows drifting forward.
 
-**Progress:** add or stack a tube, or stand with feet wider.
+**Progress:** stand wider, shorten the tubes, or use heavier tubes.
 
 ---
 
-### 7. Curl biceps (neutral grip): Tube · 3 × 12-15
+### 7. Curl biceps (neutral grip): tube and Pilates bar under feet, 3 × 12-15
 **Targets:** biceps, brachialis (arm thickness)
 
 **Setup**
-- Stand on the middle of the tube with feet shoulder-width apart.
+- Stand on the bar with feet shoulder-width apart, a tube on each end with a handle at the far end (30 lb).
 - Hold one handle in each hand with palms facing each other, elbows at your sides.
 
 **Execution**
@@ -191,13 +208,15 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 2. Squeeze for 1 s.
 3. Lower in 3 s.
 
-**Common mistakes:** swinging, elbows drifting forward.
+**Cues:** Elbows stay pinned to your ribs.
 
-**Progress:** choke up on the tube, stand wider, or use a heavier tube.
+**Mistakes:** swinging, elbows drifting forward.
+
+**Progress:** choke up on the tubes, or use heavier tubes.
 
 ---
 
-## 🧘 Cool-down (5 min)
+## Cool-down (5 min)
 - **Doorway lat stretch:** 30 s each side
 - **Cross-body shoulder stretch:** 30 s each side
 - **Biceps wall stretch:** 30 s each side
@@ -205,7 +224,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-## 📋 Log
+## Log
 
 | Date | Exercise | Band used | Sets × Reps | Notes |
 |---|---|---|---|---|

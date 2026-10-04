@@ -21,6 +21,7 @@ const DAY_TO_WORKOUT: Record<number, string> = {
   1: 'Monday',
   3: 'Wednesday',
   5: 'Friday',
+  6: 'Saturday',
 }
 
 const WEEK_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
@@ -33,6 +34,8 @@ function hueFor(workoutId: string): string {
       return 'var(--hue-push)'
     case 'shoulders-arms':
       return 'var(--hue-shoulders)'
+    case 'legs-forearms':
+      return 'var(--hue-legs)'
     default:
       return 'var(--color-accent)'
   }

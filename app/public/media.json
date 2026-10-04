@@ -19,5 +19,13 @@
   "cable-crossover": { "youtube": null, "images": [] },
   "wide-grip-barbell": { "youtube": null, "images": [] },
   "side-pull-biceps": { "youtube": null, "images": [] },
-  "bicep-curls": { "youtube": null, "images": [] }
+  "bicep-curls": { "youtube": null, "images": [] },
+  "squat": { "youtube": null, "images": [] },
+  "lunges": { "youtube": null, "images": [] },
+  "glute-bridge": { "youtube": null, "images": [] },
+  "glute-kickbacks": { "youtube": null, "images": [] },
+  "ankle-plantarflexion": { "youtube": null, "images": [] },
+  "reverse-curl": { "youtube": null, "images": [] },
+  "wrist-curl": { "youtube": null, "images": [] },
+  "wrist-extension": { "youtube": null, "images": [] }
 }

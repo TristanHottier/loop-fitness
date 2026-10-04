@@ -662,6 +662,257 @@
         "mistakes": "",
         "progress": "Drop this if you are running past 60 minutes."
       }
+    },
+    "squat": {
+      "slug": "squat",
+      "name": "Squat",
+      "equipment": "T + Pilates bar",
+      "repMin": 12,
+      "repMax": 20,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "T50",
+      "unilateral": false,
+      "optional": false,
+      "targets": "quads, glutes, hamstrings",
+      "muscles": {
+        "primary": ["quads", "glutes"],
+        "secondary": ["hamstrings"]
+      },
+      "instructions": {
+        "setup": [
+          "A tube on each end of the bar (50 lb), your feet in the handles at the other ends, feet shoulder-width apart.",
+          "Rest the bar, padded with a folded towel, across your upper back and hold it near the ends.",
+          "Stand tall so the tubes are taut."
+        ],
+        "execution": [
+          "Sit back and down, knees tracking over your toes, until your thighs are about parallel to the floor.",
+          "Pause for 1 s at the bottom.",
+          "Drive through your mid-foot to stand, squeezing your glutes at the top.",
+          "Lower in 3 s on every rep."
+        ],
+        "cues": "Chest tall, knees out, weight over the middle of your foot.",
+        "mistakes": "knees caving in, heels lifting, rounding the lower back, leaning too far forward.",
+        "progress": "stack tubes, shorten the tubes (more tension at the top), or add a 2 s pause at the bottom."
+      }
+    },
+    "lunges": {
+      "slug": "lunges",
+      "name": "Lunges",
+      "equipment": "L",
+      "repMin": 10,
+      "repMax": 12,
+      "sets": 3,
+      "restSeconds": 90,
+      "startBand": "L25-75",
+      "unilateral": true,
+      "optional": false,
+      "targets": "quads, glutes, hamstrings",
+      "muscles": {
+        "primary": ["quads", "glutes"],
+        "secondary": ["hamstrings"]
+      },
+      "instructions": {
+        "setup": [
+          "Step on the middle of a loop band (25-75) with your front foot and hold the top of the loop at shoulder height, elbows down.",
+          "Step back with the other leg into a split stance, feet hip-width apart."
+        ],
+        "execution": [
+          "Lower your back knee toward the floor in 3 s, front knee over your ankle.",
+          "Pause for 1 s just above the floor.",
+          "Drive through your front foot to stand.",
+          "Do all reps on one leg, then switch. Rest after both legs."
+        ],
+        "cues": "Torso upright, front heel planted.",
+        "mistakes": "front knee collapsing inward, leaning forward, a step that is too short.",
+        "progress": "move to the next loop up, or add a 2 s pause at the bottom."
+      }
+    },
+    "glute-bridge": {
+      "slug": "glute-bridge",
+      "name": "Glute bridge",
+      "equipment": "T + Pilates bar",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 75,
+      "startBand": "T40",
+      "unilateral": false,
+      "optional": false,
+      "targets": "glutes, hamstrings",
+      "muscles": {
+        "primary": ["glutes"],
+        "secondary": ["hamstrings"]
+      },
+      "instructions": {
+        "setup": [
+          "A tube on each end of the bar (40 lb), feet in the handles at the other ends.",
+          "Lie on your back with knees bent and feet flat on the floor, the bar padded with a towel across your hip crease. Hold the bar in place with your hands."
+        ],
+        "execution": [
+          "Drive your hips up until your body forms a straight line from shoulders to knees.",
+          "Squeeze your glutes hard for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "Push through your heels. Ribs down.",
+        "mistakes": "arching the lower back, pushing with your toes, letting the bar roll.",
+        "progress": "stack tubes, or do the last set one leg at a time."
+      }
+    },
+    "glute-kickbacks": {
+      "slug": "glute-kickbacks",
+      "name": "Glute kickbacks",
+      "equipment": "T",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": true,
+      "optional": false,
+      "targets": "glutes",
+      "muscles": {
+        "primary": ["glutes"],
+        "secondary": []
+      },
+      "instructions": {
+        "setup": [
+          "Door anchor at the lowest point of the door, a tube (30 lb) with a handle looped around your working ankle (foot in the handle).",
+          "Face the door, step back until the tube is taut, and hold a chair or the door frame for balance. Hinge slightly forward."
+        ],
+        "execution": [
+          "Kick your working leg straight back, keeping your hips square.",
+          "Squeeze your glute for 1 s.",
+          "Return in 3 s without letting the tube pull your leg forward.",
+          "Do all reps on one leg, then switch. Rest after both legs."
+        ],
+        "cues": "Move from the hip, not the lower back.",
+        "mistakes": "arching the lower back, twisting the hips, swinging.",
+        "progress": "step farther from the door or stack tubes."
+      }
+    },
+    "ankle-plantarflexion": {
+      "slug": "ankle-plantarflexion",
+      "name": "Ankle plantarflexion",
+      "equipment": "L",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 3,
+      "restSeconds": 45,
+      "startBand": "L15-50",
+      "unilateral": true,
+      "optional": false,
+      "targets": "calves",
+      "muscles": {
+        "primary": ["calves"],
+        "secondary": []
+      },
+      "instructions": {
+        "setup": [
+          "Sit on the floor with one leg extended, loop band (15-50) around the ball of your foot, ends held in both hands with the band taut."
+        ],
+        "execution": [
+          "Push your foot forward, pointing your toes, until your ankle is fully extended.",
+          "Squeeze for 1 s.",
+          "Return in 3 s.",
+          "Do all reps on one leg, then switch."
+        ],
+        "cues": "Move only at the ankle, keep your knee straight.",
+        "mistakes": "bending the knee, rushing the lowering.",
+        "progress": "pull the ends closer for more tension, or move to the next loop up."
+      }
+    },
+    "reverse-curl": {
+      "slug": "reverse-curl",
+      "name": "Reverse curl",
+      "equipment": "T + Pilates bar",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "optional": false,
+      "targets": "forearm extensors, brachioradialis, biceps",
+      "muscles": {
+        "primary": ["forearms"],
+        "secondary": ["biceps"]
+      },
+      "instructions": {
+        "setup": [
+          "A tube on each end of the bar (30 lb), feet in the handles at the other ends, feet shoulder-width apart.",
+          "Grip the bar palms down, shoulder-width, elbows at your sides."
+        ],
+        "execution": [
+          "Curl the bar toward your shoulders, wrists straight.",
+          "Squeeze for 1 s.",
+          "Lower in 3 s to full arm extension."
+        ],
+        "cues": "Keep your wrists in line with your forearms. Elbows pinned.",
+        "mistakes": "bending the wrists, swinging the torso.",
+        "progress": "stand wider, shorten the tubes, or use heavier tubes."
+      }
+    },
+    "wrist-curl": {
+      "slug": "wrist-curl",
+      "name": "Wrist curl",
+      "equipment": "T + Pilates bar",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "optional": false,
+      "targets": "forearm flexors",
+      "muscles": {
+        "primary": ["forearms"],
+        "secondary": []
+      },
+      "instructions": {
+        "setup": [
+          "A tube on each end of the bar (30 lb), feet in the handles at the other ends.",
+          "Sit on a chair, rest your forearms on your thighs with your wrists hanging past your knees. Grip the bar palms up, shoulder-width."
+        ],
+        "execution": [
+          "Curl your wrists up as far as you can.",
+          "Squeeze for 1 s.",
+          "Lower in 3 s to a full wrist stretch."
+        ],
+        "cues": "",
+        "mistakes": "lifting your forearms off your thighs, using momentum.",
+        "progress": "if 30 lb is too heavy, sit with your feet closer to the chair to reduce the stretch. To go heavier, move your feet farther away."
+      }
+    },
+    "wrist-extension": {
+      "slug": "wrist-extension",
+      "name": "Wrist extension",
+      "equipment": "T + Pilates bar",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "optional": false,
+      "targets": "forearm extensors",
+      "muscles": {
+        "primary": ["forearms"],
+        "secondary": []
+      },
+      "instructions": {
+        "setup": [
+          "Same position as the Wrist curl, grip the bar palms down."
+        ],
+        "execution": [
+          "Raise the back of your hands as far as you can.",
+          "Squeeze for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "",
+        "mistakes": "lifting your forearms off your thighs, using momentum.",
+        "progress": ""
+      }
     }
   },
   "workouts": [
@@ -714,6 +965,22 @@
         "push-down-tricep": { "sets": 3, "restSeconds": 75 },
         "triceps-extension": { "sets": 3, "restSeconds": 75 }
       }
+    },
+    {
+      "id": "legs-forearms",
+      "name": "Legs and forearms",
+      "day": "Saturday",
+      "exercises": [
+        "squat",
+        "lunges",
+        "glute-bridge",
+        "glute-kickbacks",
+        "ankle-plantarflexion",
+        "reverse-curl",
+        "wrist-curl",
+        "wrist-extension"
+      ],
+      "overrides": {}
     }
   ]
 }

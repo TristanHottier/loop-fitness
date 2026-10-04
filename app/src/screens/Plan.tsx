@@ -11,6 +11,8 @@ function hueFor(workoutId: string): string {
       return 'var(--hue-push)'
     case 'shoulders-arms':
       return 'var(--hue-shoulders)'
+    case 'legs-forearms':
+      return 'var(--hue-legs)'
     default:
       return 'var(--color-accent)'
   }
@@ -99,7 +101,7 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
   return (
     <div className="screen">
       <h1>Plan</h1>
-      <p className="screen-subtitle">Your three weekly workouts and exercises.</p>
+      <p className="screen-subtitle">Your four weekly workouts and exercises.</p>
       {plan.workouts.map((workout) => (
         <section key={workout.id} className="plan-workout">
           <div
