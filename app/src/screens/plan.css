@@ -10,16 +10,30 @@
 }
 
 /* Cover band. A tinted panel in the workout hue with the infinity line at
-   low opacity, the day, and the workout name. Mirrors the session cover. */
+   low opacity, the day, and the workout name. Mirrors the session cover.
+   The whole cover is the tap target that expands the card. */
 .plan-cover {
   position: relative;
   overflow: hidden;
+  display: block;
+  width: 100%;
   height: 96px;
   padding: 16px;
   background-color: var(--color-panel);
   background-color: color-mix(in srgb, var(--plan-hue) 8%, var(--color-panel));
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
+  text-align: left;
+  cursor: pointer;
+}
+
+.plan-cover:hover {
+  background-color: color-mix(in srgb, var(--plan-hue) 12%, var(--color-panel));
+}
+
+.plan-cover:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .plan-cover-logo {
@@ -38,12 +52,14 @@
 }
 
 .plan-cover-day {
+  display: block;
   margin: 0;
   font-size: 14px;
   color: var(--color-text-secondary);
 }
 
 .plan-cover-name {
+  display: block;
   margin: 0;
   font-family: var(--font-display);
   font-size: 24px;
@@ -52,39 +68,43 @@
   color: var(--color-text);
 }
 
-/* Property rows. Flat panel, 1px dividers, 48px minimum row height. */
-.plan-props {
+.plan-cover-chevron {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
+  transition: transform 150ms ease;
+}
+
+.plan-cover-chevron-collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Summary pills under the cover. Exercise count and total sets. */
+.plan-tags {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.plan-card-tag {
+  padding: 4px 10px;
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Expanded details. The heatmap muscle map sits in a flat panel above the
+   exercise list. */
+.plan-muscle-map {
+  padding: 16px;
   background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.plan-prop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: var(--touch-min);
-  padding: 0 16px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.plan-prop-row:last-child {
-  border-bottom: none;
-}
-
-.plan-prop-label {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-.plan-prop-value {
-  font-size: 16px;
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
 }
 
 /* Exercise rows. Tappable, flat, 48px minimum height. */

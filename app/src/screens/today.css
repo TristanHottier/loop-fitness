@@ -13,6 +13,21 @@
   padding: 16px;
 }
 
+.today-card-done {
+  background-color: color-mix(
+    in srgb,
+    var(--color-positive) 10%,
+    var(--color-panel)
+  );
+  border: 1px solid
+    color-mix(in srgb, var(--color-positive) 40%, var(--color-border));
+}
+
+.today-card-done-line {
+  font-size: 16px;
+  color: var(--color-text);
+}
+
 .today-card-head {
   display: flex;
   flex-direction: column;

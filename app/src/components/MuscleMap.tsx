@@ -7,6 +7,10 @@ import femaleBack from '../assets/musclemap/female-back.json'
 export interface MuscleMapProps {
   primary: string[]
   secondary: string[]
+  // Optional per-muscle set counts. When provided, the map renders in
+  // heatmap mode: each region is filled by a 6-step volume scale instead of
+  // the primary/secondary accent. Keys are plan.json muscle keys.
+  volume?: Record<string, number>
 }
 
 interface MusclePart {
@@ -99,26 +103,79 @@ function fillFor(part: MusclePart, level: 'primary' | 'secondary' | null): strin
   return 'var(--color-surface)'
 }
 
+// Heatmap mode. A region's total set count maps to one of six discrete
+// steps (0 to 5). The steps are the --muscle-0 to --muscle-5 tokens.
+function volumeStep(sets: number): number {
+  if (sets <= 0) return 0
+  if (sets < 4) return 1
+  if (sets < 7) return 2
+  if (sets < 10) return 3
+  if (sets < 20) return 4
+  return 5
+}
+
+// Total volume per SDK region. A region may receive volume from several
+// plan.json keys (for example lats, mid_back, and upper_back all map to
+// upperBack), so the counts are summed per region.
+function regionVolume(
+  view: string,
+  volume: Record<string, number>,
+): Map<string, number> {
+  const totals = new Map<string, number>()
+  for (const [key, sets] of Object.entries(volume)) {
+    const entry = KEY_TO_REGION[key]
+    if (!entry || !entry.views.includes(view)) continue
+    totals.set(entry.region, (totals.get(entry.region) ?? 0) + sets)
+  }
+  return totals
+}
+
+// A part's volume is read from its own slug, falling back to its parent
+// slug (sub-group inheritance), mirroring partLevel.
+function partVolume(part: MusclePart, totals: Map<string, number>): number {
+  const slugs = part.parent ? [part.slug, part.parent] : [part.slug]
+  for (const slug of slugs) {
+    const value = totals.get(slug)
+    if (value !== undefined) return value
+  }
+  return 0
+}
+
+function heatFillFor(part: MusclePart, totals: Map<string, number>): string {
+  if (!part.isMuscle) {
+    return part.slug === 'hair'
+      ? 'color-mix(in srgb, var(--color-text-secondary) 60%, black)'
+      : 'var(--color-text-secondary)'
+  }
+  const step = volumeStep(partVolume(part, totals))
+  return `var(--muscle-${step})`
+}
+
 function Figure({
   label,
   data,
   primary,
   secondary,
+  volume,
 }: {
   label: string
   data: MuscleFigureData
   primary: string[]
   secondary: string[]
+  volume?: Record<string, number>
 }) {
+  const heat = volume !== undefined
   const { primaryRegions, secondaryRegions } = litRegions(data.side, primary, secondary)
+  const totals = volume !== undefined ? regionVolume(data.side, volume) : new Map<string, number>()
   const parts = [...data.parts].sort((a, b) => a.order - b.order)
   const viewBox = `${data.viewBox.x} ${data.viewBox.y} ${data.viewBox.width} ${data.viewBox.height}`
   return (
     <div className="muscle-figure">
       <svg className="muscle-svg" viewBox={viewBox} role="img" aria-label={`${label} view`}>
         {parts.map((part) => {
-          const level = partLevel(part, primaryRegions, secondaryRegions)
-          const fill = fillFor(part, level)
+          const fill = heat
+            ? heatFillFor(part, totals)
+            : fillFor(part, partLevel(part, primaryRegions, secondaryRegions))
           const paths = [...part.common, ...part.left, ...part.right]
           return (
             <g key={part.slug}>
@@ -140,28 +197,54 @@ function Figure({
   )
 }
 
-export function MuscleMap({ primary, secondary }: MuscleMapProps) {
+export function MuscleMap({ primary, secondary, volume }: MuscleMapProps) {
   const body = BODIES[GENDER]
+  const heat = volume !== undefined
   const targets = [...primary, ...secondary]
-  const label = targets.length
-    ? `Muscles targeted: ${targets.map((key) => key.replace(/_/g, ' ')).join(', ')}`
-    : 'Muscle map'
+  const label = heat
+    ? 'Muscle map, volume by sets'
+    : targets.length
+      ? `Muscles targeted: ${targets.map((key) => key.replace(/_/g, ' ')).join(', ')}`
+      : 'Muscle map'
   return (
     <div className="muscle-map" role="group" aria-label={label}>
       <div className="muscle-figures">
-        <Figure label="front" data={body.front} primary={primary} secondary={secondary} />
-        <Figure label="back" data={body.back} primary={primary} secondary={secondary} />
+        <Figure label="front" data={body.front} primary={primary} secondary={secondary} volume={volume} />
+        <Figure label="back" data={body.back} primary={primary} secondary={secondary} volume={volume} />
       </div>
-      <div className="muscle-legend">
-        <span className="muscle-legend-item">
-          <span className="muscle-legend-swatch muscle-legend-swatch-primary" />
-          primary
-        </span>
-        <span className="muscle-legend-item">
-          <span className="muscle-legend-swatch muscle-legend-swatch-secondary" />
-          secondary
-        </span>
-      </div>
+      {heat ? (
+        <div className="muscle-heat-legend">
+          <div className="muscle-heat-bar">
+            {[0, 1, 2, 3, 4, 5].map((step) => (
+              <span
+                key={step}
+                className="muscle-heat-block"
+                style={{ backgroundColor: `var(--muscle-${step})` }}
+              />
+            ))}
+          </div>
+          <div className="muscle-heat-ticks">
+            <span>0</span>
+            <span>10</span>
+            <span>20</span>
+          </div>
+          <div className="muscle-heat-target">
+            <span className="muscle-heat-bracket" />
+            <span className="muscle-heat-target-label">target range</span>
+          </div>
+        </div>
+      ) : (
+        <div className="muscle-legend">
+          <span className="muscle-legend-item">
+            <span className="muscle-legend-swatch muscle-legend-swatch-primary" />
+            primary
+          </span>
+          <span className="muscle-legend-item">
+            <span className="muscle-legend-swatch muscle-legend-swatch-secondary" />
+            secondary
+          </span>
+        </div>
+      )}
     </div>
   )
 }

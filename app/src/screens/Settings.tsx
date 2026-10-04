@@ -138,7 +138,6 @@ export function Settings() {
   return (
     <div className="screen settings">
       <h1>Settings</h1>
-      <p className="screen-subtitle">Theme, sync and data.</p>
 
       <section className="settings-section">
         <h2 className="settings-section-title">Appearance</h2>

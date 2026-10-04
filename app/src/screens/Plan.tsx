@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { loadPlan, resolveExercise } from '../data/plan'
 import type { Exercise, PlanData, Workout } from '../data/plan'
+import { MuscleMap } from '../components/MuscleMap'
 import './plan.css'
 
 function hueFor(workoutId: string): string {
@@ -35,36 +37,27 @@ function totalSetsFor(plan: PlanData, workout: Workout): number {
   return total
 }
 
-// The most common rest duration across the workout's exercises. When two
-// durations tie for the lead there is no single most common value, so the
-// row reads "varies".
-function restLabelFor(plan: PlanData, workout: Workout): string {
-  const counts = new Map<number, number>()
+// Per-muscle set counts for the whole workout. Primary muscles get the full
+// set count, secondary muscles get half, rounded. A muscle key may appear in
+// several exercises, so the counts accumulate per key.
+function workoutVolume(plan: PlanData, workout: Workout): Record<string, number> {
+  const volume: Record<string, number> = {}
   for (const slug of workout.exercises) {
     const ex = resolveExercise(plan, workout, slug)
-    counts.set(ex.restSeconds, (counts.get(ex.restSeconds) ?? 0) + 1)
-  }
-  let best: number | null = null
-  let bestCount = 0
-  let tie = false
-  for (const [seconds, count] of counts) {
-    if (count > bestCount) {
-      best = seconds
-      bestCount = count
-      tie = false
-    } else if (count === bestCount) {
-      tie = true
+    for (const key of ex.muscles.primary) {
+      volume[key] = (volume[key] ?? 0) + ex.sets
+    }
+    for (const key of ex.muscles.secondary) {
+      volume[key] = (volume[key] ?? 0) + Math.round(ex.sets / 2)
     }
   }
-  if (best === null || tie) {
-    return 'varies'
-  }
-  return `${best} s`
+  return volume
 }
 
 export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => void }) {
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [failed, setFailed] = useState(false)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     let cancelled = false
@@ -79,6 +72,18 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
       cancelled = true
     }
   }, [])
+
+  const toggleWorkout = (workoutId: string) => {
+    setExpanded((prev) => {
+      const next = new Set(prev)
+      if (next.has(workoutId)) {
+        next.delete(workoutId)
+      } else {
+        next.add(workoutId)
+      }
+      return next
+    })
+  }
 
   if (failed) {
     return (
@@ -101,71 +106,82 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
   return (
     <div className="screen">
       <h1>Plan</h1>
-      <p className="screen-subtitle">Your four weekly workouts and exercises.</p>
-      {plan.workouts.map((workout) => (
-        <section key={workout.id} className="plan-workout">
-          <div
-            className="plan-cover"
-            style={{ ['--plan-hue' as string]: hueFor(workout.id) }}
-          >
-            <svg
-              className="plan-cover-logo"
-              viewBox="0 0 100 50"
-              aria-hidden="true"
+      {plan.workouts.map((workout) => {
+        const isOpen = expanded.has(workout.id)
+        return (
+          <section key={workout.id} className="plan-workout">
+            <button
+              type="button"
+              className="plan-cover"
+              aria-expanded={isOpen}
+              style={{ ['--plan-hue' as string]: hueFor(workout.id) }}
+              onClick={() => toggleWorkout(workout.id)}
             >
-              <path
-                d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
-                fill="none"
-                stroke="var(--plan-hue)"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <svg
+                className="plan-cover-logo"
+                viewBox="0 0 100 50"
+                aria-hidden="true"
+              >
+                <path
+                  d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
+                  fill="none"
+                  stroke="var(--plan-hue)"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <div className="plan-cover-text">
+                <span className="plan-cover-day">{workout.day}</span>
+                <span className="plan-cover-name">{workout.name}</span>
+              </div>
+              <ChevronDown
+                className={
+                  'plan-cover-chevron' +
+                  (isOpen ? '' : ' plan-cover-chevron-collapsed')
+                }
+                size={18}
+                strokeWidth={1.75}
+                aria-hidden="true"
               />
-            </svg>
-            <div className="plan-cover-text">
-              <p className="plan-cover-day">{workout.day}</p>
-              <h2 className="plan-cover-name">{workout.name}</h2>
+            </button>
+            <div className="plan-tags">
+              <span className="plan-card-tag">{workout.exercises.length} exercises</span>
+              <span className="plan-card-tag">{totalSetsFor(plan, workout)} sets</span>
             </div>
-          </div>
-          <div className="plan-props">
-            <div className="plan-prop-row">
-              <span className="plan-prop-label">Day</span>
-              <span className="plan-prop-value">{workout.day}</span>
-            </div>
-            <div className="plan-prop-row">
-              <span className="plan-prop-label">Exercises</span>
-              <span className="plan-prop-value">{workout.exercises.length}</span>
-            </div>
-            <div className="plan-prop-row">
-              <span className="plan-prop-label">Total sets</span>
-              <span className="plan-prop-value">{totalSetsFor(plan, workout)}</span>
-            </div>
-            <div className="plan-prop-row">
-              <span className="plan-prop-label">Rest</span>
-              <span className="plan-prop-value">{restLabelFor(plan, workout)}</span>
-            </div>
-          </div>
-          <div className="plan-exercise-list">
-            {workout.exercises.map((slug) => {
-              const exercise = resolveExercise(plan, workout, slug)
-              return (
-                <button
-                  key={slug}
-                  type="button"
-                  className="plan-exercise-row"
-                  onClick={() => onOpenExercise(slug)}
-                >
-                  <span className="plan-exercise-name">{exercise.name}</span>
-                  <span className="plan-exercise-spec">
-                    <span>{specLine(exercise)}</span>
-                    {exercise.optional ? <span className="plan-tag">optional</span> : null}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-        </section>
-      ))}
+            {isOpen && (
+              <>
+                <div className="plan-muscle-map">
+                  <MuscleMap
+                    primary={[]}
+                    secondary={[]}
+                    volume={workoutVolume(plan, workout)}
+                  />
+                </div>
+                <div className="plan-exercise-list">
+                  {workout.exercises.map((slug) => {
+                    const exercise = resolveExercise(plan, workout, slug)
+                    return (
+                      <button
+                        key={slug}
+                        type="button"
+                        className="plan-exercise-row"
+                        onClick={() => onOpenExercise(slug)}
+                      >
+                        <span className="plan-exercise-name">{exercise.name}</span>
+                        <span className="plan-exercise-spec">
+                          <span>{specLine(exercise)}</span>
+                          {exercise.optional ? <span className="plan-tag">optional</span> : null}
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+          </section>
+        )
+      })}
     </div>
   )
 }

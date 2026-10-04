@@ -151,7 +151,6 @@ export function Nutrition() {
   return (
     <div className="screen nutrition">
       <h1>Nutrition</h1>
-      <p className="screen-subtitle">Daily calories and protein.</p>
 
       <section className="nutrition-goal-card">
         <h2 className="nutrition-card-title">Today</h2>

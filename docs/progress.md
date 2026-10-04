@@ -12,10 +12,10 @@ Done when: an empty installable PWA is live on Cloudflare Pages and opens on the
 - [x] Design tokens: dark default, light available (section 9)
 - [x] Cloudflare Pages deploy config
 - [x] Deployed to Cloudflare Pages (project `loop-fitness`, production branch `main`)
-- [ ] Verified on the phone (user to confirm it opens and is installable)
+- [x] Verified on the phone (user confirmed M0, M20 handoff)
 - [x] Reviewer pass (M0 review: PASS, no violations)
 
-Status: deployed live, awaiting phone verification
+Status: complete
 
 ## M1: Plan and exercise pages
 Done when: the three workouts and every exercise page render from `plan.json`, with YouTube embeds and gallery images.
@@ -254,3 +254,16 @@ Tasks:
 7. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 11/11 pass; PWA deployed)
+
+## M20: Plan expandable cards + heatmap map, Today weight/done, subtitle cleanup
+Done when: the Plan screen shows collapsed workout cards (cover + exercise/set tags) that expand to a heatmap muscle map and the exercise list; the Today weight entry has -0.1 / +0.1 / Set buttons and the card turns greenish with a completion line when today's workout is done; and the descriptive subtitles are removed from all screens.
+
+Tasks:
+1. [x] `app/src/styles/tokens.css`: `--muscle-0` to `--muscle-5` heatmap scale in both theme blocks (dark `#2A2A2A` to `#C9443A`, light `#E9E9E7` to `#CF4B3F`)
+2. [x] `app/src/components/MuscleMap.tsx` + `muscle-map.css`: optional `volume` prop; heatmap mode fills regions with the 6-step scale (primary = full sets, secondary = half, accumulated per muscle key, sub-group inheritance), 6-block legend bar with 0/10/20 ticks and a target-range bracket over steps 4 to 5; primary/secondary mode unchanged when `volume` is absent
+3. [x] `app/src/screens/Plan.tsx` + `plan.css`: each workout is a collapsed card (tappable cover with day + name + chevron, two tags `N exercises` / `N sets`, Day and Rest rows removed); expanding shows the heatmap MuscleMap then the tappable exercise list; descriptive subtitle removed
+4. [x] `app/src/screens/Today.tsx` + `today.css`: weight entry now has `-0.1`, `+0.1`, and `Set` buttons (was `+0.2`); when today's scheduled workout is completed the card turns greenish (`--color-positive` tint) and shows `You're all set for today!` instead of the Start button; descriptive subtitle removed
+5. [x] Descriptive subtitles removed from `Progress.tsx`, `History.tsx`, `Nutrition.tsx`, `Settings.tsx` (error/loading subtitles kept)
+6. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 13/14 pass; the single flag is the exclamation mark in `You're all set for today!`, kept per the user's explicit request; PWA deployed)

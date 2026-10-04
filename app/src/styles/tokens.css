@@ -34,6 +34,13 @@
   --muscle-mid-back: #8A7FB0;
   --muscle-upper-back: #7A8A9A;
 
+  --muscle-0: #2A2A2A;
+  --muscle-1: #A89A4A;
+  --muscle-2: #C9A33D;
+  --muscle-3: #D98A35;
+  --muscle-4: #D9692F;
+  --muscle-5: #C9443A;
+
   --font-display: 'Figtree', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-sans: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
@@ -74,6 +81,13 @@
   --muscle-lats: #5FA8A8;
   --muscle-mid-back: #8A7FB0;
   --muscle-upper-back: #7A8A9A;
+
+  --muscle-0: #E9E9E7;
+  --muscle-1: #E6D58A;
+  --muscle-2: #E8BF5A;
+  --muscle-3: #EA9F4A;
+  --muscle-4: #E27A3E;
+  --muscle-5: #CF4B3F;
 
   --font-display: 'Figtree', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-sans: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;

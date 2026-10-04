@@ -144,6 +144,15 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
     ? plan.workouts.filter((w) => w.id !== todayWorkout.id)
     : plan.workouts
 
+  const todayDone =
+    todayWorkout !== null &&
+    sessions.some(
+      (s) =>
+        s.date === todayISO &&
+        s.ended_at !== null &&
+        s.workout_id === todayWorkout.id
+    )
+
   const now = new Date()
   const monday = new Date(now)
   monday.setDate(now.getDate() - ((now.getDay() + 6) % 7))
@@ -201,7 +210,13 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
   }
 
   function bumpWeight() {
-    void saveTodayWeight((latestWeight ?? 0) + 0.2)
+    void saveTodayWeight((latestWeight ?? 0) + 0.1)
+  }
+
+  function bumpWeightDown() {
+    const next = Math.round(((latestWeight ?? 0) - 0.1) * 10) / 10
+    if (next <= 0) return
+    void saveTodayWeight(next)
   }
 
   function setWeight() {
@@ -215,7 +230,6 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
   return (
     <div className="screen">
       <h1>Today</h1>
-      <p className="screen-subtitle">Your next workout and quick entries.</p>
 
       <section className="today-week">
         {weekDays.map((day) => (
@@ -282,9 +296,16 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
             <button
               type="button"
               className="today-weight-btn"
+              onClick={bumpWeightDown}
+            >
+              -0.1
+            </button>
+            <button
+              type="button"
+              className="today-weight-btn"
               onClick={bumpWeight}
             >
-              +0.2
+              +0.1
             </button>
             <button
               type="button"
@@ -298,18 +319,28 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
       </section>
 
       {todayWorkout ? (
-        <section className="today-card">
+        <section
+          className={
+            'today-card' + (todayDone ? ' today-card-done' : '')
+          }
+        >
           <div className="today-card-head">
             <span className="today-card-day">{todayWorkout.day}</span>
             <h2 className="today-card-name">{todayWorkout.name}</h2>
           </div>
-          <button
-            type="button"
-            className="today-start"
-            onClick={() => onStartWorkout(todayWorkout)}
-          >
-            Start workout
-          </button>
+          {todayDone ? (
+            <p className="today-card-done-line">
+              You're all set for today!
+            </p>
+          ) : (
+            <button
+              type="button"
+              className="today-start"
+              onClick={() => onStartWorkout(todayWorkout)}
+            >
+              Start workout
+            </button>
+          )}
         </section>
       ) : (
         <p className="today-rest">Rest day. No workout scheduled today.</p>

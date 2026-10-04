@@ -80,7 +80,6 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
         Back
       </button>
       <h1>History</h1>
-      <p className="screen-subtitle">Past sessions, editable.</p>
 
       {sessions.length === 0 ? (
         <p className="history-empty">No sessions yet.</p>

@@ -154,7 +154,6 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
   return (
     <div className="screen progress">
       <h1>Progress</h1>
-      <p className="screen-subtitle">Body weight and arm measurements over time.</p>
 
       <button type="button" className="progress-history" onClick={onOpenHistory}>
         View session history
