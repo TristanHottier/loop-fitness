@@ -239,4 +239,4 @@ Tasks:
 
 Decisions (approved): rear delts fall back to the back `deltoids` region, mid back falls back to the back `upperBack` region, brachialis falls back to the front `biceps` region. Minimal scope: no volume heatmap, time range control, bottom sheet, muscle list, extra placements, or gender selection.
 
-Status: complete (reviewer clean pass after the attribution fix; PWA not yet deployed, commit pending)
+Status: complete (reviewer clean pass after the attribution fix; PWA deployed, commit 16a39ac)
