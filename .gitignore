@@ -22,3 +22,7 @@ loop-fitness/
 
 # Local setup script
 setup.sh
+
+# Logo source files (the PWA icons in app/public/icons/ are the committed source of truth)
+loop-fitness-logo-192.png
+loop-fitness-logo-512.png
