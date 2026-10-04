@@ -315,6 +315,30 @@ export async function resetSessionHistory(): Promise<void> {
   }
 }
 
+// Soft-delete a single session and its set logs, and enqueue each so the
+// delete propagates to the server.
+export async function deleteSession(id: string): Promise<void> {
+  const now = new Date().toISOString();
+  const session = await db.sessions.get(id);
+  if (session && !session.deleted) {
+    session.deleted = true;
+    session.updated_at = now;
+    await db.sessions.put(session);
+    await enqueue('sessions', id, now);
+  }
+  const logs = await db.set_logs
+    .where('session_id')
+    .equals(id)
+    .filter((l) => !l.deleted)
+    .toArray();
+  for (const log of logs) {
+    log.deleted = true;
+    log.updated_at = now;
+    await db.set_logs.put(log);
+    await enqueue('set_logs', log.id, now);
+  }
+}
+
 export function newBodyMetric(type: BodyMetricType, date: string, value: number): BodyMetric {
   return {
     id: crypto.randomUUID(),

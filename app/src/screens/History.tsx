@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import {
   getSessions,
   updateSession,
+  deleteSession,
   type Session,
 } from '../db/db'
 import { loadPlan, type PlanData } from '../data/plan'
@@ -18,6 +19,8 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
   const [sessions, setSessions] = useState<Session[]>([])
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({})
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
+  const [deleteBusyIds, setDeleteBusyIds] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     let cancelled = false
@@ -60,6 +63,17 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
     )
   }
 
+  async function confirmDelete(session: Session) {
+    setDeleteBusyIds((prev) => ({ ...prev, [session.id]: true }))
+    try {
+      await deleteSession(session.id)
+      setSessions((prev) => prev.filter((s) => s.id !== session.id))
+      setConfirmDeleteId((prev) => (prev === session.id ? null : prev))
+    } finally {
+      setDeleteBusyIds((prev) => ({ ...prev, [session.id]: false }))
+    }
+  }
+
   return (
     <div className="screen history">
       <button type="button" className="history-back" onClick={onBack}>
@@ -85,13 +99,50 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
                 {secs !== null ? (
                   <p className="history-card-meta">{formatDuration(secs)}</p>
                 ) : null}
-                <button
-                  type="button"
-                  className="history-card-toggle"
-                  onClick={() => onOpenSession(session.id)}
-                >
-                  Show sets
-                </button>
+                <div className="history-card-actions">
+                  <button
+                    type="button"
+                    className="history-card-toggle"
+                    onClick={() => onOpenSession(session.id)}
+                  >
+                    Show sets
+                  </button>
+                  <button
+                    type="button"
+                    className="history-card-delete"
+                    onClick={() => {
+                      if (deleteBusyIds[session.id]) return
+                      setConfirmDeleteId(session.id)
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+                {confirmDeleteId === session.id ? (
+                  <div className="history-delete-confirm">
+                    <p className="history-delete-note">
+                      This deletes the session and its sets. This cannot be undone.
+                    </p>
+                    <div className="history-card-actions">
+                      <button
+                        type="button"
+                        className="history-card-delete-confirm"
+                        onClick={() => confirmDelete(session)}
+                        disabled={deleteBusyIds[session.id]}
+                      >
+                        Confirm delete
+                      </button>
+                      <button
+                        type="button"
+                        className="history-card-cancel"
+                        onClick={() => setConfirmDeleteId(null)}
+                        disabled={deleteBusyIds[session.id]}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
                 <div className="history-note">
                   <label className="history-note-label" htmlFor={`note-${session.id}`}>
                     Note
