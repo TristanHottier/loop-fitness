@@ -225,3 +225,18 @@ Tasks:
 3. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 6/6 pass; one non-blocking note fixed: per-card busy state so an in-flight delete on one card does not close another card's confirm row; PWA deployed, commit 4d9ab43)
+
+## M18: MuscleMap port (SVG body artwork)
+Done when: the flat ellipse muscle map is replaced with the MuscleMap SDK full-body SVG artwork, the 10-key mapping lights the right regions with sub-group inheritance, and the MIT attribution is in place.
+
+Tasks:
+1. [x] `scripts/extract-musclemap.mjs` + `scripts/verify-musclemap.mjs`: parse the 4 Swift path files into JSON assets (28/16/28/14 parts, 361 path strings byte-for-byte)
+2. [x] `app/src/assets/musclemap/{male-front,male-back,female-front,female-back}.json`: generated body artwork assets
+3. [x] `docs/design-preview/musclemap-preview.html`: standalone QA preview (all 4 bodies, one color per region, per-body legend)
+4. [x] `docs/musclemap-port.md`: data format, coordinate system, model rules, 10-key mapping table, gap analysis, heatmap tokens, counting rule, attribution
+5. [x] `app/src/components/MuscleMap.tsx` + `muscle-map.css`: rewritten to render the full-body SVG artwork from the JSON assets, stacked front over back, 10-key mapping with sub-group inheritance, cosmetic head/hair neutral, `vector-effect: non-scaling-stroke`, same `primary`/`secondary` API
+6. [x] `docs/credits.md` + `NOTICE` + `app/src/screens/Settings.tsx` Credits section: MIT attribution (MuscleMap, Copyright (c) 2026 Melih Colpan)
+
+Decisions (approved): rear delts fall back to the back `deltoids` region, mid back falls back to the back `upperBack` region, brachialis falls back to the front `biceps` region. Minimal scope: no volume heatmap, time range control, bottom sheet, muscle list, extra placements, or gender selection.
+
+Status: complete (reviewer clean pass after the attribution fix; PWA not yet deployed, commit pending)

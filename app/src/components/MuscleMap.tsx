@@ -1,108 +1,134 @@
 import './muscle-map.css'
+import maleFront from '../assets/musclemap/male-front.json'
+import maleBack from '../assets/musclemap/male-back.json'
+import femaleFront from '../assets/musclemap/female-front.json'
+import femaleBack from '../assets/musclemap/female-back.json'
 
 export interface MuscleMapProps {
   primary: string[]
   secondary: string[]
 }
 
-interface MuscleShape {
-  key: string
-  cx: number
-  cy: number
-  rx: number
-  ry: number
+interface MusclePart {
+  slug: string
+  parent: string | null
+  alwaysVisible: boolean
+  isMuscle: boolean
+  order: number
+  common: string[]
+  left: string[]
+  right: string[]
 }
 
-// Front figure muscle groups, positioned on a 100 x 200 viewBox.
-const FRONT_MUSCLES: MuscleShape[] = [
-  { key: 'chest', cx: 42, cy: 44, rx: 9, ry: 8 },
-  { key: 'chest', cx: 58, cy: 44, rx: 9, ry: 8 },
-  { key: 'front_delts', cx: 32, cy: 34, rx: 6, ry: 5 },
-  { key: 'front_delts', cx: 68, cy: 34, rx: 6, ry: 5 },
-  { key: 'side_delts', cx: 26, cy: 37, rx: 4, ry: 6 },
-  { key: 'side_delts', cx: 74, cy: 37, rx: 4, ry: 6 },
-  { key: 'biceps', cx: 22, cy: 52, rx: 4.5, ry: 10 },
-  { key: 'biceps', cx: 78, cy: 52, rx: 4.5, ry: 10 },
-  { key: 'brachialis', cx: 22, cy: 68, rx: 4, ry: 8 },
-  { key: 'brachialis', cx: 78, cy: 68, rx: 4, ry: 8 },
-  { key: 'triceps', cx: 18, cy: 52, rx: 3, ry: 9 },
-  { key: 'triceps', cx: 82, cy: 52, rx: 3, ry: 9 },
-]
-
-// Back figure muscle groups, positioned on a 100 x 200 viewBox.
-const BACK_MUSCLES: MuscleShape[] = [
-  { key: 'lats', cx: 40, cy: 72, rx: 9, ry: 14 },
-  { key: 'lats', cx: 60, cy: 72, rx: 9, ry: 14 },
-  { key: 'mid_back', cx: 50, cy: 58, rx: 12, ry: 13 },
-  { key: 'upper_back', cx: 50, cy: 40, rx: 14, ry: 8 },
-  { key: 'rear_delts', cx: 32, cy: 34, rx: 6, ry: 5 },
-  { key: 'rear_delts', cx: 68, cy: 34, rx: 6, ry: 5 },
-  { key: 'side_delts', cx: 26, cy: 37, rx: 4, ry: 6 },
-  { key: 'side_delts', cx: 74, cy: 37, rx: 4, ry: 6 },
-  { key: 'triceps', cx: 22, cy: 52, rx: 4.5, ry: 10 },
-  { key: 'triceps', cx: 78, cy: 52, rx: 4.5, ry: 10 },
-]
-
-// Per-muscle-group color tokens. Each muscle key maps to its group color so
-// the map reads as a diagram of distinct groups, not a single accent.
-const MUSCLE_TOKENS: Record<string, string> = {
-  chest: 'var(--muscle-chest)',
-  front_delts: 'var(--muscle-front-delts)',
-  side_delts: 'var(--muscle-side-delts)',
-  rear_delts: 'var(--muscle-rear-delts)',
-  biceps: 'var(--muscle-biceps)',
-  brachialis: 'var(--muscle-brachialis)',
-  triceps: 'var(--muscle-triceps)',
-  lats: 'var(--muscle-lats)',
-  mid_back: 'var(--muscle-mid-back)',
-  upper_back: 'var(--muscle-upper-back)',
+interface MuscleFigureData {
+  gender: string
+  side: string
+  viewBox: { x: number; y: number; width: number; height: number }
+  parts: MusclePart[]
 }
 
-// Primary muscles fill with their group color at full opacity. Secondary
-// muscles fill with the group color at about 0.45 opacity. Idle muscles
-// (in neither list) fill with the border color. The fill is set inline so
-// the 1px stroke in var(--color-bg) stays solid.
-function fillFor(key: string, isPrimary: boolean, isSecondary: boolean): string {
-  const token = MUSCLE_TOKENS[key] ?? 'var(--color-border)'
-  if (isPrimary) return token
-  if (isSecondary) return `color-mix(in srgb, ${token} 45%, transparent)`
-  return 'var(--color-border)'
+// plan.json muscle key to SDK region and the view(s) where it lights up.
+// side_delts and rear_delts both light the back deltoids; lats, mid_back, and
+// upper_back all light the back upperBack; brachialis has no SDK region, so it
+// lights the front biceps.
+const KEY_TO_REGION: Record<string, { region: string; views: string[] }> = {
+  chest: { region: 'chest', views: ['front'] },
+  front_delts: { region: 'frontDeltoid', views: ['front'] },
+  side_delts: { region: 'deltoids', views: ['back'] },
+  rear_delts: { region: 'deltoids', views: ['back'] },
+  biceps: { region: 'biceps', views: ['front'] },
+  brachialis: { region: 'biceps', views: ['front'] },
+  triceps: { region: 'triceps', views: ['front', 'back'] },
+  lats: { region: 'upperBack', views: ['back'] },
+  mid_back: { region: 'upperBack', views: ['back'] },
+  upper_back: { region: 'upperBack', views: ['back'] },
+}
+
+const BODIES: Record<'male' | 'female', { front: MuscleFigureData; back: MuscleFigureData }> = {
+  male: { front: maleFront, back: maleBack },
+  female: { front: femaleFront, back: femaleBack },
+}
+
+// The app has no gender selection yet; male is the default.
+const GENDER: 'male' | 'female' = 'male'
+
+// For a given view, the set of regions lit as primary and as secondary.
+function litRegions(view: string, primary: string[], secondary: string[]) {
+  const primaryRegions = new Set<string>()
+  const secondaryRegions = new Set<string>()
+  for (const key of primary) {
+    const entry = KEY_TO_REGION[key]
+    if (entry && entry.views.includes(view)) primaryRegions.add(entry.region)
+  }
+  for (const key of secondary) {
+    const entry = KEY_TO_REGION[key]
+    if (entry && entry.views.includes(view)) secondaryRegions.add(entry.region)
+  }
+  return { primaryRegions, secondaryRegions }
+}
+
+// A part is lit if its slug or its parent slug is in the lit set (sub-group
+// inheritance). Primary wins when a part matches both.
+function partLevel(
+  part: MusclePart,
+  primaryRegions: Set<string>,
+  secondaryRegions: Set<string>,
+): 'primary' | 'secondary' | null {
+  const slugs = part.parent ? [part.slug, part.parent] : [part.slug]
+  for (const slug of slugs) if (primaryRegions.has(slug)) return 'primary'
+  for (const slug of slugs) if (secondaryRegions.has(slug)) return 'secondary'
+  return null
+}
+
+// Lit primary fills with the accent; lit secondary with the accent at 45%;
+// idle muscles with the neutral surface. Cosmetic parts (head, hair) stay
+// neutral so the body reads as a silhouette.
+function fillFor(part: MusclePart, level: 'primary' | 'secondary' | null): string {
+  if (!part.isMuscle) {
+    return part.slug === 'hair'
+      ? 'color-mix(in srgb, var(--color-text-secondary) 60%, black)'
+      : 'var(--color-text-secondary)'
+  }
+  if (level === 'primary') return 'var(--color-accent)'
+  if (level === 'secondary') return 'color-mix(in srgb, var(--color-accent) 45%, transparent)'
+  return 'var(--color-surface)'
 }
 
 function Figure({
   label,
-  muscles,
+  data,
   primary,
   secondary,
 }: {
   label: string
-  muscles: MuscleShape[]
+  data: MuscleFigureData
   primary: string[]
   secondary: string[]
 }) {
+  const { primaryRegions, secondaryRegions } = litRegions(data.side, primary, secondary)
+  const parts = [...data.parts].sort((a, b) => a.order - b.order)
+  const viewBox = `${data.viewBox.x} ${data.viewBox.y} ${data.viewBox.width} ${data.viewBox.height}`
   return (
     <div className="muscle-figure">
-      <svg className="muscle-svg" viewBox="0 0 100 200" role="img" aria-label={`${label} view`}>
-        <g className="muscle-body">
-          <circle cx="50" cy="15" r="11" />
-          <rect x="44" y="24" width="12" height="8" rx="2" />
-          <path d="M 30 32 Q 30 28 34 28 L 66 28 Q 70 28 70 32 L 68 100 Q 68 106 62 106 L 38 106 Q 32 106 32 100 Z" />
-          <rect x="16" y="32" width="12" height="70" rx="6" />
-          <rect x="72" y="32" width="12" height="70" rx="6" />
-          <rect x="34" y="104" width="14" height="86" rx="7" />
-          <rect x="52" y="104" width="14" height="86" rx="7" />
-        </g>
-        {muscles.map((m, i) => (
-          <ellipse
-            key={i}
-            className="muscle"
-            style={{ fill: fillFor(m.key, primary.includes(m.key), secondary.includes(m.key)) }}
-            cx={m.cx}
-            cy={m.cy}
-            rx={m.rx}
-            ry={m.ry}
-          />
-        ))}
+      <svg className="muscle-svg" viewBox={viewBox} role="img" aria-label={`${label} view`}>
+        {parts.map((part) => {
+          const level = partLevel(part, primaryRegions, secondaryRegions)
+          const fill = fillFor(part, level)
+          const paths = [...part.common, ...part.left, ...part.right]
+          return (
+            <g key={part.slug}>
+              {paths.map((d, i) => (
+                <path
+                  key={i}
+                  d={d}
+                  className="muscle-part"
+                  style={{ fill }}
+                  vectorEffect="non-scaling-stroke"
+                />
+              ))}
+            </g>
+          )
+        })}
       </svg>
       <span className="muscle-figure-label">{label}</span>
     </div>
@@ -110,20 +136,25 @@ function Figure({
 }
 
 export function MuscleMap({ primary, secondary }: MuscleMapProps) {
+  const body = BODIES[GENDER]
+  const targets = [...primary, ...secondary]
+  const label = targets.length
+    ? `Muscles targeted: ${targets.map((key) => key.replace(/_/g, ' ')).join(', ')}`
+    : 'Muscle map'
   return (
-    <div className="muscle-map">
+    <div className="muscle-map" role="group" aria-label={label}>
       <div className="muscle-figures">
-        <Figure label="Front" muscles={FRONT_MUSCLES} primary={primary} secondary={secondary} />
-        <Figure label="Back" muscles={BACK_MUSCLES} primary={primary} secondary={secondary} />
+        <Figure label="front" data={body.front} primary={primary} secondary={secondary} />
+        <Figure label="back" data={body.back} primary={primary} secondary={secondary} />
       </div>
       <div className="muscle-legend">
         <span className="muscle-legend-item">
           <span className="muscle-legend-swatch muscle-legend-swatch-primary" />
-          Primary
+          primary
         </span>
         <span className="muscle-legend-item">
           <span className="muscle-legend-swatch muscle-legend-swatch-secondary" />
-          Secondary
+          secondary
         </span>
       </div>
     </div>

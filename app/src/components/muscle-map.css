@@ -1,8 +1,8 @@
 /* Muscle map styles.
    Reference: docs/design-v2.md, Direction A.
    Flat surfaces, 1px borders, 4 to 6px radius, no shadows, no gradients.
-   Muscle fills are set inline per group; the stroke stays a solid 1px in
-   var(--color-bg). */
+   The full-body artwork is stacked front over back; each figure is
+   constrained so it stays readable on 360 to 412px screens. */
 
 .muscle-map {
   display: flex;
@@ -13,11 +13,10 @@
 
 .muscle-figures {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
   gap: 20px;
   width: 100%;
-  max-width: 320px;
 }
 
 .muscle-figure {
@@ -25,14 +24,15 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 .muscle-svg {
   display: block;
   width: 100%;
+  max-width: 240px;
   height: auto;
+  margin: 0 auto;
 }
 
 .muscle-figure-label {
@@ -40,24 +40,16 @@
   color: var(--color-text-secondary);
 }
 
-/* Body silhouette */
+/* Muscle paths. The fill is set inline per part; the stroke keeps a solid
+   1px separation in the page background color. vector-effect is set inline
+   so the stroke stays 1px on screen regardless of the viewBox scale. */
 
-.muscle-body {
-  fill: var(--color-surface);
-  stroke: var(--color-border);
-  stroke-width: 1;
-}
-
-/* Muscle shapes. The fill is set inline per muscle group; the stroke keeps
-   the 1px separation in the page background color. */
-
-.muscle {
+.muscle-part {
   stroke: var(--color-bg);
   stroke-width: 1;
 }
 
-/* Legend. The map now fills each muscle with its own group color, so the
-   legend explains the opacity: primary is full, secondary is muted. */
+/* Legend. Primary is the full accent; secondary is the accent at 45%. */
 
 .muscle-legend {
   display: flex;

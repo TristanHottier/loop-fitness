@@ -268,6 +268,11 @@ export function Settings() {
           )}
         </div>
       </section>
+
+      <section className="settings-section">
+        <h2 className="settings-section-title">Credits</h2>
+        <p className="settings-note">Body artwork from MuscleMap by Melih Colpan, MIT license.</p>
+      </section>
     </div>
   )
 }
