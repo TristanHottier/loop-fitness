@@ -3,9 +3,9 @@
 
 | | |
 |---|---|
-| **Duration** | About 60 min |
+| **Duration** | About 70 min |
 | **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), door anchor, handles, loop bands |
-| **Rest between sets** | 60-90 s (supersets: rest after each pair) |
+| **Rest between sets** | 45-75 s (see the overview table) |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s lifting |
 | **Effort** | Most sets end with 1-2 reps left in reserve. The last set of each exercise goes to failure when it is safe |
 
@@ -40,18 +40,20 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ## Session overview
 
-| # | Exercise | Equipment | Sets × Reps |
-|---|---|---|---|
-| | Warm-up | | 8 min |
-| 1 | Lateral raise | Loop | 5 × 15-20 |
-| 2 | Bend over fly | Tube, bar under feet | 3 × 15-20 |
-| 3 | Close grip lift | Tube, bar in hands | 3 × 12-15 |
-| 4 | Pull down (underhand) | Tube, bar, door (top) | 3 × 12-15 |
-| 5 | Cable crossover | Tube, handles, door (top) | 3 × 12-15 |
-| 6 | **Superset A:** Wide grip barbell + Triceps extension | Tube, bar in hands + loop | 3 rounds × 10-12 + 12-15 |
-| 7 | **Superset B:** Side pull biceps + Push-down tricep | Tube, handles, door (top) | 3 rounds × 12-15 each |
-| 8 | Bicep curls (finisher, optional) | Loop | 2 × 20 |
-| | Cool-down | | 5 min |
+| # | Exercise | Equipment | Sets × Reps | Rest |
+|---|---|---|---|---|
+| | Warm-up | | 8 min | |
+| 1 | Lateral raise | Loop | 5 × 15-20 | 60 s |
+| 2 | Bend over fly | Tube, bar under feet | 3 × 15-20 | 60 s |
+| 3 | Close grip lift | Tube, bar in hands | 3 × 12-15 | 60 s |
+| 4 | Pull down (underhand) | Tube, bar, door (top) | 3 × 12-15 | 75 s |
+| 5 | Cable crossover | Tube, handles, door (top) | 3 × 12-15 | 60 s |
+| 6 | Wide grip barbell | Tube, bar in hands | 3 × 10-12 | 75 s |
+| 7 | Side pull biceps | Tube, handle, door (top) | 3 × 12-15 each arm | 60 s |
+| 8 | Push-down tricep | Tube, handles, door (top) | 3 × 12-15 | 60 s |
+| 9 | Triceps extension | Loop | 3 × 12-15 | 60 s |
+| 10 | Bicep curls (finisher, optional) | Loop | 2 × 20 | 45 s |
+| | Cool-down | | 5 min | |
 
 ---
 
@@ -113,8 +115,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 ### 3. Close grip lift: tube and Pilates bar in hands, 3 × 12-15
 **Targets:** side delts, upper traps, biceps
 
-> *Setup as you described: feet in handles, hands near the middle of the bar, palms down, raise to head level with elbows out.*
-
 **Setup**
 - A tube on each end of the bar (30-40 lb), with your feet in the handles at the other ends, feet shoulder-width apart.
 - Hold the bar overhand with hands near the middle (about 10-15 cm apart), arms down.
@@ -172,10 +172,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 6. Superset A: Wide grip barbell + Triceps extension
-Do 10-12 reps of the first, then go straight into 12-15 reps of the second. Rest 60-90 s after the pair. Repeat for 3 rounds.
-
-#### 6a. Wide grip barbell: tube and Pilates bar in hands
+### 6. Wide grip barbell: tube and Pilates bar in hands, 3 × 10-12
 **Targets:** biceps
 
 > *On your chart this is "Wide grip barbell". I use it as a wide-grip curl with the Pilates bar.*
@@ -195,25 +192,9 @@ Do 10-12 reps of the first, then go straight into 12-15 reps of the second. Rest
 
 **Progress:** stand wider or use heavier tubes.
 
-#### 6b. Triceps extension: loop
-**Targets:** triceps (long head)
-
-**Setup**
-- Stand on one end of a loop band (15-50) with your front foot and hold the other end behind your head with both hands, elbows forward.
-
-**Execution**
-1. Extend your arms straight up.
-2. Squeeze for 1 s.
-3. Lower in 3 s.
-
-**Mistakes:** elbows flaring, arching the lower back.
-
 ---
 
-### 7. Superset B: Side pull biceps + Push-down tricep
-Do 12-15 reps per side of the first, then 12-15 reps of the second. Rest 60-90 s after the pair. Repeat for 3 rounds. The door anchor stays at the top for both.
-
-#### 7a. Side pull biceps: tube and handle on door
+### 7. Side pull biceps: tube and handle on door, 3 × 12-15 each arm
 **Targets:** biceps (peak)
 
 > *On your chart this is "Side pull biceps". I use it as a single-arm curl with the arm out to the side.*
@@ -226,29 +207,55 @@ Do 12-15 reps per side of the first, then 12-15 reps of the second. Rest 60-90 s
 1. Curl the handle toward your head, keeping your upper arm at shoulder height.
 2. Squeeze your biceps for 1 s.
 3. Return in 3 s to a straight arm.
+4. Do all reps on one arm, then switch.
+
+**Cues:** Keep the elbow high.
 
 **Mistakes:** dropping the elbow, shrugging.
 
 **Progress:** step away from the door or use a heavier tube.
 
-#### 7b. Push-down tricep: tube and handles on door
+---
+
+### 8. Push-down tricep: tube and handles on door, 3 × 12-15
 **Targets:** triceps
 
-> *Done with handles here so you can swap quickly from the previous exercise.*
-
 **Setup**
-- Same door anchor position, a tube with a handle in each hand (or one tube and one handle at a time), elbows pinned at about 90°, facing the door.
+- Door anchor at the **top** of the door, a tube with a handle in each hand (30 lb), facing the door, elbows pinned at about 90°.
 
 **Execution**
 1. Push your hands down until your arms are straight.
 2. Squeeze for 1 s.
-3. Return in 3 s.
+3. Return in 3 s to elbows at about 90°.
+
+**Cues:** Only your forearms move.
 
 **Mistakes:** elbows drifting forward, leaning over.
 
+**Progress:** step back or stack tubes.
+
 ---
 
-### 8. Bicep curls (finisher, optional): loop, 2 × 20
+### 9. Triceps extension: loop, 3 × 12-15
+**Targets:** triceps (long head)
+
+**Setup**
+- Stand on one end of a loop band (15-50) with your front foot and hold the other end behind your head with both hands, elbows forward.
+
+**Execution**
+1. Extend your arms straight up.
+2. Squeeze for 1 s.
+3. Lower in 3 s.
+
+**Cues:** Upper arms stay still.
+
+**Mistakes:** elbows flaring, arching the lower back.
+
+**Progress:** next loop up, or single-arm.
+
+---
+
+### 10. Bicep curls (finisher, optional): loop, 2 × 20
 **Targets:** biceps (pump)
 
 **Setup**
@@ -259,7 +266,7 @@ Do 12-15 reps per side of the first, then 12-15 reps of the second. Rest 60-90 s
 2. Squeeze for 1 s.
 3. Lower in 3 s.
 
-**Note:** drop this if you are running past 60 minutes.
+**Note:** drop this if you are running past 70 minutes or your elbows are sore.
 
 ---
 

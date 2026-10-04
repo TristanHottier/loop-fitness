@@ -1,5 +1,5 @@
 # Program guide
-### How the 4 workouts fit together, and how to make them grow your arms, shoulders and back
+### How the 4 workouts fit together, and how to train almost every muscle while growing your arms and shoulders
 
 ---
 
@@ -17,34 +17,43 @@ Doubling your arm size (30 cm to 60 cm) is not achievable. A 60 cm arm is larger
 
 ## 2. Weekly layout
 
-| Day | Workout | Main focus |
-|---|---|---|
-| Monday | **Workout 1: Pull** | Back, rear delts, biceps |
-| Wednesday | **Workout 2: Push** | Chest, shoulders, triceps |
-| Friday | **Workout 3: Shoulders and arms** | Side delts, arms, extra back and chest |
-| Saturday | **Workout 4: Legs and forearms** | Quads, glutes, calves, forearms |
+| Day | Workout | Main focus | Duration |
+|---|---|---|---|
+| Monday | **Workout 1: Pull** | Back, rear delts, biceps, abs | About 70 min |
+| Wednesday | **Workout 2: Push** | Chest, shoulders, triceps, abs and obliques | About 70 min |
+| Friday | **Workout 3: Shoulders and arms** | Side delts, arms, extra back and chest | About 70 min |
+| Saturday | **Workout 4: Legs and forearms** | Quads, hamstrings, glutes, calves, forearms | About 65 min |
 
-Friday and Saturday are back to back. Workout 3 already works your forearms through the curls and the Close grip lift, so if your grip feels tired on Saturday, do the Wrist curl and Wrist extension superset with fewer rounds or move Workout 4 to Sunday.
+Sessions run longer than an hour now. If you're short on time, drop the optional finisher in Workout 3 first, then one set from each isolation exercise.
+
+Friday and Saturday are back to back. Workout 3 already works your forearms through the curls and the Close grip lift, so if your grip feels tired on Saturday, do fewer sets of the Wrist curl and Wrist extension or move Workout 4 to Sunday.
+
+**Where the emphasis is.** Arms and shoulders get the most direct work, and every other muscle group gets at least some.
 
 **Weekly hard sets per muscle** (the range generally linked to good hypertrophy is about 10-20 per week). "Direct" counts sets where the muscle is primary. "With half credit" adds half a set for each set where it is secondary. Unilateral exercises count rounds, not sides (3 rounds is 3 sets for each arm or leg).
 
 | Muscle | Direct sets | With half credit |
 |---|---|---|
-| Lats | 18 | 18 |
-| Mid-back | 8 | 13 |
-| Rear delts | 6 | 12 |
-| Side delts | 12 | 12 |
-| Front delts | 4 | 10 |
-| Chest | 15 | 15 |
-| Biceps | 16 (18 with the finisher) | 24 |
+| Side delts | 15 | 15 |
+| Rear delts | 9 | 15 |
+| Front delts | 4 | 9 |
+| Upper traps | 6 | 12 |
+| Biceps | 15 (17 with the finisher) | 25 |
 | Triceps | 13 | 19 |
-| Forearms | 9 | 16 |
+| Forearms | 9 | 15 |
+| Lats | 17 | 17 |
+| Mid-back | 7 | 15 |
+| Chest | 14 | 14 |
+| Abs | 6 | 8 |
+| Obliques | 3 | 3 |
+| Lower back | 0 | 5 |
+| Rotator cuff | 0 | 2 |
 | Quads | 7 | 7 |
 | Glutes | 13 | 13 |
-| Hamstrings | 0 | 5 |
+| Hamstrings | 3 | 8 |
 | Calves | 3 | 3 |
 
-Triceps make up most of your upper-arm size, so they get real volume. Biceps are above the usual range with half credit on purpose, since arms are your priority, but cut the finisher in Workout 3 if you feel sore or flat.
+Biceps are above the usual range with half credit on purpose, since arms are your priority. If your elbows or biceps feel sore or flat, cut the Workout 3 finisher first, then the Curl biceps in Workout 1. Quads, obliques and calves stay on a lower volume to keep the week manageable.
 
 ---
 
@@ -136,24 +145,33 @@ I used the names from your band chart. P is primary, S is secondary (counts half
 | Push down (straight-arm) | Lats | None |
 | Reverse fly | Rear delts | Mid-back |
 | Bend over fly | Rear delts | Mid-back, lower back |
+| Face pull | Rear delts | Upper traps, mid-back, rotator cuff |
 | Close grip barbell, Wide grip barbell, Curl biceps, Side pull biceps, Bicep curls (loop) | Biceps | Forearms |
 | Grip press | Chest | Front delts, triceps |
 | Hex press | Chest | Front delts, triceps |
 | Standing press | Front delts, chest | Triceps |
 | Cable crossover | Chest | Front delts |
 | Lateral raises, Lateral raise (loop) | Side delts | Upper traps |
+| Upright row (loop) | Side delts, upper traps | Biceps |
 | Close grip lift | Side delts, upper traps | Biceps, forearms |
 | Push-down tricep, Triceps extension (loop) | Triceps | None |
+| V-ups | Abs | Hip flexors |
+| Kneeling crunch | Abs | None |
+| Trunk twist (loop) | Obliques | Abs |
 | Squat | Quads, glutes | Hamstrings |
+| Romanian deadlift | Hamstrings, glutes | Lower back |
 | Lunges (loop) | Quads, glutes | Hamstrings |
 | Glute bridge | Glutes | Hamstrings |
-| Glute kickbacks | Glutes | None |
 | Ankle plantarflexion (loop) | Calves | None |
 | Reverse curl | Forearms | Biceps |
 | Wrist curl, Wrist extension | Forearms | None |
 
-**Interpretations I made** (check them against the pictures on your chart): Push down (straight-arm lat push down), Wide grip barbell and Close grip barbell (curls with the bar), Side pull biceps (single-arm curl with the arm out to the side), Cable crossover (sweep down and across from a high anchor).
+**Muscle keys the app needs:** chest, front delts, side delts, rear delts, upper traps, mid-back, lats, lower back, biceps, triceps, forearms, abs, obliques, rotator cuff (optional), quads, glutes, hamstrings, calves. Hip flexors (secondary on V-ups) can be left out.
 
-**Not on your chart:** Reverse curl, Wrist curl and Wrist extension. I added them because the chart has no forearm exercises.
+**Interpretations I made** (check them against the pictures on your chart): Push down (straight-arm lat push down), Wide grip barbell and Close grip barbell (curls with the bar), Side pull biceps (single-arm curl with the arm out to the side), Cable crossover (sweep down and across from a high anchor), V-ups (V-up with a tube held overhead), Kneeling crunch (kneeling cable-style crunch), Trunk twist (standing rotation against a band).
 
-**Not used:** Upper oblique, Lower oblique, Kneeling crunch, V-ups, Hip flexion, Band squat, 1-leg miniquat, Upright row, Trunk twist, Russian twist, Reverse crunch, Diagonal wood chops. Core is not trained in this plan. The Lying chest press (loop) is kept as the heavier alternative to the Grip press when the tubes are no longer enough.
+**Not on your chart:** Face pull, Romanian deadlift, Reverse curl, Wrist curl and Wrist extension. I added them for rear delts and shoulder health, hamstrings, and forearms.
+
+**Dropped from the plan:** Glute kickbacks, to keep Saturday near 65 minutes. Glutes still get 13 direct sets a week.
+
+**Not used:** Upper oblique, Lower oblique, Hip flexion, Band squat, 1-leg miniquat, Russian twist, Reverse crunch, Diagonal wood chops. The Lying chest press (loop) is kept as the heavier alternative to the Grip press when the tubes are no longer enough.

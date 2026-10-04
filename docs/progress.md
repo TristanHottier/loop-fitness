@@ -267,3 +267,16 @@ Tasks:
 6. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 13/14 pass; the single flag is the exclamation mark in `You're all set for today!`, kept per the user's explicit request; PWA deployed)
+
+## M21: Sync plan data with edited content, whole-program muscle map, Today Set button
+Done when: `plan.json`/`media.json`/gallery match the edited `content/*.md` files (new exercises, set/rest/band changes, new muscle keys, glute-kickbacks removed); the Plan page shows a whole-program heatmap muscle map at the bottom; and the Today "Set" weight button saves the displayed weight instead of opening a prompt.
+
+Tasks:
+1. [x] `app/public/plan.json`: 7 new exercises (face-pull, v-ups, grip-press, kneeling-crunch, trunk-twist, close-grip-lift, romanian-deadlift); glute-kickbacks removed; lying-chest-press kept in the dict but out of the push list; set/rest/band changes applied (bend-over-rows 4 to 3 sets, close-grip-barbell 4 to 3, hex-press 4 to 3 sets + T30, lateral-raise 4 to 5 sets, side-pull-biceps rest 75 to 60, lunges rest 90 to 75, glute-bridge rest 75 to 60, wrist-curl/wrist-extension rest 60 to 45); all muscle keys synced to the guide section 7 P/S table (new keys upper_traps, lower_back, abs, obliques, rotator_cuff); workout lists replaced (pull 9, push 9, shoulders-arms 10, legs-forearms 8)
+2. [x] `app/public/media.json` + `app/public/gallery/`: 7 new entries + folders, glute-kickbacks entry + folder removed, lying-chest-press retained
+3. [x] `app/src/components/MuscleMap.tsx`: `KEY_TO_REGION` extended with upper_traps (trapezius, back), lower_back (lowerBack, back), abs (abs, front), obliques (obliques, front); rotator_cuff intentionally unmapped (no SDK region)
+4. [x] `app/src/screens/Plan.tsx` + `plan.css`: `programVolume` helper (volume across all 4 workouts) + a whole-program heatmap MuscleMap section at the bottom of the screen ("Muscles trained across the program")
+5. [x] `app/src/screens/Today.tsx` + `today.css`: "Set" button now saves the displayed `latestWeight` (no `window.prompt`), disabled when no weight is logged; `-0.1`/`+0.1` unchanged
+6. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 32/32 pass; one non-blocking note: rotator_cuff has no body-map region so it never lights up, by design; PWA deployed)

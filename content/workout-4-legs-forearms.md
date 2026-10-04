@@ -1,15 +1,15 @@
 # Workout 4: Legs and forearms
-### Saturday session: quads, glutes, calves, forearms
+### Saturday session: quads, hamstrings, glutes, calves, forearms
 
 | | |
 |---|---|
-| **Duration** | About 60 min |
-| **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), door anchor, handles, loop bands, a chair, a folded towel |
+| **Duration** | About 65 min |
+| **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), loop bands, a chair, a folded towel |
 | **Rest between sets** | 45-90 s (single-leg work: rest after both legs) |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s lifting |
 | **Effort** | Most sets end with 1-2 reps left in reserve. The last set of each exercise goes to failure when it is safe |
 
-> **Safety check:** inspect every band for nicks, cracks or thinning before each session, and never use a damaged one. Check that every clip on the bar and the anchor is fully closed. Pad the bar with a folded towel for squats and glute bridges. For the door anchor, the door must be **closed and latched** and open **away from you**.
+> **Safety check:** inspect every band for nicks, cracks or thinning before each session, and never use a damaged one. Check that every clip on the bar is fully closed. Pad the bar with a folded towel for squats and glute bridges.
 
 ## Bar setups used today
 
@@ -30,9 +30,9 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Exercise | Start with |
 |---|---|
 | Squat | Tube 50 lb, stack to go heavier |
+| Romanian deadlift | Tube 40 lb |
 | Lunges | Loop 25-75 |
 | Glute bridge | Tube 40 lb |
-| Glute kickbacks | Tube 30 lb |
 | Ankle plantarflexion | Loop 15-50 |
 | Reverse curl | Tube 30 lb |
 | Wrist curl, Wrist extension | Tube 30 lb |
@@ -41,19 +41,20 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ## Session overview
 
-| # | Exercise | Equipment | Sets × Reps |
-|---|---|---|---|
-| | Warm-up | | 8 min |
-| 1 | Squat | Tube, bar on back | 4 × 12-20 |
-| 2 | Lunges | Loop | 3 × 10-12 each leg |
-| 3 | Glute bridge | Tube, bar on hips | 3 × 12-15 |
-| 4 | Glute kickbacks | Tube, door (floor) | 3 × 12-15 each leg |
-| 5 | Ankle plantarflexion | Loop | 3 × 15-20 each leg |
-| 6 | Reverse curl | Tube, bar in hands | 3 × 12-15 |
-| 7 | **Superset:** Wrist curl + Wrist extension | Tube, bar in hands, chair | 3 rounds × 15-20 each |
-| | Cool-down | | 5 min |
+| # | Exercise | Equipment | Sets × Reps | Rest |
+|---|---|---|---|---|
+| | Warm-up | | 8 min | |
+| 1 | Squat | Tube, bar on back | 4 × 12-20 | 90 s |
+| 2 | Romanian deadlift | Tube, bar in hands | 3 × 10-15 | 75 s |
+| 3 | Lunges | Loop | 3 × 10-12 each leg | 75 s |
+| 4 | Glute bridge | Tube, bar on hips | 3 × 12-15 | 60 s |
+| 5 | Ankle plantarflexion | Loop | 3 × 15-20 each leg | 45 s |
+| 6 | Reverse curl | Tube, bar in hands | 3 × 12-15 | 60 s |
+| 7 | Wrist curl | Tube, bar in hands, chair | 3 × 15-20 | 45 s |
+| 8 | Wrist extension | Tube, bar in hands, chair | 3 × 15-20 | 45 s |
+| | Cool-down | | 5 min | |
 
-> *Reverse curl, Wrist curl and Wrist extension are not on your chart. I named them myself, since the chart has no forearm exercises.*
+> *Romanian deadlift, Reverse curl, Wrist curl and Wrist extension are not on your chart. I added them for hamstrings and forearms.*
 
 ---
 
@@ -91,7 +92,30 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 2. Lunges: loop, 3 × 10-12 each leg
+### 2. Romanian deadlift: tube and Pilates bar in hands, 3 × 10-15
+**Targets:** hamstrings, glutes, lower back
+
+> *Not on your chart. Added for hamstrings, which nothing else here trains directly.*
+
+**Setup**
+- A tube on each end of the bar (40 lb), feet in the handles at the other ends, feet shoulder-width apart.
+- Stand tall holding the bar overhand at your thighs, shoulders back, knees soft.
+
+**Execution**
+1. Push your hips back and lower the bar along your legs until you feel a strong hamstring stretch (about mid-shin), back flat.
+2. Pause for 1 s.
+3. Drive your hips forward to stand, squeezing your glutes at the top.
+4. Lower in 3 s on every rep.
+
+**Cues:** "Hips back, back flat." Keep the bar close to your legs.
+
+**Mistakes:** rounding the back, squatting instead of hinging, the bar drifting away from your legs.
+
+**Progress:** stack tubes, shorten the tubes, or add a 2 s pause at the bottom.
+
+---
+
+### 3. Lunges: loop, 3 × 10-12 each leg
 **Targets:** quads, glutes, hamstrings
 
 **Setup**
@@ -112,7 +136,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 3. Glute bridge: tube and Pilates bar on hips, 3 × 12-15
+### 4. Glute bridge: tube and Pilates bar on hips, 3 × 12-15
 **Targets:** glutes, hamstrings
 
 **Setup**
@@ -132,32 +156,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 4. Glute kickbacks: tube on door, 3 × 12-15 each leg
-**Targets:** glutes
-
-**Setup**
-- Door anchor at the **lowest** point of the door, a tube (30 lb) with a handle looped around your working ankle (foot in the handle).
-- Face the door, step back until the tube is taut, and hold a chair or the door frame for balance. Hinge slightly forward.
-
-**Execution**
-1. Kick your working leg straight back, keeping your hips square.
-2. Squeeze your glute for 1 s.
-3. Return in 3 s without letting the tube pull your leg forward.
-4. Do all reps on one leg, then switch. Rest after both legs.
-
-**Cues:** Move from the hip, not the lower back.
-
-**Mistakes:** arching the lower back, twisting the hips, swinging.
-
-**Progress:** step farther from the door or stack tubes.
-
----
-
 ### 5. Ankle plantarflexion: loop, 3 × 15-20 each leg
 **Targets:** calves
 
 **Setup**
-- Sit on the floor with one leg extended, loop band (15-50) around the ball of your foot, ends held in both hands with the band taut.
+- Sit on the floor with one leg extended, a loop band (15-50) around the ball of your foot, ends held in both hands with the band taut.
 
 **Execution**
 1. Push your foot forward, pointing your toes, until your ankle is fully extended.
@@ -193,10 +196,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 7. Superset: Wrist curl + Wrist extension
-Do 15-20 reps of the first, then go straight into 15-20 reps of the second. Rest 60 s after the pair. Repeat for 3 rounds.
-
-#### 7a. Wrist curl: tube and Pilates bar in hands
+### 7. Wrist curl: tube and Pilates bar in hands, 3 × 15-20
 **Targets:** forearm flexors
 
 **Setup**
@@ -208,11 +208,15 @@ Do 15-20 reps of the first, then go straight into 15-20 reps of the second. Rest
 2. Squeeze for 1 s.
 3. Lower in 3 s to a full wrist stretch.
 
+**Cues:** Only your wrists move.
+
 **Mistakes:** lifting your forearms off your thighs, using momentum.
 
 **Progress:** if 30 lb is too heavy, sit with your feet closer to the chair to reduce the stretch. To go heavier, move your feet farther away.
 
-#### 7b. Wrist extension: tube and Pilates bar in hands
+---
+
+### 8. Wrist extension: tube and Pilates bar in hands, 3 × 15-20
 **Targets:** forearm extensors
 
 **Setup**
@@ -223,7 +227,11 @@ Do 15-20 reps of the first, then go straight into 15-20 reps of the second. Rest
 2. Squeeze for 1 s.
 3. Lower in 3 s.
 
+**Cues:** Only your wrists move.
+
 **Mistakes:** lifting your forearms off your thighs, using momentum.
+
+**Progress:** same as the Wrist curl.
 
 ---
 

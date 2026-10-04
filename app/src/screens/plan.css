@@ -107,6 +107,29 @@
   border-radius: var(--radius);
 }
 
+/* Whole-program map at the bottom of the screen. Same flat panel treatment
+   as the per-workout map, with a section title and a short sub-line. */
+.plan-program-map {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.plan-program-map-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.plan-program-map-sub {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
 /* Exercise rows. Tappable, flat, 48px minimum height. */
 .plan-exercise-list {
   display: flex;

@@ -18,7 +18,7 @@
       "targets": "lats (back width), biceps",
       "muscles": {
         "primary": ["lats"],
-        "secondary": ["biceps"]
+        "secondary": ["biceps", "mid_back", "rear_delts"]
       },
       "instructions": {
         "setup": [
@@ -51,7 +51,7 @@
       "targets": "mid-back, lats, rear delts, biceps",
       "muscles": {
         "primary": ["mid_back", "lats"],
-        "secondary": ["rear_delts", "biceps"]
+        "secondary": ["biceps", "rear_delts"]
       },
       "instructions": {
         "setup": [
@@ -75,7 +75,7 @@
       "equipment": "L",
       "repMin": 10,
       "repMax": 15,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 90,
       "startBand": "L35-95",
       "unilateral": false,
@@ -83,7 +83,7 @@
       "targets": "mid-back, lats, rear delts, biceps",
       "muscles": {
         "primary": ["mid_back", "lats"],
-        "secondary": ["rear_delts", "biceps"]
+        "secondary": ["biceps", "rear_delts", "lower_back"]
       },
       "instructions": {
         "setup": [
@@ -147,7 +147,7 @@
       "targets": "rear delts, upper back",
       "muscles": {
         "primary": ["rear_delts"],
-        "secondary": ["upper_back"]
+        "secondary": ["mid_back"]
       },
       "instructions": {
         "setup": [
@@ -164,13 +164,45 @@
         "progress": ""
       }
     },
+    "face-pull": {
+      "slug": "face-pull",
+      "name": "Face pull",
+      "equipment": "T + handles",
+      "repMin": 15,
+      "repMax": 20,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "optional": false,
+      "targets": "rear delts, upper traps, rotator cuff (shoulder health)",
+      "muscles": {
+        "primary": ["rear_delts"],
+        "secondary": ["upper_traps", "mid_back", "rotator_cuff"]
+      },
+      "instructions": {
+        "setup": [
+          "Door anchor at face height, a tube with a handle in each hand (30 lb), palms facing each other.",
+          "Step back until taut, arms extended in front of you."
+        ],
+        "execution": [
+          "Pull the handles toward your face, splitting your hands apart so they finish beside your ears.",
+          "Keep your elbows high and wide.",
+          "At the end, rotate your hands back so your knuckles point toward the ceiling, and squeeze for 1 s.",
+          "Return in 3 s."
+        ],
+        "cues": "Pull the band apart, not just back.",
+        "mistakes": "Elbows dropping low, leaning back to cheat the rep.",
+        "progress": "Step back or stack tubes."
+      }
+    },
     "close-grip-barbell": {
       "slug": "close-grip-barbell",
       "name": "Close grip barbell",
       "equipment": "T + Pilates bar",
       "repMin": 10,
       "repMax": 12,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 75,
       "startBand": "T30",
       "unilateral": false,
@@ -178,7 +210,7 @@
       "targets": "biceps",
       "muscles": {
         "primary": ["biceps"],
-        "secondary": []
+        "secondary": ["forearms"]
       },
       "instructions": {
         "setup": [
@@ -209,7 +241,7 @@
       "targets": "biceps, brachialis (arm thickness)",
       "muscles": {
         "primary": ["biceps"],
-        "secondary": ["brachialis"]
+        "secondary": ["forearms"]
       },
       "instructions": {
         "setup": [
@@ -224,6 +256,37 @@
         "cues": "",
         "mistakes": "Swinging, elbows drifting forward.",
         "progress": "Choke up on the tube, stand wider, or use a heavier tube."
+      }
+    },
+    "v-ups": {
+      "slug": "v-ups",
+      "name": "V-ups",
+      "equipment": "T + handles",
+      "repMin": 10,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T30",
+      "unilateral": false,
+      "optional": false,
+      "targets": "abs, hip flexors",
+      "muscles": {
+        "primary": ["abs"],
+        "secondary": []
+      },
+      "instructions": {
+        "setup": [
+          "Door anchor at the lowest point of the door, a tube with a handle in each hand (30 lb).",
+          "Lie on your back with your head toward the door, arms extended overhead, tube taut, legs straight on the floor."
+        ],
+        "execution": [
+          "Raise your legs and torso at the same time into a V, reaching your hands toward your feet.",
+          "Squeeze your abs for 1 s at the top.",
+          "Lower in 3 s until your legs and shoulders hover just above the floor."
+        ],
+        "cues": "Legs straight, exhale as you rise.",
+        "mistakes": "Swinging with momentum, arching the lower back, bending the arms.",
+        "progress": "Use a heavier tube or lower in 4 s. Easier: tuck your knees. If your lower back complains, use the tuck version."
       }
     },
     "lying-chest-press": {
@@ -258,21 +321,53 @@
         "progress": "Heavier loop, double loop, or add a 2 s pause at the top."
       }
     },
+    "grip-press": {
+      "slug": "grip-press",
+      "name": "Grip press",
+      "equipment": "T + Pilates bar",
+      "repMin": 8,
+      "repMax": 15,
+      "sets": 4,
+      "restSeconds": 90,
+      "startBand": "T40",
+      "unilateral": false,
+      "optional": false,
+      "targets": "chest, front delts, triceps",
+      "muscles": {
+        "primary": ["chest"],
+        "secondary": ["front_delts", "triceps"]
+      },
+      "instructions": {
+        "setup": [
+          "Clip one tube from one end of the bar to the other (handles removed or tucked away).",
+          "Lie on your back on the floor with knees bent and feet flat. Pass the tube under your upper back and hold the bar on your chest.",
+          "Hands overhand, slightly wider than shoulder-width."
+        ],
+        "execution": [
+          "Press the bar straight up above your chest until your arms are fully extended.",
+          "Squeeze your chest for 1 s.",
+          "Lower in 3 s until the bar lightly touches your chest."
+        ],
+        "cues": "Keep your shoulder blades pinched and flat on the floor. Push the ceiling away.",
+        "mistakes": "The tube sliding up toward your neck (keep it across the upper back), elbows flaring to 90 degrees, the bar drifting toward your face.",
+        "progress": "Add or swap in a heavier tube, or add a 2 s pause at the top. When the tubes are no longer enough, use the Lying chest press with a heavy loop (35-95 or 50-145): lie down, loop across your upper back, press the sides up."
+      }
+    },
     "hex-press": {
       "slug": "hex-press",
       "name": "Hex press",
       "equipment": "T",
       "repMin": 12,
       "repMax": 15,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 75,
-      "startBand": "T40",
+      "startBand": "T30",
       "unilateral": false,
       "optional": false,
       "targets": "inner chest, triceps",
       "muscles": {
         "primary": ["chest"],
-        "secondary": ["triceps"]
+        "secondary": ["front_delts", "triceps"]
       },
       "instructions": {
         "setup": [
@@ -302,7 +397,7 @@
       "optional": false,
       "targets": "shoulders (front and side delts), triceps",
       "muscles": {
-        "primary": ["front_delts", "side_delts"],
+        "primary": ["front_delts", "chest"],
         "secondary": ["triceps"]
       },
       "instructions": {
@@ -335,7 +430,7 @@
       "targets": "side delts (shoulder width)",
       "muscles": {
         "primary": ["side_delts"],
-        "secondary": []
+        "secondary": ["upper_traps"]
       },
       "instructions": {
         "setup": [
@@ -350,6 +445,38 @@
         "cues": "Imagine pouring water out of a jug at the top. Don't swing.",
         "mistakes": "Shrugging, raising above shoulder height, using momentum.",
         "progress": "Stand with feet wider, choke up, or stack tubes. Finish the last set with partial reps in the top half."
+      }
+    },
+    "upright-row": {
+      "slug": "upright-row",
+      "name": "Upright row",
+      "equipment": "L",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "L25-75",
+      "unilateral": false,
+      "optional": false,
+      "targets": "side delts, upper traps",
+      "muscles": {
+        "primary": ["side_delts", "upper_traps"],
+        "secondary": ["biceps"]
+      },
+      "instructions": {
+        "setup": [
+          "Stand on the middle of a loop band (25-75) with feet shoulder-width apart.",
+          "Hold the top of the loop with hands about shoulder-width apart, arms down."
+        ],
+        "execution": [
+          "Pull your hands up along your body toward your chest, leading with your elbows.",
+          "Stop when your elbows reach shoulder height. Don't go higher.",
+          "Hold for 1 s.",
+          "Lower in 3 s."
+        ],
+        "cues": "Elbows stay higher than your wrists. Keep your shoulders down and away from your ears.",
+        "mistakes": "Pulling the elbows above shoulder height (this can irritate the shoulder), using a very narrow grip, shrugging.",
+        "progress": "Next loop up, or widen your stance."
       }
     },
     "push-down-tricep": {
@@ -415,13 +542,76 @@
         "progress": "Next loop up, or go single-arm."
       }
     },
+    "kneeling-crunch": {
+      "slug": "kneeling-crunch",
+      "name": "Kneeling crunch",
+      "equipment": "T + handles",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 60,
+      "startBand": "T40",
+      "unilateral": false,
+      "optional": false,
+      "targets": "abs",
+      "muscles": {
+        "primary": ["abs"],
+        "secondary": []
+      },
+      "instructions": {
+        "setup": [
+          "Door anchor at the top of the door, a tube with a handle in each hand (40 lb).",
+          "Kneel on a mat facing the door, about 1 m away. Hold the handles beside your head, elbows pointing down, hips stacked over your knees."
+        ],
+        "execution": [
+          "Round your spine and curl your ribs toward your hips, bringing your elbows toward your thighs.",
+          "Squeeze your abs for 1 s.",
+          "Return in 3 s, keeping your hips still."
+        ],
+        "cues": "Ribs to hips.",
+        "mistakes": "Sitting back on your heels, hinging at the hips instead of curling the spine, pulling with the arms.",
+        "progress": "Use a heavier tube or step back."
+      }
+    },
+    "trunk-twist": {
+      "slug": "trunk-twist",
+      "name": "Trunk twist",
+      "equipment": "L",
+      "repMin": 12,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 45,
+      "startBand": "L15-50",
+      "unilateral": true,
+      "optional": false,
+      "targets": "obliques, abs",
+      "muscles": {
+        "primary": ["obliques"],
+        "secondary": ["abs"]
+      },
+      "instructions": {
+        "setup": [
+          "Loop a band (15-50) through the door anchor at chest height. If the loop won't attach, use a 30 lb tube with a handle.",
+          "Stand side-on to the door, feet shoulder-width apart, hold the band with both hands at chest height, arms slightly bent, band taut."
+        ],
+        "execution": [
+          "Rotate your torso away from the door until you face forward, hips square.",
+          "Squeeze your obliques for 1 s.",
+          "Return in 3 s.",
+          "Do all reps on one side, then switch."
+        ],
+        "cues": "Turn the ribs, not the arms.",
+        "mistakes": "Swinging the arms, letting the hips rotate, leaning back.",
+        "progress": "Step away from the door or use the next loop up."
+      }
+    },
     "lateral-raise": {
       "slug": "lateral-raise",
       "name": "Lateral raise",
       "equipment": "L",
       "repMin": 15,
       "repMax": 20,
-      "sets": 4,
+      "sets": 5,
       "restSeconds": 60,
       "startBand": "L5-30",
       "unilateral": false,
@@ -429,7 +619,7 @@
       "targets": "side delts (the main driver of shoulder width)",
       "muscles": {
         "primary": ["side_delts"],
-        "secondary": []
+        "secondary": ["upper_traps"]
       },
       "instructions": {
         "setup": [
@@ -460,7 +650,7 @@
       "targets": "rear delts, upper back",
       "muscles": {
         "primary": ["rear_delts"],
-        "secondary": ["upper_back"]
+        "secondary": ["mid_back", "lower_back"]
       },
       "instructions": {
         "setup": [
@@ -477,36 +667,35 @@
         "progress": "Choke up on the tube or stack tubes."
       }
     },
-    "upright-row": {
-      "slug": "upright-row",
-      "name": "Upright row",
-      "equipment": "L",
+    "close-grip-lift": {
+      "slug": "close-grip-lift",
+      "name": "Close grip lift",
+      "equipment": "T + Pilates bar",
       "repMin": 12,
       "repMax": 15,
       "sets": 3,
       "restSeconds": 60,
-      "startBand": "L25-75",
+      "startBand": "T30",
       "unilateral": false,
       "optional": false,
-      "targets": "side delts, upper traps",
+      "targets": "side delts, upper traps, biceps",
       "muscles": {
-        "primary": ["side_delts"],
-        "secondary": ["upper_back"]
+        "primary": ["side_delts", "upper_traps"],
+        "secondary": ["biceps", "forearms"]
       },
       "instructions": {
         "setup": [
-          "Stand on the middle of a loop band (25-75) with feet shoulder-width apart.",
-          "Hold the top of the loop with hands about shoulder-width apart, arms down."
+          "A tube on each end of the bar (30-40 lb), with your feet in the handles at the other ends, feet shoulder-width apart.",
+          "Hold the bar overhand with hands near the middle (about 10-15 cm apart), arms down."
         ],
         "execution": [
-          "Pull your hands up along your body toward your chest, leading with your elbows.",
-          "Stop when your elbows reach shoulder height. Don't go higher.",
+          "Raise the bar up in front of you to head level, elbows going out to the sides, until your hands are in front of your nose.",
           "Hold for 1 s.",
           "Lower in 3 s."
         ],
-        "cues": "Elbows stay higher than your wrists. Keep your shoulders down and away from your ears.",
-        "mistakes": "Pulling the elbows above shoulder height (this can irritate the shoulder), using a very narrow grip, shrugging.",
-        "progress": "Next loop up, or widen your stance."
+        "cues": "Elbows stay higher than your wrists. Keep your shoulders down, away from your ears.",
+        "mistakes": "Swinging the bar with your hips, shrugging, rushing the lowering.",
+        "progress": "Stand wider, shorten the tubes, or use heavier tubes. If you feel pinching at the top of the shoulder, stop at chin height instead."
       }
     },
     "pull-down-underhand": {
@@ -522,8 +711,8 @@
       "optional": false,
       "targets": "lower lats, biceps",
       "muscles": {
-        "primary": ["lats"],
-        "secondary": ["biceps"]
+        "primary": ["lats", "biceps"],
+        "secondary": ["mid_back"]
       },
       "instructions": {
         "setup": [
@@ -585,7 +774,7 @@
       "targets": "biceps",
       "muscles": {
         "primary": ["biceps"],
-        "secondary": []
+        "secondary": ["forearms"]
       },
       "instructions": {
         "setup": [
@@ -609,14 +798,14 @@
       "repMin": 12,
       "repMax": 15,
       "sets": 3,
-      "restSeconds": 75,
+      "restSeconds": 60,
       "startBand": "T30",
       "unilateral": true,
       "optional": false,
       "targets": "biceps (peak)",
       "muscles": {
         "primary": ["biceps"],
-        "secondary": []
+        "secondary": ["forearms"]
       },
       "instructions": {
         "setup": [
@@ -647,7 +836,7 @@
       "targets": "biceps (pump)",
       "muscles": {
         "primary": ["biceps"],
-        "secondary": []
+        "secondary": ["forearms"]
       },
       "instructions": {
         "setup": [
@@ -696,6 +885,38 @@
         "progress": "stack tubes, shorten the tubes (more tension at the top), or add a 2 s pause at the bottom."
       }
     },
+    "romanian-deadlift": {
+      "slug": "romanian-deadlift",
+      "name": "Romanian deadlift",
+      "equipment": "T + Pilates bar",
+      "repMin": 10,
+      "repMax": 15,
+      "sets": 3,
+      "restSeconds": 75,
+      "startBand": "T40",
+      "unilateral": false,
+      "optional": false,
+      "targets": "hamstrings, glutes, lower back",
+      "muscles": {
+        "primary": ["hamstrings", "glutes"],
+        "secondary": ["lower_back"]
+      },
+      "instructions": {
+        "setup": [
+          "A tube on each end of the bar (40 lb), feet in the handles at the other ends, feet shoulder-width apart.",
+          "Stand tall holding the bar overhand at your thighs, shoulders back, knees soft."
+        ],
+        "execution": [
+          "Push your hips back and lower the bar along your legs until you feel a strong hamstring stretch (about mid-shin), back flat.",
+          "Pause for 1 s.",
+          "Drive your hips forward to stand, squeezing your glutes at the top.",
+          "Lower in 3 s on every rep."
+        ],
+        "cues": "Hips back, back flat. Keep the bar close to your legs.",
+        "mistakes": "Rounding the back, squatting instead of hinging, the bar drifting away from your legs.",
+        "progress": "Stack tubes, shorten the tubes, or add a 2 s pause at the bottom."
+      }
+    },
     "lunges": {
       "slug": "lunges",
       "name": "Lunges",
@@ -703,7 +924,7 @@
       "repMin": 10,
       "repMax": 12,
       "sets": 3,
-      "restSeconds": 90,
+      "restSeconds": 75,
       "startBand": "L25-75",
       "unilateral": true,
       "optional": false,
@@ -735,7 +956,7 @@
       "repMin": 12,
       "repMax": 15,
       "sets": 3,
-      "restSeconds": 75,
+      "restSeconds": 60,
       "startBand": "T40",
       "unilateral": false,
       "optional": false,
@@ -757,38 +978,6 @@
         "cues": "Push through your heels. Ribs down.",
         "mistakes": "arching the lower back, pushing with your toes, letting the bar roll.",
         "progress": "stack tubes, or do the last set one leg at a time."
-      }
-    },
-    "glute-kickbacks": {
-      "slug": "glute-kickbacks",
-      "name": "Glute kickbacks",
-      "equipment": "T",
-      "repMin": 12,
-      "repMax": 15,
-      "sets": 3,
-      "restSeconds": 60,
-      "startBand": "T30",
-      "unilateral": true,
-      "optional": false,
-      "targets": "glutes",
-      "muscles": {
-        "primary": ["glutes"],
-        "secondary": []
-      },
-      "instructions": {
-        "setup": [
-          "Door anchor at the lowest point of the door, a tube (30 lb) with a handle looped around your working ankle (foot in the handle).",
-          "Face the door, step back until the tube is taut, and hold a chair or the door frame for balance. Hinge slightly forward."
-        ],
-        "execution": [
-          "Kick your working leg straight back, keeping your hips square.",
-          "Squeeze your glute for 1 s.",
-          "Return in 3 s without letting the tube pull your leg forward.",
-          "Do all reps on one leg, then switch. Rest after both legs."
-        ],
-        "cues": "Move from the hip, not the lower back.",
-        "mistakes": "arching the lower back, twisting the hips, swinging.",
-        "progress": "step farther from the door or stack tubes."
       }
     },
     "ankle-plantarflexion": {
@@ -860,7 +1049,7 @@
       "repMin": 15,
       "repMax": 20,
       "sets": 3,
-      "restSeconds": 60,
+      "restSeconds": 45,
       "startBand": "T30",
       "unilateral": false,
       "optional": false,
@@ -891,7 +1080,7 @@
       "repMin": 15,
       "repMax": 20,
       "sets": 3,
-      "restSeconds": 60,
+      "restSeconds": 45,
       "startBand": "T30",
       "unilateral": false,
       "optional": false,
@@ -926,8 +1115,10 @@
         "bend-over-rows",
         "push-down-straight-arm",
         "reverse-fly",
+        "face-pull",
         "close-grip-barbell",
-        "curl-biceps-neutral-grip"
+        "curl-biceps-neutral-grip",
+        "v-ups"
       ],
       "overrides": {}
     },
@@ -936,12 +1127,15 @@
       "name": "Push",
       "day": "Wednesday",
       "exercises": [
-        "lying-chest-press",
+        "grip-press",
         "hex-press",
         "standing-press",
         "lateral-raises",
+        "upright-row",
         "push-down-tricep",
-        "triceps-extension"
+        "triceps-extension",
+        "kneeling-crunch",
+        "trunk-twist"
       ],
       "overrides": {}
     },
@@ -952,18 +1146,18 @@
       "exercises": [
         "lateral-raise",
         "bend-over-fly",
-        "upright-row",
+        "close-grip-lift",
         "pull-down-underhand",
         "cable-crossover",
         "wide-grip-barbell",
-        "push-down-tricep",
         "side-pull-biceps",
+        "push-down-tricep",
         "triceps-extension",
         "bicep-curls"
       ],
       "overrides": {
-        "push-down-tricep": { "sets": 3, "restSeconds": 75 },
-        "triceps-extension": { "sets": 3, "restSeconds": 75 }
+        "push-down-tricep": { "sets": 3, "restSeconds": 60 },
+        "triceps-extension": { "sets": 3, "restSeconds": 60 }
       }
     },
     {
@@ -972,9 +1166,9 @@
       "day": "Saturday",
       "exercises": [
         "squat",
+        "romanian-deadlift",
         "lunges",
         "glute-bridge",
-        "glute-kickbacks",
         "ankle-plantarflexion",
         "reverse-curl",
         "wrist-curl",

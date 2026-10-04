@@ -219,12 +219,9 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
     void saveTodayWeight(next)
   }
 
-  function setWeight() {
-    const input = window.prompt('Enter weight in kg')
-    if (input === null) return
-    const value = parseFloat(input)
-    if (!Number.isFinite(value) || value <= 0) return
-    void saveTodayWeight(value)
+  function setDisplayedWeight() {
+    if (latestWeight === null) return
+    void saveTodayWeight(latestWeight)
   }
 
   return (
@@ -310,7 +307,8 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
             <button
               type="button"
               className="today-weight-btn"
-              onClick={setWeight}
+              onClick={setDisplayedWeight}
+              disabled={latestWeight === null}
             >
               Set
             </button>

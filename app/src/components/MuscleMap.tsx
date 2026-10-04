@@ -51,6 +51,10 @@ const KEY_TO_REGION: Record<string, { region: string; views: string[] }> = {
   hamstrings: { region: 'hamstring', views: ['back'] },
   calves: { region: 'calves', views: ['front', 'back'] },
   forearms: { region: 'forearm', views: ['front', 'back'] },
+  upper_traps: { region: 'trapezius', views: ['back'] },
+  lower_back: { region: 'lowerBack', views: ['back'] },
+  abs: { region: 'abs', views: ['front'] },
+  obliques: { region: 'obliques', views: ['front'] },
 }
 
 const BODIES: Record<'male' | 'female', { front: MuscleFigureData; back: MuscleFigureData }> = {

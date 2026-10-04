@@ -54,6 +54,19 @@ function workoutVolume(plan: PlanData, workout: Workout): Record<string, number>
   return volume
 }
 
+// Per-muscle set counts across the whole program. Same counting rule as
+// workoutVolume, summed over every workout in the plan.
+function programVolume(plan: PlanData): Record<string, number> {
+  const volume: Record<string, number> = {}
+  for (const workout of plan.workouts) {
+    const perWorkout = workoutVolume(plan, workout)
+    for (const [key, sets] of Object.entries(perWorkout)) {
+      volume[key] = (volume[key] ?? 0) + sets
+    }
+  }
+  return volume
+}
+
 export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => void }) {
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [failed, setFailed] = useState(false)
@@ -182,6 +195,19 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
           </section>
         )
       })}
+      <section className="plan-program-map">
+        <h2 className="plan-program-map-title">Muscles trained across the program</h2>
+        <p className="plan-program-map-sub">
+          Set volume across {plan.workouts.length} workouts
+        </p>
+        <div className="plan-muscle-map">
+          <MuscleMap
+            primary={[]}
+            secondary={[]}
+            volume={programVolume(plan)}
+          />
+        </div>
+      </section>
     </div>
   )
 }
