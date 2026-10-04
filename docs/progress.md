@@ -215,3 +215,13 @@ Tasks:
 12. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer clean pass after post-review fixes: today-ring box-shadow to outline, timer bar + band picker radius to var(--radius), weight row restructured to wrap at 360px; PWA deployed)
+
+## M17: Per-session delete in History
+Done when: each session card in History has a Delete option that, with a confirm step, soft-deletes that session and its set logs and propagates the delete to the server via the sync outbox.
+
+Tasks:
+1. [x] `app/src/db/db.ts`: `deleteSession(id)` helper (soft-delete one session + its set logs, enqueue each to the sync outbox; mirrors `resetSessionHistory`)
+2. [x] `app/src/screens/History.tsx` + `history.css`: per-card "Delete" button in a `.history-card-actions` row, a `.history-delete-confirm` block (calm note + "Confirm delete" / "Cancel", per-card busy state), destructive styling in `var(--color-error)`
+3. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 6/6 pass; one non-blocking note fixed: per-card busy state so an in-flight delete on one card does not close another card's confirm row; PWA deployed, commit 4d9ab43)
