@@ -178,17 +178,32 @@ Bottom navigation, four tabs: **Today**, **Plan**, **Progress**, **Settings**.
 
 ## 9. Design rules (apply to every screen and every UI string)
 
-Reference: the Notion website and app. Calm, flat, document-like.
+Reference: the Notion website and app, with a richer finish. A calm, document-like base with one muted hue per workout. Direction A from `docs/design-v2.md` is the chosen direction. All values live in `app/src/styles/tokens.css`.
 
-**Do**
-- System sans font stack: `ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`. Tabular numerals for numbers and the timer.
-- Sentence case everywhere. Page titles about 28 px, bold. Body 16 px.
-- Flat surfaces, 1 px borders, radius 4 to 6 px, almost no shadows, generous whitespace, left-aligned content.
+**Type**
+- Display face: Figtree (self-hosted). Titles 28 to 32 px, bold. Big numerals 40 to 56 px.
+- Body and data: Inter (self-hosted), tabular figures. Body 16 px.
+- Sentence case everywhere. Size and weight do the contrast, not color.
+
+**Color tokens**
+- Dark (default): background `#191919`, panel `#1F1F1F`, sheet `#262626`, border `#2F2F2F`, text `#EBEBEB`, secondary text `#9B9B9B`, accent `#529CCA`.
+- Light: background `#FFFFFF`, panel `#F7F6F3`, sheet `#FFFFFF`, border `#E9E9E7`, text `#37352F`, secondary text `#787774`, accent `#2383E2`.
+- Per-workout hue (dark): Pull `#529CCA`, Push `#5E9E7A`, Shoulders and arms `#C29A5B`. On light: Pull `#2383E2`, Push `#2E7D5B`, Shoulders and arms `#A66A2E`.
+- Muscle-group colors (shared, desaturated): chest `#C97B6E`, front delts `#C79A5B`, side delts `#B8A24A`, rear delts `#5E9E7A`, biceps `#529CCA`, brachialis `#6E7FC0`, triceps `#7FA85E`, lats `#5FA8A8`, mid back `#8A7FB0`, upper back `#7A8A9A`.
+
+**Surfaces and layout**
+- Flat surfaces, 1 px borders, radius 4 to 6 px, generous whitespace, left-aligned content.
+- Soft shadow only on bottom sheets and the rest timer bar. No other shadows.
 - Touch targets at least 48 px.
-- Simple outline icons (Lucide) or none.
-- Dark tokens: background `#191919`, surface `#202020`, hover `#2A2A2A`, border `#2F2F2F`, text `#EBEBEB`, secondary text `#9B9B9B`, accent `#529CCA`.
-- Light tokens: background `#FFFFFF`, surface `#F7F6F3`, hover `#EFEEEC`, border `#E9E9E7`, text `#37352F`, secondary text `#787774`, accent `#2383E2`.
-- Accent used sparingly: primary buttons, the active tab, chart lines.
+- Workout pages: a cover band about 120 px tall built from the logo infinity line in the workout hue at low opacity, then an icon, the title, and property rows.
+- Today: a week strip (Mon to Sun) with the three training days marked and done days as filled rings, a thin session progress line, the next workout as a page link, and weight entry as a property row.
+- Session: each exercise is a toggle with its set rows inside. The active exercise gets a colored left border. Set rows have a checkbox that draws its check stroke when tapped, reps and band as tappable fields, 48 px minimum height. A thin progress line at the top shows sets done. A small "new best" tag appears when reps or band beat the last session.
+- Rest timer: a bottom bar with a ring that depletes around large tabular numerals, in the workout hue. Minus 15, plus 15 and skip as text buttons. Vibration at the end.
+- Band picker: a bottom sheet, the ladder as steps with the lb value, tube and loop distinguished by tag color, last used band marked.
+- Progress: charts in one hue, a soft single-hue area fade, light gridlines, a direct label on the latest point, small markers where the band changed, delta tags such as +0.4 cm. A goal line is allowed.
+- Icons: one custom outline set, 1.75 stroke, round caps, for muscle groups and equipment.
+- Signature motion: the infinity line draws itself on the splash screen and on the session complete screen. Everything else moves only in response to a tap. Respect reduced motion.
+- Empty states use the infinity line and one sentence saying what to do next.
 
 **Never**
 - Em dashes or en dashes in UI text, and no center dots (middle dots) as separators, use commas or separate lines.

@@ -1,0 +1,160 @@
+/* Band picker styles.
+   Reference: docs/design-v2.md, Direction A, "Layout concept", band picker.
+   A bottom sheet over a semi-transparent overlay. The ladder renders as
+   tappable steps, tube and loop distinguished by a left border, the last
+   used band underlined, and the current band filled in the accent color.
+   Flat surfaces, 1px borders, 48px minimum touch targets. The sheet is one
+   of the two allowed soft-shadow surfaces. */
+
+.band-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: band-picker-overlay-in 150ms ease-out;
+}
+
+.band-picker-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  max-height: 70dvh;
+  overflow-y: auto;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  background-color: var(--color-sheet);
+  border-top: 1px solid var(--color-border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: var(--shadow-soft);
+  animation: band-picker-sheet-in 150ms ease-out;
+}
+
+.band-picker-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-text);
+  margin: 0 0 16px;
+}
+
+.band-picker-group {
+  margin-bottom: 16px;
+}
+
+.band-picker-group:last-child {
+  margin-bottom: 0;
+}
+
+.band-picker-group-label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+  margin: 0 0 8px;
+}
+
+.band-picker-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.band-picker-step {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-min);
+  padding: 8px 14px;
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.band-picker-step:hover {
+  background-color: var(--color-hover);
+}
+
+.band-picker-step:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Tube steps carry a 2px accent left border, loop steps a 2px
+   secondary-text left border, so the two ladders read apart at a glance. */
+
+.band-picker-step-tube {
+  border-left: 2px solid var(--color-accent);
+}
+
+.band-picker-step-loop {
+  border-left: 2px solid var(--color-text-secondary);
+}
+
+/* The current band is filled in the accent color with white text. */
+
+.band-picker-step.is-current {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #FFFFFF;
+}
+
+.band-picker-step.is-current:hover {
+  background-color: var(--color-accent);
+}
+
+/* The last used band gets a 2px accent underline under the step text.
+   When the last used band is also the current one, the underline turns
+   white so it stays visible on the filled accent background. */
+
+.band-picker-step.is-last-used .band-picker-step-text {
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.band-picker-step.is-current.is-last-used .band-picker-step-text {
+  border-bottom-color: #FFFFFF;
+}
+
+.band-picker-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes band-picker-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes band-picker-sheet-in {
+  from {
+    transform: translate(-50%, 100%);
+  }
+
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .band-picker-overlay,
+  .band-picker-sheet {
+    animation: none;
+  }
+}

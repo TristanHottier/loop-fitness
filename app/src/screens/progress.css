@@ -1,5 +1,5 @@
 /* Progress screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
+   Reference: docs/design-v2.md, Direction A.
    Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
 
 .progress {
@@ -8,23 +8,101 @@
   gap: 8px;
 }
 
-.progress-section {
-  margin-top: 24px;
+/* Chart card: a flat panel that wraps the chart and carries the header row. */
+
+.progress-card {
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-top: 16px;
 }
+
+.progress-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.progress-card-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.progress-card-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.progress-card-latest {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.progress-card-unit {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.progress-card-empty {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.progress-delta {
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-delta-positive {
+  color: var(--color-positive);
+}
+
+.progress-delta-negative {
+  color: var(--color-text-secondary);
+}
+
+/* The chart renders its own panel chrome and title. Inside a card the card
+   owns the chrome and the header owns the title, so drop both. */
+
+.progress-card .chart {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-top: 12px;
+}
+
+.progress-card .chart-title {
+  display: none;
+}
+
+/* View session history button, flat and full width. */
 
 .progress-history {
   min-height: var(--touch-min);
   padding: 0 12px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  background: none;
+  width: 100%;
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
   font-size: 14px;
   cursor: pointer;
-  align-self: flex-start;
 }
 
 .progress-history:hover {
@@ -36,9 +114,16 @@
   outline-offset: -2px;
 }
 
+/* Entries section. */
+
+.progress-section {
+  margin-top: 24px;
+}
+
 .progress-section-title {
+  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
   margin: 0 0 8px;
 }
@@ -48,7 +133,7 @@
   flex-direction: column;
   gap: 8px;
   margin-top: 16px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 16px;
@@ -63,7 +148,7 @@
 .progress-input {
   min-height: var(--touch-min);
   padding: 0 12px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -77,22 +162,22 @@
 }
 
 .progress-input-date {
-  width: 160px;
-}
-
-.progress-input-value {
-  width: 96px;
+  flex: 1 1 140px;
 }
 
 .progress-input-type {
-  flex: 1;
-  min-width: 120px;
+  flex: 1 1 120px;
+}
+
+.progress-input-value {
+  flex: 1 1 96px;
 }
 
 .progress-add {
   min-height: var(--touch-min);
   padding: 0 16px;
-  background-color: var(--color-surface);
+  width: 100%;
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);

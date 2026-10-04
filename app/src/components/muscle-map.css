@@ -1,6 +1,8 @@
 /* Muscle map styles.
-   Reference: docs/fitness-app-brief.md, section 9.
-   Flat surfaces, 1px borders, 4 to 6px radius, no shadows, no gradients. */
+   Reference: docs/design-v2.md, Direction A.
+   Flat surfaces, 1px borders, 4 to 6px radius, no shadows, no gradients.
+   Muscle fills are set inline per group; the stroke stays a solid 1px in
+   var(--color-bg). */
 
 .muscle-map {
   display: flex;
@@ -46,27 +48,16 @@
   stroke-width: 1;
 }
 
-/* Muscle shapes */
+/* Muscle shapes. The fill is set inline per muscle group; the stroke keeps
+   the 1px separation in the page background color. */
 
 .muscle {
   stroke: var(--color-bg);
   stroke-width: 1;
 }
 
-.muscle-idle {
-  fill: var(--color-border);
-}
-
-.muscle-secondary {
-  fill: var(--color-text-secondary);
-  opacity: 0.55;
-}
-
-.muscle-primary {
-  fill: var(--color-accent);
-}
-
-/* Legend */
+/* Legend. The map now fills each muscle with its own group color, so the
+   legend explains the opacity: primary is full, secondary is muted. */
 
 .muscle-legend {
   display: flex;
@@ -93,6 +84,5 @@
 }
 
 .muscle-legend-swatch-secondary {
-  background-color: var(--color-text-secondary);
-  opacity: 0.55;
+  background-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
 }

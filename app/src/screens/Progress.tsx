@@ -34,6 +34,68 @@ function toPoints(metrics: BodyMetric[]): ChartPoint[] {
   return metrics.map((m) => ({ date: m.date, value: m.value }))
 }
 
+// Latest value and the delta between the two most recent entries, by date.
+// The delta is rounded to one decimal place; zero returns null.
+function latestDelta(metrics: BodyMetric[]): { latest: number | null; delta: number | null } {
+  if (metrics.length === 0) return { latest: null, delta: null }
+  const sorted = [...metrics].sort((a, b) => a.date.localeCompare(b.date))
+  const last = sorted[sorted.length - 1]
+  const prev = sorted.length >= 2 ? sorted[sorted.length - 2] : null
+  if (!prev) return { latest: last.value, delta: null }
+  const delta = Math.round((last.value - prev.value) * 10) / 10
+  return { latest: last.value, delta: delta === 0 ? null : delta }
+}
+
+// One decimal place. A positive delta gets a plus sign; a negative delta
+// shows the absolute change without a sign. A unit is appended only when given.
+function deltaLabel(delta: number, unit: string | null): string {
+  const abs = Math.abs(delta).toFixed(1)
+  const text = unit ? `${abs} ${unit}` : abs
+  return delta > 0 ? `+${text}` : text
+}
+
+interface ChartCardProps {
+  title: string
+  points: ChartPoint[]
+  unit: string
+  showAverage?: boolean
+  latest: number | null
+  delta: number | null
+  deltaUnit: string | null
+}
+
+function ChartCard({ title, points, unit, showAverage, latest, delta, deltaUnit }: ChartCardProps) {
+  return (
+    <div className="progress-card">
+      <div className="progress-card-header">
+        <h3 className="progress-card-title">{title}</h3>
+        <div className="progress-card-value">
+          {latest === null ? (
+            <span className="progress-card-empty">No entries</span>
+          ) : (
+            <>
+              <span className="progress-card-latest">{latest.toFixed(1)}</span>
+              <span className="progress-card-unit">{unit}</span>
+              {delta !== null && (
+                <span
+                  className={
+                    delta > 0
+                      ? 'progress-delta progress-delta-positive'
+                      : 'progress-delta progress-delta-negative'
+                  }
+                >
+                  {deltaLabel(delta, deltaUnit)}
+                </span>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+      {latest !== null && <Chart title={title} points={points} unit={unit} showAverage={showAverage} />}
+    </div>
+  )
+}
+
 export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
   const [metrics, setMetrics] = useState<BodyMetric[]>([])
   const [loading, setLoading] = useState(true)
@@ -85,6 +147,10 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
     )
   }
 
+  const weight = latestDelta(byType('weight_kg'))
+  const armLeft = latestDelta(byType('arm_left_cm'))
+  const armRight = latestDelta(byType('arm_right_cm'))
+
   return (
     <div className="screen progress">
       <h1>Progress</h1>
@@ -94,14 +160,31 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
         View session history
       </button>
 
-      <Chart
+      <ChartCard
         title="Weight"
         points={toPoints(byType('weight_kg'))}
         unit="kg"
         showAverage
+        latest={weight.latest}
+        delta={weight.delta}
+        deltaUnit={null}
       />
-      <Chart title="Arm (left)" points={toPoints(byType('arm_left_cm'))} unit="cm" />
-      <Chart title="Arm (right)" points={toPoints(byType('arm_right_cm'))} unit="cm" />
+      <ChartCard
+        title="Arm (left)"
+        points={toPoints(byType('arm_left_cm'))}
+        unit="cm"
+        latest={armLeft.latest}
+        delta={armLeft.delta}
+        deltaUnit="cm"
+      />
+      <ChartCard
+        title="Arm (right)"
+        points={toPoints(byType('arm_right_cm'))}
+        unit="cm"
+        latest={armRight.latest}
+        delta={armRight.delta}
+        deltaUnit="cm"
+      />
 
       <section className="progress-section">
         <h2 className="progress-section-title">Entries</h2>

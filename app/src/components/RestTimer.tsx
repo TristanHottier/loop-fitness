@@ -8,6 +8,9 @@ interface RestTimerProps {
   onDone: () => void
 }
 
+const RING_RADIUS = 32
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
+
 export function RestTimer({ seconds, label, onDone }: RestTimerProps) {
   const [remaining, setRemaining] = useState(seconds)
   const endTimeRef = useRef(Date.now() + seconds * 1000)
@@ -127,22 +130,52 @@ export function RestTimer({ seconds, label, onDone }: RestTimerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const fraction = seconds > 0 ? Math.min(1, remaining / seconds) : 0
+  const dashOffset = RING_CIRCUMFERENCE * (1 - fraction)
+
   return (
     <div className="rest-timer" role="timer" aria-live="polite">
-      <span className="rest-timer-count">{formatClock(remaining)}</span>
-      <span className="rest-timer-label">{label}</span>
-      <div className="rest-timer-controls">
-        <button type="button" className="rest-timer-btn" onClick={() => adjust(-15)}>
-          -15s
-        </button>
-        <button type="button" className="rest-timer-btn" onClick={() => adjust(15)}>
-          +15s
-        </button>
-        <button type="button" className="rest-timer-btn rest-timer-btn-skip" onClick={skip}>
-          Skip
-        </button>
+      <div className="rest-timer-ring">
+        <svg
+          className="rest-timer-ring-svg"
+          viewBox="0 0 72 72"
+          aria-hidden="true"
+        >
+          <circle
+            className="rest-timer-ring-track"
+            cx="36"
+            cy="36"
+            r={RING_RADIUS}
+            fill="none"
+          />
+          <circle
+            className="rest-timer-ring-arc"
+            cx="36"
+            cy="36"
+            r={RING_RADIUS}
+            fill="none"
+            strokeDasharray={RING_CIRCUMFERENCE}
+            strokeDashoffset={dashOffset}
+            transform="rotate(-90 36 36)"
+          />
+        </svg>
+        <span className="rest-timer-count">{formatClock(remaining)}</span>
       </div>
-      <p className="rest-timer-note">The timer cannot ring while the screen is locked.</p>
+      <div className="rest-timer-body">
+        <span className="rest-timer-label">{label}</span>
+        <div className="rest-timer-controls">
+          <button type="button" className="rest-timer-btn" onClick={() => adjust(-15)}>
+            -15s
+          </button>
+          <button type="button" className="rest-timer-btn" onClick={() => adjust(15)}>
+            +15s
+          </button>
+          <button type="button" className="rest-timer-btn rest-timer-btn-skip" onClick={skip}>
+            Skip
+          </button>
+        </div>
+        <p className="rest-timer-note">The timer cannot ring while the screen is locked.</p>
+      </div>
     </div>
   )
 }

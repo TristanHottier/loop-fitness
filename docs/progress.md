@@ -196,3 +196,22 @@ Tasks (~15 min each):
 7. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 7/7 pass; four new standalone headers given the Sets x Reps suffix to match the file's style; PWA deployed)
+
+## M16: Design v2, Direction A restyle (Phase 2)
+Done when: the whole app is restyled to Direction A (Notion with a richer finish), the banned-character rules hold, and the reviewer passes the design checklist at 360 to 412 px.
+
+Tasks:
+1. [x] `docs/fitness-app-brief.md` section 9 + `.opencode/skills/notion-style-ui/SKILL.md`: rewritten for Direction A (banned list kept)
+2. [x] `app/src/styles/tokens.css`: Direction A tokens (panel/surface alias, sheet, hover, three workout hues, 10 muscle colors, Figtree/Inter, shadow-soft, a new --color-positive); `app/src/main.tsx` + `app/package.json`: self-hosted @fontsource Figtree (500,700) + Inter (400,500,600,700)
+3. [x] `app/src/screens/Session.tsx` + `session.css`: infinity-line cover band, thin progress line, exercise toggles, active-exercise left border + hue tint, drawing checkbox, "new best" pill, restyled Finish, session-complete view (infinity line draws on)
+4. [x] `app/src/components/RestTimer.tsx` + `rest-timer.css`: floating bottom bar with a depleting ring in the workout hue
+5. [x] `app/src/components/BandPicker.tsx` + `band-picker.css`: new bottom-sheet band picker (Tube/Loop ladder, last-used underline), wired into the Session band field
+6. [x] `app/src/screens/Today.tsx` + `today.css`: week strip (Mon to Sun, 3 training days marked, done days as filled rings), thin session progress line, next-workout card, weight entry property row
+7. [x] `app/src/screens/Progress.tsx` + `progress.css` + `app/src/components/Chart.tsx` + `chart.css`: one-hue charts with a soft single-hue area fade, a direct label on the latest point, chart cards with a header row (latest value + delta tag), flat entries form
+8. [x] `app/src/screens/Plan.tsx` + `plan.css`: per-workout cover band, property rows (Day, Exercises, Total sets, Rest), flat exercise rows
+9. [x] `app/src/screens/Exercise.tsx` + `exercise.css` + `app/src/components/MuscleMap.tsx` + `muscle-map.css`: exercise cover band, property rows for the spec, muscle map now uses the per-group --muscle-* colors (primary full opacity, secondary 45%)
+10. [x] `app/src/screens/Settings.tsx` + `settings.css`: flat property rows, Figtree section titles, panel cards, destructive reset in the error color
+11. [x] Banned-character grep (em/en dashes, middle dots, uppercase, monospace, exclamation marks) clean; full build passes
+12. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer clean pass after post-review fixes: today-ring box-shadow to outline, timer bar + band picker radius to var(--radius), weight row restructured to wrap at 360px; PWA deployed)

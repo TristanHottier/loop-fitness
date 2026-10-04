@@ -1,5 +1,5 @@
 /* Exercise screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
+   Reference: docs/design-v2.md, Direction A.
    Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
 
 .exercise-back {
@@ -25,6 +25,85 @@
   outline-offset: -2px;
 }
 
+/* Cover band. A tinted panel in the workout hue with the infinity line at
+   low opacity, the day, and the workout name. Mirrors the session and plan
+   covers. */
+.exercise-cover {
+  position: relative;
+  overflow: hidden;
+  height: 96px;
+  padding: 16px;
+  background-color: var(--color-panel);
+  background-color: color-mix(in srgb, var(--exercise-hue) 8%, var(--color-panel));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.exercise-cover-logo {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 40px;
+  height: 20px;
+  opacity: 0.14;
+}
+
+.exercise-cover-text {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+}
+
+.exercise-cover-day {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.exercise-cover-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+/* Property rows. Flat panel, 1px dividers, 48px minimum row height. */
+.exercise-props {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.exercise-prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--touch-min);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.exercise-prop-row:last-child {
+  border-bottom: none;
+}
+
+.exercise-prop-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.exercise-prop-value {
+  font-size: 16px;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .exercise-note {
   color: var(--color-text-secondary);
   font-size: 14px;
@@ -36,6 +115,15 @@
 
 .exercise-section h2 {
   margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.exercise-section p {
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .exercise-list {
@@ -45,6 +133,8 @@
 
 .exercise-list li {
   margin-bottom: 4px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .exercise-video {

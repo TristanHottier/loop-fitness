@@ -108,9 +108,22 @@ export function Chart({ title, points, unit, showAverage }: ChartProps) {
     .map((p, i) => `${i === 0 ? 'M' : 'L'} ${xFor(i).toFixed(1)} ${yFor(p.value).toFixed(1)}`)
     .join(' ')
 
+  // Area under the value line: follow the line, drop to the plot bottom, and close.
+  const plotBottom = PAD_T + innerH
+  const areaPath = `${linePath} L ${xFor(n - 1).toFixed(1)} ${plotBottom.toFixed(1)} L ${xFor(0).toFixed(1)} ${plotBottom.toFixed(1)} Z`
+
   const avgPath = average
     .map((a, i) => `${i === 0 ? 'M' : 'L'} ${a.x.toFixed(1)} ${a.y.toFixed(1)}`)
     .join(' ')
+
+  // Direct label on the latest point.
+  const last = sorted[n - 1]
+  const lastX = xFor(n - 1)
+  const lastY = yFor(last.value)
+  const latestLabel = `${Number(last.value.toFixed(1))}${unit ? ' ' + unit : ''}`
+  // Keep the label inside the plot: above the dot, or below it if the dot is near the top.
+  const labelAbove = lastY - 8 >= 12
+  const labelY = labelAbove ? lastY - 8 : lastY + 14
 
   const gridCount = Math.max(1, Math.round((max - min) / step))
   const gridLines = Array.from({ length: gridCount + 1 }, (_, g) => {
@@ -138,11 +151,24 @@ export function Chart({ title, points, unit, showAverage }: ChartProps) {
             </text>
           </g>
         ))}
+        <path className="chart-area" d={areaPath} />
         {showAverage && <path className="chart-line-average" d={avgPath} />}
         <path className="chart-line" d={linePath} />
-        {sorted.map((p, i) => (
-          <circle key={i} className="chart-dot" cx={xFor(i)} cy={yFor(p.value)} r={2.5} />
-        ))}
+        {sorted.map((p, i) =>
+          i === n - 1 ? (
+            <circle key={i} className="chart-dot chart-dot-latest" cx={xFor(i)} cy={yFor(p.value)} r={4} />
+          ) : (
+            <circle key={i} className="chart-dot" cx={xFor(i)} cy={yFor(p.value)} r={2.5} />
+          ),
+        )}
+        <text
+          className="chart-latest-label"
+          x={lastX}
+          y={labelY}
+          textAnchor={lastX > W - PAD_R - 24 ? 'end' : 'middle'}
+        >
+          {latestLabel}
+        </text>
         {uniqueTicks.map((idx) => (
           <text
             key={idx}

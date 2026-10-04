@@ -43,10 +43,30 @@ const BACK_MUSCLES: MuscleShape[] = [
   { key: 'triceps', cx: 78, cy: 52, rx: 4.5, ry: 10 },
 ]
 
-function muscleClass(key: string, primary: string[], secondary: string[]): string {
-  if (primary.includes(key)) return 'muscle-primary'
-  if (secondary.includes(key)) return 'muscle-secondary'
-  return 'muscle-idle'
+// Per-muscle-group color tokens. Each muscle key maps to its group color so
+// the map reads as a diagram of distinct groups, not a single accent.
+const MUSCLE_TOKENS: Record<string, string> = {
+  chest: 'var(--muscle-chest)',
+  front_delts: 'var(--muscle-front-delts)',
+  side_delts: 'var(--muscle-side-delts)',
+  rear_delts: 'var(--muscle-rear-delts)',
+  biceps: 'var(--muscle-biceps)',
+  brachialis: 'var(--muscle-brachialis)',
+  triceps: 'var(--muscle-triceps)',
+  lats: 'var(--muscle-lats)',
+  mid_back: 'var(--muscle-mid-back)',
+  upper_back: 'var(--muscle-upper-back)',
+}
+
+// Primary muscles fill with their group color at full opacity. Secondary
+// muscles fill with the group color at about 0.45 opacity. Idle muscles
+// (in neither list) fill with the border color. The fill is set inline so
+// the 1px stroke in var(--color-bg) stays solid.
+function fillFor(key: string, isPrimary: boolean, isSecondary: boolean): string {
+  const token = MUSCLE_TOKENS[key] ?? 'var(--color-border)'
+  if (isPrimary) return token
+  if (isSecondary) return `color-mix(in srgb, ${token} 45%, transparent)`
+  return 'var(--color-border)'
 }
 
 function Figure({
@@ -75,7 +95,8 @@ function Figure({
         {muscles.map((m, i) => (
           <ellipse
             key={i}
-            className={`muscle ${muscleClass(m.key, primary, secondary)}`}
+            className="muscle"
+            style={{ fill: fillFor(m.key, primary.includes(m.key), secondary.includes(m.key)) }}
             cx={m.cx}
             cy={m.cy}
             rx={m.rx}

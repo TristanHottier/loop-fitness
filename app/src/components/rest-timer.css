@@ -1,38 +1,83 @@
 /* Rest timer styles.
-   Reference: docs/fitness-app-brief.md, section 9.
-   Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
+   Reference: docs/design-v2.md, Direction A, "Layout concept".
+   A floating bottom bar: a depleting ring around large tabular numerals on the
+   left, the label, text buttons, and note on the right. Flat surfaces, 1px
+   borders, 48px minimum touch targets. The bar is one of the two allowed
+   soft-shadow surfaces. */
 
 .rest-timer {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 56px;
   z-index: 40;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background-color: var(--color-surface);
-  border-top: 1px solid var(--color-border);
-  border-radius: 0;
+  gap: 16px;
+  width: calc(100% - 32px);
+  max-width: 380px;
+  padding: 16px;
+  background-color: var(--color-sheet);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
   text-align: left;
 }
 
+/* Ring with the depleting arc and the centered numeral. */
+
+.rest-timer-ring {
+  position: relative;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+}
+
+.rest-timer-ring-svg {
+  display: block;
+  width: 72px;
+  height: 72px;
+}
+
+.rest-timer-ring-track {
+  stroke: var(--color-border);
+  stroke-width: 4;
+}
+
+.rest-timer-ring-arc {
+  stroke: var(--session-hue, var(--color-accent));
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.25s linear;
+}
+
 .rest-timer-count {
-  font-size: 28px;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 30px;
   font-weight: 700;
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
-  min-width: 72px;
-  text-align: left;
+}
+
+/* Right side: label, text buttons, and the note. */
+
+.rest-timer-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
 }
 
 .rest-timer-label {
   font-size: 14px;
   color: var(--color-text-secondary);
-  flex: 1;
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -40,15 +85,15 @@
 
 .rest-timer-controls {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
 }
 
 .rest-timer-btn {
   min-height: var(--touch-min);
-  min-width: var(--touch-min);
   padding: 0 12px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -74,5 +119,4 @@
 .rest-timer-note {
   font-size: 12px;
   color: var(--color-text-secondary);
-  width: 100%;
 }

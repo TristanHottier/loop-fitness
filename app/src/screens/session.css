@@ -8,6 +8,73 @@
   gap: 8px;
 }
 
+.session-cover {
+  position: relative;
+  overflow: hidden;
+  height: 120px;
+  padding: 16px;
+  background-color: var(--color-panel);
+  background-color: color-mix(in srgb, var(--session-hue) 8%, var(--color-panel));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.session-cover-logo {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 96px;
+  height: 48px;
+  opacity: 0.14;
+}
+
+.session-cover-text {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+}
+
+.session-cover-day {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.session-cover-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+.session-progress {
+  margin-top: 12px;
+}
+
+.session-progress-track {
+  height: 4px;
+  border-radius: 2px;
+  background-color: var(--color-border);
+  overflow: hidden;
+}
+
+.session-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background-color: var(--session-hue);
+  transition: width 200ms ease;
+}
+
+.session-progress-caption {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
 .session-header {
   display: flex;
   align-items: center;
@@ -15,6 +82,13 @@
   gap: 12px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--color-border);
+}
+
+/* In the live session screen the header holds only the Finish button. */
+.session .session-header {
+  justify-content: flex-end;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .session-title {
@@ -50,12 +124,57 @@
   border-top: 1px solid var(--color-border);
 }
 
+.session-exercise-active {
+  border-left: 3px solid var(--session-hue);
+  background-color: color-mix(in srgb, var(--session-hue) 5%, transparent);
+  padding-left: 12px;
+}
+
+.session-exercise-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.session-exercise-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.session-exercise-toggle:hover {
+  background-color: var(--color-hover);
+}
+
+.session-exercise-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.session-exercise-toggle-chevron {
+  flex-shrink: 0;
+  transition: transform 150ms ease;
+}
+
+.session-exercise-toggle-chevron-collapsed {
+  transform: rotate(-90deg);
+}
+
 .session-exercise-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   min-height: var(--touch-min);
   padding: 8px 4px;
   background: none;
@@ -85,6 +204,16 @@
 .session-exercise-title-chevron {
   flex-shrink: 0;
   color: var(--color-text-secondary);
+}
+
+.session-new-best {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  background-color: var(--session-hue);
+  border-radius: 6px;
+  color: #FFFFFF;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .session-note {
@@ -147,6 +276,18 @@
   width: 96px;
 }
 
+/* The band field is a tappable button that opens the band picker. It keeps
+   the same field look as the other inputs: panel background, 1px border,
+   6px radius, 48px minimum height, left-aligned text. */
+.session-input-band-button {
+  text-align: left;
+  cursor: pointer;
+}
+
+.session-input-band-button:hover {
+  background-color: var(--color-hover);
+}
+
 .session-input-note {
   flex: 1;
   min-width: 120px;
@@ -156,20 +297,34 @@
   color: var(--color-text-secondary);
 }
 
+/* Checkbox-style set check. The button keeps a 48px tap target; the visible
+   box is a 28px square with a 2px border and 6px radius. */
 .session-check {
-  min-height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: var(--touch-min);
-  padding: 10px 16px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 16px;
+  min-height: var(--touch-min);
+  padding: 10px;
+  background: none;
+  border: none;
   cursor: pointer;
 }
 
-.session-check:hover {
-  background-color: var(--color-hover);
+.session-check-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background-color: var(--color-panel);
+  border: 2px solid var(--color-border);
+  border-radius: 6px;
+  transition: border-color 150ms ease;
+}
+
+.session-check:hover .session-check-box {
+  border-color: var(--color-text-secondary);
 }
 
 .session-check:focus-visible {
@@ -177,14 +332,31 @@
   outline-offset: -2px;
 }
 
-.session-check-logged {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #FFFFFF;
+.session-check-logged .session-check-box {
+  background-color: var(--session-hue);
+  border-color: var(--session-hue);
 }
 
-.session-check-logged:hover {
-  background-color: var(--color-accent);
+.session-check-mark {
+  width: 16px;
+  height: 16px;
+}
+
+/* The check stroke draws in when the logged state turns on. */
+.session-check-mark path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset 200ms ease;
+}
+
+.session-check-logged .session-check-mark path {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-check-mark path {
+    transition: none;
+  }
 }
 
 .session-side {
@@ -214,4 +386,93 @@
   border-radius: var(--radius);
   color: var(--color-text-secondary);
   font-size: 14px;
+}
+
+/* Session complete view. The infinity line draws itself on mount, then the
+   summary property rows and the Done button. */
+.session-complete {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 24px;
+}
+
+.session-complete-logo {
+  width: 120px;
+  height: 60px;
+}
+
+.session-complete-logo path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: session-complete-draw 1.2s ease forwards;
+}
+
+@keyframes session-complete-draw {
+  from {
+    stroke-dashoffset: 200;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.session-complete-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.session-complete-rows {
+  width: 100%;
+}
+
+.session-complete-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.session-complete-label {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+.session-complete-value {
+  font-size: 16px;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.session-complete-done {
+  min-height: var(--touch-min);
+  width: 100%;
+  padding: 10px 16px;
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.session-complete-done:hover {
+  background-color: var(--color-hover);
+}
+
+.session-complete-done:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-complete-logo path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
 }

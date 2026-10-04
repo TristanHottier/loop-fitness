@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { loadMedia, loadPlan, resolveExercise } from '../data/plan'
-import type { Exercise, MediaMap, PlanData } from '../data/plan'
+import type { MediaMap, PlanData } from '../data/plan'
 import { MuscleMap } from '../components/MuscleMap'
 import './exercise.css'
 
-function specLine(exercise: Exercise): string {
-  const reps =
-    exercise.repMin === exercise.repMax
-      ? String(exercise.repMin)
-      : `${exercise.repMin}-${exercise.repMax}`
-  return `${exercise.sets} x ${reps}, ${exercise.equipment}, start ${exercise.startBand}, ${exercise.restSeconds} s rest`
+function hueFor(workoutId: string): string {
+  switch (workoutId) {
+    case 'pull':
+      return 'var(--hue-pull)'
+    case 'push':
+      return 'var(--hue-push)'
+    case 'shoulders-arms':
+      return 'var(--hue-shoulders)'
+    default:
+      return 'var(--color-accent)'
+  }
 }
 
 function youtubeId(value: string): string {
@@ -79,11 +84,60 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
   const exercise = resolveExercise(plan, workout, slug)
   const videoId = entry?.youtube ? youtubeId(entry.youtube) : null
 
+  const reps =
+    exercise.repMin === exercise.repMax
+      ? String(exercise.repMin)
+      : `${exercise.repMin} to ${exercise.repMax}`
+
   return (
-    <div className="screen">
+    <div
+      className="screen"
+      style={{ ['--exercise-hue' as string]: hueFor(workout.id) }}
+    >
       {backButton}
+      <div className="exercise-cover">
+        <svg
+          className="exercise-cover-logo"
+          viewBox="0 0 100 50"
+          aria-hidden="true"
+        >
+          <path
+            d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
+            fill="none"
+            stroke="var(--exercise-hue)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <div className="exercise-cover-text">
+          <p className="exercise-cover-day">{workout.day}</p>
+          <h1 className="exercise-cover-title">{workout.name}</h1>
+        </div>
+      </div>
       <h1>{exercise.name}</h1>
-      <p className="screen-subtitle">{specLine(exercise)}</p>
+      <div className="exercise-props">
+        <div className="exercise-prop-row">
+          <span className="exercise-prop-label">Sets</span>
+          <span className="exercise-prop-value">{exercise.sets}</span>
+        </div>
+        <div className="exercise-prop-row">
+          <span className="exercise-prop-label">Reps</span>
+          <span className="exercise-prop-value">{reps}</span>
+        </div>
+        <div className="exercise-prop-row">
+          <span className="exercise-prop-label">Band</span>
+          <span className="exercise-prop-value">{exercise.startBand}</span>
+        </div>
+        <div className="exercise-prop-row">
+          <span className="exercise-prop-label">Rest</span>
+          <span className="exercise-prop-value">{exercise.restSeconds} s</span>
+        </div>
+        <div className="exercise-prop-row">
+          <span className="exercise-prop-label">Equipment</span>
+          <span className="exercise-prop-value">{exercise.equipment}</span>
+        </div>
+      </div>
       {exercise.unilateral ? <p className="exercise-note">One set per side.</p> : null}
       {exercise.optional ? <p className="exercise-note">Optional.</p> : null}
 

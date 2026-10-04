@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Direction B, bolder with stronger color per workout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root,
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --bg: #0E1013;
+    --panel: #171A1F;
+    --sheet: #1F242B;
+    --border: #2A3038;
+    --text: #F2F4F7;
+    --text-2: #8B94A1;
+    --accent: #4C8DFF;
+    --pull: #3E7BFF;
+    --push: #2FA36B;
+    --shoulders: #E08A3C;
+    --shadow: 0 10px 30px rgba(0,0,0,0.45);
+    --display: 'Plus Jakarta Sans', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --bg: #FFFFFF;
+    --panel: #F5F6F8;
+    --sheet: #FFFFFF;
+    --border: #E2E4E9;
+    --text: #1B1E24;
+    --text-2: #6B7280;
+    --accent: #2563EB;
+    --pull: #2563EB;
+    --push: #1F8A54;
+    --shoulders: #C46A1E;
+    --shadow: 0 10px 30px rgba(0,0,0,0.12);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  .device {
+    max-width: 412px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+  }
+  .content { flex: 1; padding: 20px 20px 120px; }
+  h1 { font-family: var(--display); font-size: 32px; font-weight: 800; margin: 0; line-height: 1.15; }
+  .subtitle { color: var(--text-2); margin: 4px 0 0; font-size: 14px; }
+  .section-title { font-family: var(--display); font-size: 15px; font-weight: 700; margin: 26px 0 10px; letter-spacing: 0.2px; }
+
+  /* Preview chrome */
+  .preview-bar {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; gap: 8px; align-items: center;
+    padding: 10px 16px;
+    background: var(--sheet);
+    border-bottom: 1px solid var(--border);
+  }
+  .preview-bar .label { font-size: 12px; color: var(--text-2); margin-right: auto; font-weight: 600; }
+  .tab {
+    font-family: var(--body); font-size: 13px; font-weight: 600;
+    min-height: 36px; padding: 0 12px;
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text-2); cursor: pointer;
+  }
+  .tab.active { color: #fff; background: var(--accent); border-color: var(--accent); }
+  .theme-toggle {
+    font-family: var(--body); font-size: 13px; font-weight: 600;
+    min-height: 36px; padding: 0 12px;
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); cursor: pointer;
+  }
+
+  /* Filled cover band */
+  .cover {
+    height: 120px;
+    border-radius: 12px;
+    background: var(--pull);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 18px;
+    display: flex; align-items: flex-end;
+    padding: 16px;
+  }
+  .cover .infinity {
+    position: absolute; top: 14px; right: 16px;
+    width: 96px; height: 48px; opacity: 0.35;
+  }
+  .cover .infinity path { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round; }
+  .cover .kicker { font-size: 12px; color: rgba(255,255,255,0.8); font-weight: 600; }
+  .cover .title { font-family: var(--display); font-size: 30px; font-weight: 800; color: #fff; line-height: 1.1; }
+
+  /* Property rows */
+  .prop {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 52px; padding: 0 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prop:last-child { border-bottom: none; }
+  .prop .key { color: var(--text-2); font-size: 14px; }
+  .prop .val { font-size: 14px; font-weight: 600; }
+  .tag {
+    display: inline-flex; align-items: center;
+    min-height: 26px; padding: 0 10px;
+    border-radius: 6px; font-size: 12px; font-weight: 600;
+    background: var(--pull); color: #fff;
+  }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  /* Week strip with filled rings */
+  .week { display: flex; justify-content: space-between; margin: 8px 0 4px; }
+  .week .day { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 40px; }
+  .week .day .d { font-size: 12px; color: var(--text-2); font-weight: 600; }
+  .ring {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--text-2); font-weight: 600;
+  }
+  .ring.done { background: var(--pull); border-color: var(--pull); color: #fff; }
+  .ring.today { border-color: var(--accent); color: var(--accent); }
+
+  /* Filled progress bar */
+  .progress-line { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin: 10px 0; }
+  .progress-line .fill { height: 100%; width: 71%; background: var(--pull); border-radius: 4px; }
+  .progress-caption { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); font-weight: 600; }
+
+  /* Card with filled accent */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--shoulders); }
+  .card .name { font-family: var(--display); font-size: 18px; font-weight: 700; }
+  .card .day { font-size: 12px; color: var(--text-2); font-weight: 600; }
+  .btn {
+    font-family: var(--body); font-size: 14px; font-weight: 700;
+    min-height: 48px; padding: 0 18px;
+    border-radius: 8px; cursor: pointer;
+    border: none;
+    background: var(--accent); color: #fff;
+  }
+
+  /* Weight property row, big numerals */
+  .weight-row { display: flex; align-items: baseline; gap: 10px; }
+  .weight-row .big { font-family: var(--display); font-size: 44px; font-weight: 800; line-height: 1; }
+  .weight-row .unit { color: var(--text-2); font-size: 16px; font-weight: 600; }
+  .step-btn {
+    min-height: 48px; padding: 0 16px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--panel); color: var(--text); font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+
+  /* Session */
+  .session-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .session-head h1 { font-size: 28px; }
+  .exercise {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .exercise.active {
+    border-left: 4px solid var(--pull);
+    background: color-mix(in srgb, var(--pull) 8%, var(--panel));
+  }
+  .ex-toggle {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 60px; padding: 0 16px;
+    cursor: pointer;
+  }
+  .ex-toggle .chev { width: 18px; height: 18px; color: var(--text-2); transition: transform .15s; }
+  .exercise.open .chev { transform: rotate(90deg); }
+  .ex-toggle .ex-name { font-family: var(--display); font-size: 17px; font-weight: 700; flex: 1; }
+  .ex-toggle .band { font-size: 13px; color: var(--text-2); font-weight: 600; }
+  .new-best {
+    font-size: 11px; font-weight: 700;
+    color: #fff;
+    background: var(--push);
+    border-radius: 5px; padding: 3px 8px;
+  }
+  .sets { padding: 0 16px 14px; display: none; }
+  .exercise.open .sets { display: block; }
+  .set-row {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 52px;
+    border-top: 1px solid var(--border);
+  }
+  .check {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex: none;
+  }
+  .check svg { width: 16px; height: 16px; stroke: var(--pull); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .check.done { background: var(--pull); border-color: var(--pull); }
+  .check.done svg { stroke: #fff; }
+  .set-label { font-size: 12px; color: var(--text-2); width: 42px; font-weight: 600; }
+  .field {
+    min-height: 48px; padding: 0 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text);
+    font-size: 15px; font-weight: 600;
+    display: flex; align-items: center;
+  }
+  .field.reps { width: 60px; justify-content: center; font-family: var(--display); font-size: 17px; }
+  .field.band { width: 78px; justify-content: center; }
+  .field.note { flex: 1; color: var(--text-2); font-weight: 400; }
+
+  /* Rest timer bar, filled ring */
+  .timer-bar {
+    position: fixed; bottom: 76px; left: 50%; transform: translateX(-50%);
+    width: calc(100% - 32px); max-width: 380px;
+    background: var(--sheet);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 16px;
+    z-index: 20;
+  }
+  .timer-ring { position: relative; width: 72px; height: 72px; flex: none; }
+  .timer-ring svg { width: 72px; height: 72px; transform: rotate(-90deg); }
+  .timer-ring .track { fill: none; stroke: var(--border); stroke-width: 6; }
+  .timer-ring .deplete { fill: none; stroke: var(--pull); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 170; stroke-dashoffset: 50; }
+  .timer-ring .time {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 18px; font-weight: 800;
+  }
+  .timer-controls { display: flex; gap: 8px; flex: 1; }
+  .timer-controls button {
+    font-family: var(--body); font-size: 14px; font-weight: 600;
+    min-height: 48px; padding: 0 14px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: none; color: var(--text); cursor: pointer;
+  }
+  .timer-controls .skip { color: var(--text-2); }
+
+  /* Progress charts, filled area */
+  .chart-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .chart-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .chart-head .t { font-family: var(--display); font-size: 16px; font-weight: 700; }
+  .chart-head .v { font-family: var(--display); font-size: 30px; font-weight: 800; line-height: 1; }
+  .delta { font-size: 13px; font-weight: 700; color: var(--push); }
+  .delta.down { color: var(--text-2); }
+  .chart-svg { width: 100%; height: auto; display: block; }
+  .chart-svg .grid { stroke: var(--border); stroke-width: 1; }
+  .chart-svg .goal { stroke: var(--text-2); stroke-width: 1; stroke-dasharray: 4 4; }
+  .chart-svg .area { fill: var(--pull); opacity: 0.22; }
+  .chart-svg .line { fill: none; stroke: var(--pull); stroke-width: 3; }
+  .chart-svg .avg { fill: none; stroke: var(--text-2); stroke-width: 2; stroke-dasharray: 4 4; }
+  .chart-svg .dot { fill: var(--pull); stroke: var(--bg); stroke-width: 2; }
+  .chart-svg .marker { fill: var(--bg); stroke: var(--pull); stroke-width: 3; }
+  .chart-svg .latest-label { fill: var(--text); font-size: 12px; font-family: var(--display); font-weight: 700; }
+  .legend { display: flex; gap: 16px; margin-top: 10px; font-size: 12px; color: var(--text-2); font-weight: 600; }
+  .legend .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 412px;
+    display: flex;
+    background: var(--sheet);
+    border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: 25;
+  }
+  .bottom-nav .item {
+    flex: 1; min-height: 60px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    font-size: 11px; font-weight: 600; color: var(--text-2);
+    border: none; background: none; cursor: pointer;
+  }
+  .bottom-nav .item svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .bottom-nav .item.active { color: var(--accent); }
+
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="preview-bar">
+    <span class="label">Direction B</span>
+    <button class="tab active" data-screen="today">Today</button>
+    <button class="tab" data-screen="session">Session</button>
+    <button class="tab" data-screen="progress">Progress</button>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+  </div>
+
+  <div class="content">
+    <!-- TODAY -->
+    <section id="screen-today">
+      <h1>Today</h1>
+      <p class="subtitle">Your next workout and quick entries.</p>
+
+      <div class="section-title">This week</div>
+      <div class="week">
+        <div class="day"><span class="d">M</span><span class="ring done">Pull</span></div>
+        <div class="day"><span class="d">T</span><span class="ring"></span></div>
+        <div class="day"><span class="d">W</span><span class="ring done">Push</span></div>
+        <div class="day"><span class="d">T</span><span class="ring"></span></div>
+        <div class="day"><span class="d">F</span><span class="ring today">Arms</span></div>
+        <div class="day"><span class="d">S</span><span class="ring"></span></div>
+        <div class="day"><span class="d">S</span><span class="ring"></span></div>
+      </div>
+
+      <div class="section-title">Session progress</div>
+      <div class="progress-line"><div class="fill"></div></div>
+      <div class="progress-caption"><span>5 of 7 sets</span><span>71%</span></div>
+
+      <div class="section-title">Next workout</div>
+      <div class="card">
+        <div>
+          <div class="day">Friday</div>
+          <div class="name">Shoulders and arms</div>
+        </div>
+        <button class="btn">Start</button>
+      </div>
+
+      <div class="section-title">Weight today</div>
+      <div class="card" style="border-left:none;">
+        <div class="weight-row">
+          <span class="big">82.4</span><span class="unit">kg</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="step-btn">+0.2</button>
+          <button class="step-btn">0.2</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SESSION -->
+    <section id="screen-session" class="hidden">
+      <div class="cover">
+        <div class="infinity">
+          <svg viewBox="0 0 100 50" aria-hidden="true">
+            <path d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z" />
+          </svg>
+        </div>
+        <div>
+          <div class="kicker">Monday</div>
+          <div class="title">Pull</div>
+        </div>
+      </div>
+
+      <div class="progress-line"><div class="fill"></div></div>
+      <div class="progress-caption"><span>5 of 7 sets</span><span>71%</span></div>
+
+      <div class="exercise active open">
+        <div class="ex-toggle">
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          <span class="ex-name">Pull down</span>
+          <span class="new-best">new best</span>
+          <span class="band">T40</span>
+        </div>
+        <div class="sets">
+          <div class="set-row"><span class="set-label">Set 1</span><span class="check done"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span><span class="field reps">12</span><span class="field band">T40</span><span class="field note">Note</span></div>
+          <div class="set-row"><span class="set-label">Set 2</span><span class="check done"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg></span><span class="field reps">12</span><span class="field band">T40</span><span class="field note">Note</span></div>
+          <div class="set-row"><span class="set-label">Set 3</span><span class="check"></span><span class="field reps">12</span><span class="field band">T40</span><span class="field note">Note</span></div>
+          <div class="set-row"><span class="set-label">Set 4</span><span class="check"></span><span class="field reps">12</span><span class="field band">T40</span><span class="field note">Note</span></div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-toggle">
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          <span class="ex-name">Seated row</span>
+          <span class="band">T40</span>
+        </div>
+        <div class="sets">
+          <div class="set-row"><span class="set-label">Set 1</span><span class="check"></span><span class="field reps">10</span><span class="field band">T40</span><span class="field note">Note</span></div>
+          <div class="set-row"><span class="set-label">Set 2</span><span class="check"></span><span class="field reps">10</span><span class="field band">T40</span><span class="field note">Note</span></div>
+        </div>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-toggle">
+          <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          <span class="ex-name">Bend over rows</span>
+          <span class="band">L35-95</span>
+        </div>
+      </div>
+
+      <div class="timer-bar">
+        <div class="timer-ring">
+          <svg viewBox="0 0 72 72"><circle class="track" cx="36" cy="36" r="27"/><circle class="deplete" cx="36" cy="36" r="27"/></svg>
+          <span class="time">0:42</span>
+        </div>
+        <div class="timer-controls">
+          <button>15</button>
+          <button>15</button>
+          <button class="skip">Skip</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section id="screen-progress" class="hidden">
+      <h1>Progress</h1>
+      <p class="subtitle">Body weight and arm measurements over time.</p>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <span class="t">Weight</span>
+          <span style="display:flex; align-items:baseline; gap:10px;"><span class="v">82.4</span><span class="delta">+0.4</span></span>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 320 160" role="img" aria-label="Weight chart">
+          <line class="grid" x1="40" y1="20" x2="312" y2="20"/>
+          <line class="grid" x1="40" y1="60" x2="312" y2="60"/>
+          <line class="grid" x1="40" y1="100" x2="312" y2="100"/>
+          <line class="goal" x1="40" y1="40" x2="312" y2="40"/>
+          <path class="area" d="M40,90 L90,84 L140,80 L190,74 L240,70 L290,64 L290,140 L40,140 Z"/>
+          <path class="avg" d="M40,92 L90,86 L140,82 L190,76 L240,72 L290,66"/>
+          <path class="line" d="M40,90 L90,84 L140,80 L190,74 L240,70 L290,64"/>
+          <circle class="marker" cx="140" cy="80" r="4"/>
+          <circle class="dot" cx="290" cy="64" r="4.5"/>
+          <text class="latest-label" x="290" y="52" text-anchor="end">82.4</text>
+        </svg>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--pull)"></span>Weight</span>
+          <span><span class="sw" style="background:var(--text-2)"></span>7-day average</span>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <span class="t">Arm (left)</span>
+          <span style="display:flex; align-items:baseline; gap:10px;"><span class="v">38.2</span><span class="delta">+0.4 cm</span></span>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 320 120" role="img" aria-label="Arm left chart">
+          <line class="grid" x1="40" y1="20" x2="312" y2="20"/>
+          <line class="grid" x1="40" y1="60" x2="312" y2="60"/>
+          <line class="grid" x1="40" y1="100" x2="312" y2="100"/>
+          <path class="area" d="M40,80 L120,74 L200,66 L290,58 L290,110 L40,110 Z"/>
+          <path class="line" d="M40,80 L120,74 L200,66 L290,58"/>
+          <circle class="dot" cx="290" cy="58" r="4.5"/>
+          <text class="latest-label" x="290" y="46" text-anchor="end">38.2</text>
+        </svg>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <span class="t">Arm (right)</span>
+          <span style="display:flex; align-items:baseline; gap:10px;"><span class="v">37.9</span><span class="delta down">0.1 cm</span></span>
+        </div>
+        <svg class="chart-svg" viewBox="0 0 320 120" role="img" aria-label="Arm right chart">
+          <line class="grid" x1="40" y1="20" x2="312" y2="20"/>
+          <line class="grid" x1="40" y1="60" x2="312" y2="60"/>
+          <line class="grid" x1="40" y1="100" x2="312" y2="100"/>
+          <path class="area" d="M40,70 L120,72 L200,68 L290,70 L290,110 L40,110 Z"/>
+          <path class="line" d="M40,70 L120,72 L200,68 L290,70"/>
+          <circle class="dot" cx="290" cy="70" r="4.5"/>
+          <text class="latest-label" x="290" y="58" text-anchor="end">37.9</text>
+        </svg>
+      </div>
+
+      <button class="btn" style="width:100%;">View session history</button>
+    </section>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="item active"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>Today</button>
+    <button class="item"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Plan</button>
+    <button class="item"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M8 15l4-4 4 3 4-6"/></svg>Progress</button>
+    <button class="item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2 1.5A7 7 0 0 0 12 5V3M5 12a7 7 0 0 0 .1 1l-2 1.5 2 3.5 2-1.5A7 7 0 0 0 12 19v2"/></svg>Settings</button>
+    <button class="item"><svg viewBox="0 0 24 24"><path d="M4 3v7a3 3 0 0 0 3 3h0a3 3 0 0 0 3-3V3M7 3v18M17 3c-1.5 0-3 1.5-3 4v4h4v-4c0-2.5-1.5-4-3-4zM17 11v10"/></svg>Nutrition</button>
+  </nav>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    toggle.textContent = next === 'dark' ? 'Light' : 'Dark';
+  });
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach((t) => {
+    t.addEventListener('click', () => {
+      tabs.forEach((x) => x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('section[id^="screen-"]').forEach((s) => s.classList.add('hidden'));
+      document.getElementById('screen-' + t.dataset.screen).classList.remove('hidden');
+    });
+  });
+  document.querySelectorAll('.ex-toggle').forEach((el) => {
+    el.addEventListener('click', () => el.parentElement.classList.toggle('open'));
+  });
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /* Settings screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
+   Reference: docs/design-v2.md, Direction A.
    Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
 
 .settings {
@@ -12,30 +12,42 @@
   margin-top: 24px;
 }
 
+/* Section titles: display face, 20px, weight 700. */
 .settings-section-title {
+  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
   margin: 0 0 8px;
 }
 
+/* Property rows: flat, 1px bottom border, 48px min height,
+   14px secondary label on the left, control on the right. */
 .settings-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
   min-height: var(--touch-min);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* The last property row inside a card drops the bottom border. */
+.settings-sync-card > .settings-row:last-of-type {
+  border-bottom: 0;
 }
 
 .settings-label {
-  font-size: 16px;
-  color: var(--color-text);
+  font-size: 14px;
+  color: var(--color-text-secondary);
 }
 
+/* Small pill toggle: 48px min height, panel background, 1px border,
+   6px radius, 14px. The on state uses the accent border and text. */
 .settings-theme-toggle {
   min-height: var(--touch-min);
   padding: 0 16px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -57,10 +69,11 @@
   color: var(--color-accent);
 }
 
+/* Inputs: 48px min height, panel background, 1px border, 6px radius. */
 .settings-time-input {
   min-height: var(--touch-min);
   padding: 0 12px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -73,8 +86,9 @@
   outline-offset: -2px;
 }
 
+/* Flat panel card: panel background, 1px border, 6px radius, 16px padding. */
 .settings-sync-card {
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 16px;
@@ -87,7 +101,7 @@
   width: 100%;
   min-height: var(--touch-min);
   padding: 0 12px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -105,10 +119,11 @@
   flex-wrap: wrap;
 }
 
+/* Buttons: 48px min height, panel background, 1px border, 6px radius, 14px. */
 .settings-connect {
   min-height: var(--touch-min);
   padding: 0 16px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -125,10 +140,11 @@
   outline-offset: -2px;
 }
 
+/* Primary action: accent border and accent text. */
 .settings-sync-now {
   min-height: var(--touch-min);
   padding: 0 16px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-accent);
   border-radius: var(--radius);
   color: var(--color-accent);
@@ -158,7 +174,7 @@
 .settings-export {
   min-height: var(--touch-min);
   padding: 0 16px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
@@ -175,13 +191,14 @@
   outline-offset: -2px;
 }
 
+/* Destructive action: error color for text and border. */
 .settings-reset {
   min-height: var(--touch-min);
   padding: 0 16px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-error);
   border-radius: var(--radius);
-  color: var(--color-text);
+  color: var(--color-error);
   font-size: 14px;
   cursor: pointer;
 }
@@ -191,7 +208,7 @@
 }
 
 .settings-reset:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-error);
   outline-offset: -2px;
 }
 
@@ -213,6 +230,7 @@
   color: var(--color-text-secondary);
 }
 
+/* Status and notes: 13px secondary text. The error state uses the error color. */
 .settings-status {
   font-size: 13px;
   color: var(--color-text-secondary);

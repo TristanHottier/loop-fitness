@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react'
-import { loadPlan, type PlanData, type Workout } from '../data/plan'
-import { getFirstSessionDate, getLastArmMeasurementDate } from '../db/db'
+import { loadPlan, resolveExercise, type PlanData, type Workout } from '../data/plan'
+import {
+  createBodyMetric,
+  getBodyMetrics,
+  getFirstSessionDate,
+  getLastArmMeasurementDate,
+  getLatestBodyMetric,
+  getSessions,
+  getSetLogsForSession,
+  newBodyMetric,
+  updateBodyMetric,
+  type Session,
+} from '../db/db'
+import { todayISODate } from '../lib/format'
 import { armMeasurementDue, deloadDue } from '../lib/suggestions'
 import './today.css'
 
@@ -11,11 +23,36 @@ const DAY_TO_WORKOUT: Record<number, string> = {
   5: 'Friday',
 }
 
+const WEEK_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+
+function hueFor(workoutId: string): string {
+  switch (workoutId) {
+    case 'pull':
+      return 'var(--hue-pull)'
+    case 'push':
+      return 'var(--hue-push)'
+    case 'shoulders-arms':
+      return 'var(--hue-shoulders)'
+    default:
+      return 'var(--color-accent)'
+  }
+}
+
+function toISODate(d: Date): string {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}
+
 export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) => void }) {
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [failed, setFailed] = useState(false)
   const [armDue, setArmDue] = useState(false)
   const [deload, setDeload] = useState(false)
+  const [sessions, setSessions] = useState<Session[]>([])
+  const [doneSets, setDoneSets] = useState(0)
+  const [latestWeight, setLatestWeight] = useState<number | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -35,10 +72,47 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
       .catch(() => {
         // The prompts are non-critical; ignore db errors.
       })
+    getSessions()
+      .then((data) => {
+        if (!cancelled) setSessions(data)
+      })
+      .catch(() => {
+        // The week strip is non-critical; ignore db errors.
+      })
+    getLatestBodyMetric('weight_kg')
+      .then((metric) => {
+        if (!cancelled) setLatestWeight(metric ? metric.value : null)
+      })
+      .catch(() => {
+        // The weight row is non-critical; ignore db errors.
+      })
     return () => {
       cancelled = true
     }
   }, [])
+
+  const todayISO = todayISODate()
+  const inProgress = sessions.find(
+    (s) => s.date === todayISO && s.ended_at === null
+  )
+
+  useEffect(() => {
+    if (!inProgress) {
+      setDoneSets(0)
+      return
+    }
+    let cancelled = false
+    getSetLogsForSession(inProgress.id)
+      .then((logs) => {
+        if (!cancelled) setDoneSets(logs.length)
+      })
+      .catch(() => {
+        // The progress line is non-critical; ignore db errors.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [inProgress])
 
   if (failed) {
     return (
@@ -67,10 +141,158 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
     ? plan.workouts.filter((w) => w.id !== todayWorkout.id)
     : plan.workouts
 
+  const now = new Date()
+  const monday = new Date(now)
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7))
+
+  const weekDays = Array.from({ length: 7 }, (_, offset) => {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + offset)
+    const dateISO = toISODate(d)
+    const dow = (offset + 1) % 7
+    const dayName: string | undefined = DAY_TO_WORKOUT[dow]
+    const scheduled = dayName !== undefined
+    const workout = scheduled
+      ? plan.workouts.find((w) => w.day === dayName)
+      : undefined
+    const done = sessions.some((s) => s.date === dateISO && s.ended_at !== null)
+    return {
+      dateISO,
+      letter: WEEK_LETTERS[offset],
+      workout,
+      scheduled,
+      done,
+      isToday: dateISO === todayISO,
+    }
+  })
+
+  const inProgressWorkout = inProgress
+    ? plan.workouts.find((w) => w.id === inProgress.workout_id) ?? null
+    : null
+  const totalSets = inProgressWorkout
+    ? inProgressWorkout.exercises.reduce((sum, slug) => {
+        const ex = resolveExercise(plan, inProgressWorkout, slug)
+        return sum + (ex.unilateral ? ex.sets * 2 : ex.sets)
+      }, 0)
+    : 0
+  const progressPct =
+    totalSets > 0 ? Math.min(100, Math.round((doneSets / totalSets) * 100)) : 0
+
+  async function refreshWeight() {
+    const metric = await getLatestBodyMetric('weight_kg')
+    setLatestWeight(metric ? metric.value : null)
+  }
+
+  async function saveTodayWeight(value: number) {
+    const rounded = Math.round(value * 10) / 10
+    const today = todayISODate()
+    const metrics = await getBodyMetrics('weight_kg')
+    const existing = metrics.find((m) => m.date === today)
+    if (existing) {
+      existing.value = rounded
+      await updateBodyMetric(existing)
+    } else {
+      await createBodyMetric(newBodyMetric('weight_kg', today, rounded))
+    }
+    await refreshWeight()
+  }
+
+  function bumpWeight() {
+    void saveTodayWeight((latestWeight ?? 0) + 0.2)
+  }
+
+  function setWeight() {
+    const input = window.prompt('Enter weight in kg')
+    if (input === null) return
+    const value = parseFloat(input)
+    if (!Number.isFinite(value) || value <= 0) return
+    void saveTodayWeight(value)
+  }
+
   return (
     <div className="screen">
       <h1>Today</h1>
       <p className="screen-subtitle">Your next workout and quick entries.</p>
+
+      <section className="today-week">
+        {weekDays.map((day) => (
+          <div
+            key={day.dateISO}
+            className={
+              'today-week-day' + (day.isToday ? ' today-week-today' : '')
+            }
+          >
+            <span className="today-week-letter">{day.letter}</span>
+            <span
+              className={
+                'today-week-ring' +
+                (day.done ? ' today-week-ring-done' : '') +
+                (day.scheduled ? ' today-week-ring-scheduled' : '')
+              }
+              style={
+                day.workout
+                  ? { ['--day-hue' as string]: hueFor(day.workout.id) }
+                  : undefined
+              }
+            />
+            <span className="today-week-name">
+              {day.workout ? day.workout.name : ''}
+            </span>
+          </div>
+        ))}
+      </section>
+
+      {inProgress && inProgressWorkout && (
+        <section
+          className="today-progress"
+          style={{ ['--day-hue' as string]: hueFor(inProgressWorkout.id) }}
+        >
+          <div className="today-progress-track">
+            <div
+              className="today-progress-fill"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <div className="today-progress-caption">
+            <span>
+              {doneSets} of {totalSets} sets
+            </span>
+            <span>{progressPct}%</span>
+          </div>
+        </section>
+      )}
+
+      <section className="today-weight">
+        <div className="today-weight-row">
+          <span className="today-weight-label">Weight today</span>
+          {latestWeight !== null ? (
+            <>
+              <span className="today-weight-value">
+                {latestWeight.toFixed(1)}
+              </span>
+              <span className="today-weight-unit">kg</span>
+            </>
+          ) : (
+            <span className="today-weight-empty">No weight logged</span>
+          )}
+          <div className="today-weight-actions">
+            <button
+              type="button"
+              className="today-weight-btn"
+              onClick={bumpWeight}
+            >
+              +0.2
+            </button>
+            <button
+              type="button"
+              className="today-weight-btn"
+              onClick={setWeight}
+            >
+              Set
+            </button>
+          </div>
+        </div>
+      </section>
 
       {todayWorkout ? (
         <section className="today-card">

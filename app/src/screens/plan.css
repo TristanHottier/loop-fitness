@@ -1,19 +1,97 @@
 /* Plan screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
+   Reference: docs/design-v2.md, Direction A.
    Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
 
 .plan-workout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-top: 24px;
 }
 
-.plan-workout h2 {
-  margin-bottom: 8px;
+/* Cover band. A tinted panel in the workout hue with the infinity line at
+   low opacity, the day, and the workout name. Mirrors the session cover. */
+.plan-cover {
+  position: relative;
+  overflow: hidden;
+  height: 96px;
+  padding: 16px;
+  background-color: var(--color-panel);
+  background-color: color-mix(in srgb, var(--plan-hue) 8%, var(--color-panel));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
 }
 
+.plan-cover-logo {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 40px;
+  height: 20px;
+  opacity: 0.14;
+}
+
+.plan-cover-text {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+}
+
+.plan-cover-day {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.plan-cover-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+/* Property rows. Flat panel, 1px dividers, 48px minimum row height. */
+.plan-props {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.plan-prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--touch-min);
+  padding: 0 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.plan-prop-row:last-child {
+  border-bottom: none;
+}
+
+.plan-prop-label {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.plan-prop-value {
+  font-size: 16px;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Exercise rows. Tappable, flat, 48px minimum height. */
 .plan-exercise-list {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   overflow: hidden;

@@ -24,6 +24,11 @@
   display: block;
 }
 
+.chart-area {
+  fill: var(--color-accent);
+  opacity: 0.12;
+}
+
 .chart-line {
   fill: none;
   stroke: var(--color-accent);
@@ -41,6 +46,19 @@
 
 .chart-dot {
   fill: var(--color-accent);
+}
+
+.chart-dot-latest {
+  stroke: var(--color-panel);
+  stroke-width: 2;
+}
+
+.chart-latest-label {
+  fill: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .chart-axis {
