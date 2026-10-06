@@ -429,13 +429,3 @@ export async function getNutritionEntries(): Promise<NutritionEntry[]> {
   entries.sort((a, b) => a.date.localeCompare(b.date));
   return entries;
 }
-
-export async function getNutritionEntryByDate(date: string): Promise<NutritionEntry | null> {
-  const entries = await db.nutrition
-    .where('date')
-    .equals(date)
-    .filter((e) => !e.deleted)
-    .toArray();
-  if (entries.length === 0) return null;
-  return entries.reduce((a, b) => (a.updated_at >= b.updated_at ? a : b));
-}

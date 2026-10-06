@@ -114,12 +114,19 @@
   width: 96px;
 }
 
+/* Two columns for the four goal inputs (calorie min/max, protein min/max). */
+.nutrition-goal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
 .nutrition-goal-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
   flex: 1;
-  min-width: 140px;
+  min-width: 0;
 }
 
 .nutrition-goal-field-label {

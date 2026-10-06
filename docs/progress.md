@@ -280,3 +280,16 @@ Tasks:
 6. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 32/32 pass; one non-blocking note: rotator_cuff has no body-map region so it never lights up, by design; PWA deployed)
+
+## M22: Nutrition entries add up, goals as intervals
+Done when: nutrition entries for the same day add up (meal by meal) instead of one entry per day, and goals are intervals (a min and a max) instead of single fixed values.
+
+Tasks:
+1. [x] `app/src/screens/Nutrition.tsx`: `addEntry()` now creates a new entry on every submit (one per meal) via `newNutritionEntry` + `createNutritionEntry`, no upsert on date; clears the calories/protein inputs but keeps the date so several meals for the same day can be logged in a row
+2. [x] `app/src/screens/Nutrition.tsx`: the Today card sums all of today's entries (calories + protein) instead of reading a single entry; the two charts aggregate by date (daily totals) via a `dailyTotals` helper so they show one point per day, not one per meal
+3. [x] `app/src/screens/Nutrition.tsx`: goals are now min/max intervals (calories default 2400 to 3000, protein default 120 to 180), stored as a "min max" string under the existing `nutrition_calorie_goal` / `nutrition_protein_goal` keys; the parser is backward compatible (a lone number = min = max); the Today card value line reads "{total} / {min}-{max}" and the status line shows "to go" (below min), "In range" (within), or "over" (above max)
+4. [x] `app/src/screens/nutrition.css`: `.nutrition-goal-grid` (a 2-column grid for the four goal inputs) + relaxed `.nutrition-goal-field` min-width so the grid does not overflow at 360 px
+5. [x] `app/src/db/db.ts`: removed the now-unused `getNutritionEntryByDate` helper
+6. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 18/18 pass; one non-blocking note: updateNutritionEntry/deleteNutritionEntry are now dead in db.ts, same pattern as the M10 note; no server change needed since the D1 schema already allows multiple rows per date and sync merges by record id; PWA deployed)
