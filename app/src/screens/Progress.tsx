@@ -34,16 +34,63 @@ function toPoints(metrics: BodyMetric[]): ChartPoint[] {
   return metrics.map((m) => ({ date: m.date, value: m.value }))
 }
 
-// Latest value and the delta between the two most recent entries, by date.
-// The delta is rounded to one decimal place; zero returns null.
-function latestDelta(metrics: BodyMetric[]): { latest: number | null; delta: number | null } {
-  if (metrics.length === 0) return { latest: null, delta: null }
+const DAY_MS = 86400000
+
+function parseDate(d: string): number {
+  return new Date(d + 'T00:00:00Z').getTime()
+}
+
+function addDaysISO(iso: string, days: number): string {
+  const d = new Date(iso + 'T00:00:00Z')
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
+}
+
+// The most recent entry's value, by date. Null when there are no entries.
+function latestValue(metrics: BodyMetric[]): number | null {
+  if (metrics.length === 0) return null
+  const sorted = [...metrics].sort((a, b) => a.date.localeCompare(b.date))
+  return sorted[sorted.length - 1].value
+}
+
+// Delta between the two most recent entries, by date. Rounded to one decimal
+// place; zero returns null.
+function latestDelta(metrics: BodyMetric[]): number | null {
+  if (metrics.length < 2) return null
   const sorted = [...metrics].sort((a, b) => a.date.localeCompare(b.date))
   const last = sorted[sorted.length - 1]
-  const prev = sorted.length >= 2 ? sorted[sorted.length - 2] : null
-  if (!prev) return { latest: last.value, delta: null }
+  const prev = sorted[sorted.length - 2]
   const delta = Math.round((last.value - prev.value) * 10) / 10
-  return { latest: last.value, delta: delta === 0 ? null : delta }
+  return delta === 0 ? null : delta
+}
+
+// Average of the entries in the 7-day window ending on `endDate` (inclusive).
+// Null when the window has no entries.
+function windowAverage(metrics: BodyMetric[], endDate: string): number | null {
+  const end = parseDate(endDate)
+  const start = end - 6 * DAY_MS
+  let sum = 0
+  let count = 0
+  for (const m of metrics) {
+    const t = parseDate(m.date)
+    if (t <= end && t >= start) {
+      sum += m.value
+      count += 1
+    }
+  }
+  return count ? sum / count : null
+}
+
+// Delta between the average of the last 7 days and the average of the 7 days
+// before that. Null when either window has no entries.
+function weekDelta(metrics: BodyMetric[]): number | null {
+  const today = todayISODate()
+  const current = windowAverage(metrics, today)
+  if (current === null) return null
+  const past = windowAverage(metrics, addDaysISO(today, -7))
+  if (past === null) return null
+  const delta = Math.round((current - past) * 10) / 10
+  return delta === 0 ? null : delta
 }
 
 // One decimal place. A positive delta gets a plus sign; a negative delta
@@ -62,9 +109,10 @@ interface ChartCardProps {
   latest: number | null
   delta: number | null
   deltaUnit: string | null
+  deltaNote?: string
 }
 
-function ChartCard({ title, points, unit, showAverage, latest, delta, deltaUnit }: ChartCardProps) {
+function ChartCard({ title, points, unit, showAverage, latest, delta, deltaUnit, deltaNote }: ChartCardProps) {
   return (
     <div className="progress-card">
       <div className="progress-card-header">
@@ -85,6 +133,7 @@ function ChartCard({ title, points, unit, showAverage, latest, delta, deltaUnit 
                   }
                 >
                   {deltaLabel(delta, deltaUnit)}
+                  {deltaNote ? <span className="progress-delta-note">{deltaNote}</span> : null}
                 </span>
               )}
             </>
@@ -147,9 +196,9 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
     )
   }
 
-  const weight = latestDelta(byType('weight_kg'))
-  const armLeft = latestDelta(byType('arm_left_cm'))
-  const armRight = latestDelta(byType('arm_right_cm'))
+  const weightMetrics = byType('weight_kg')
+  const armLeftMetrics = byType('arm_left_cm')
+  const armRightMetrics = byType('arm_right_cm')
 
   return (
     <div className="screen progress">
@@ -161,27 +210,28 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
 
       <ChartCard
         title="Weight"
-        points={toPoints(byType('weight_kg'))}
+        points={toPoints(weightMetrics)}
         unit="kg"
         showAverage
-        latest={weight.latest}
-        delta={weight.delta}
+        latest={latestValue(weightMetrics)}
+        delta={weekDelta(weightMetrics)}
         deltaUnit={null}
+        deltaNote="vs last week"
       />
       <ChartCard
         title="Arm (left)"
-        points={toPoints(byType('arm_left_cm'))}
+        points={toPoints(armLeftMetrics)}
         unit="cm"
-        latest={armLeft.latest}
-        delta={armLeft.delta}
+        latest={latestValue(armLeftMetrics)}
+        delta={latestDelta(armLeftMetrics)}
         deltaUnit="cm"
       />
       <ChartCard
         title="Arm (right)"
-        points={toPoints(byType('arm_right_cm'))}
+        points={toPoints(armRightMetrics)}
         unit="cm"
-        latest={armRight.latest}
-        delta={armRight.delta}
+        latest={latestValue(armRightMetrics)}
+        delta={latestDelta(armRightMetrics)}
         deltaUnit="cm"
       />
 

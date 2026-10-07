@@ -72,6 +72,12 @@
   color: var(--color-text-secondary);
 }
 
+.progress-delta-note {
+  margin-left: 4px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
 /* The chart renders its own panel chrome and title. Inside a card the card
    owns the chrome and the header owns the title, so drop both. */
 
