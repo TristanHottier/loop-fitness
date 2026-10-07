@@ -293,3 +293,13 @@ Tasks:
 6. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 18/18 pass; one non-blocking note: updateNutritionEntry/deleteNutritionEntry are now dead in db.ts, same pattern as the M10 note; no server change needed since the D1 schema already allows multiple rows per date and sync merges by record id; PWA deployed)
+
+## M23: Weight delta compares last 7 days to the 7 before
+Done when: the Weight chart card's delta metric compares the average of the last 7 days to the average of the 7 days before that (week over week), instead of the delta between the two most recent entries; the arm charts keep the two-entry delta.
+
+Tasks:
+1. [x] `app/src/screens/Progress.tsx`: `weekDelta` helper (average of the 7-day window ending today vs the 7-day window ending 7 days before today, rounded to one decimal, null when either window is empty) + `windowAverage` / `latestValue` helpers; the Weight card now uses `weekDelta` with a "vs last week" note; the arm cards keep `latestDelta`
+2. [x] `app/src/screens/progress.css`: `.progress-delta-note` (flat, secondary color, inline) for the "vs last week" label
+3. [x] Reviewer pass + PWA deploy + commit
+
+Status: complete (reviewer 9/9 pass; one non-blocking note: a zero week-over-week delta renders as no delta tag, consistent with the existing two-entry convention; PWA deployed)
