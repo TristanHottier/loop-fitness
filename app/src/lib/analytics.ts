@@ -95,6 +95,27 @@ export function volumeStatus(value: number, targets: { min: number; max: number 
   return 'within'
 }
 
+// Target range for one muscle: the plan's own entry (plan.json muscleTargets)
+// if it has one, otherwise the fallback (the user's default range).
+export function targetFor(
+  muscle: string,
+  planTargets: { [muscle: string]: { min: number; max: number } } | undefined,
+  fallback: { min: number; max: number }
+): { min: number; max: number } {
+  const t = planTargets?.[muscle]
+  return t && Number.isFinite(t.min) && Number.isFinite(t.max) && t.min <= t.max ? t : fallback
+}
+
+// Status of a muscle's weekly volume against its own target.
+export function muscleVolumeStatus(
+  muscle: string,
+  value: number,
+  planTargets: { [muscle: string]: { min: number; max: number } } | undefined,
+  fallback: { min: number; max: number }
+): VolumeStatus {
+  return volumeStatus(value, targetFor(muscle, planTargets, fallback))
+}
+
 // --- Per-exercise strength --------------------------------------------------
 
 export interface SeriesPoint {

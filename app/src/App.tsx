@@ -189,7 +189,7 @@ export default function App() {
         ) : tab === 'plan' ? (
           <Plan onOpenExercise={openExercise} />
         ) : tab === 'progress' ? (
-          <Progress onOpenHistory={openHistory} />
+          <Progress onOpenHistory={openHistory} onOpenExercise={openExercise} />
         ) : tab === 'nutrition' ? (
           <Nutrition />
         ) : (

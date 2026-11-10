@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { Collapsible } from '../components/Collapsible'
 import { EmptyState } from '../components/EmptyState'
 import {
   newNutritionEntry,
@@ -67,7 +67,6 @@ function goalStatus(total: number, min: number, max: number) {
 export function Nutrition() {
   const [entries, setEntries] = useState<NutritionEntry[]>([])
   const [loading, setLoading] = useState(true)
-  const [goalsOpen, setGoalsOpen] = useState(false)
 
   // Add-entry form state.
   const [formDate, setFormDate] = useState(todayISODate())
@@ -285,33 +284,23 @@ export function Nutrition() {
       </section>
 
       {hasEntries ? (
-        <>
+        <Collapsible
+          id="nutrition.charts"
+          title="Charts"
+          summary={`${caloriePoints.length} ${caloriePoints.length === 1 ? 'day' : 'days'}`}
+        >
           <Chart title="Calories" points={caloriePoints} unit="kcal" showAverage />
           <Chart title="Protein" points={proteinPoints} unit="g" />
-        </>
+        </Collapsible>
       ) : (
         <EmptyState>Add your first meal above to see daily totals.</EmptyState>
       )}
 
-      <section className="nutrition-section">
-        <button
-          type="button"
-          className="prop-row"
-          aria-expanded={goalsOpen}
-          onClick={() => setGoalsOpen((o) => !o)}
-        >
-          <span>Daily goals</span>
-          <span className="nutrition-goals-summary">
-            {calorieGoal.min} to {calorieGoal.max} kcal
-            <ChevronDown
-              size={18}
-              strokeWidth={1.75}
-              aria-hidden="true"
-              className={'nutrition-chevron' + (goalsOpen ? ' nutrition-chevron-open' : '')}
-            />
-          </span>
-        </button>
-        {goalsOpen && (
+      <Collapsible
+        id="nutrition.goals"
+        title="Daily goals"
+        summary={`${calorieGoal.min} to ${calorieGoal.max} kcal`}
+      >
           <form
             className="nutrition-goals-form"
             onSubmit={(e) => {
@@ -378,8 +367,7 @@ export function Nutrition() {
               Save goals
             </button>
           </form>
-        )}
-      </section>
+      </Collapsible>
     </div>
   )
 }

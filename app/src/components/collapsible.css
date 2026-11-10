@@ -1,0 +1,82 @@
+/* Notion-style toggle section. Header is one 48px button; content below. */
+.collapsible {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.collapsible-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: 8px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  text-align: left;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.collapsible-head:hover {
+  background-color: var(--color-hover);
+}
+
+.collapsible-chevron {
+  flex: none;
+  color: var(--color-text-secondary);
+  transition: transform 120ms ease;
+}
+
+.collapsible.is-open > .collapsible-head .collapsible-chevron {
+  transform: rotate(90deg);
+}
+
+.collapsible-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.collapsible-summary {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.collapsible-body {
+  padding: 0 0 16px;
+}
+
+.collapsible-body[hidden] {
+  display: none;
+}
+
+.collapsible.is-open > .collapsible-body {
+  animation: collapsible-in 140ms ease-out;
+}
+
+@keyframes collapsible-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collapsible-chevron {
+    transition: none;
+  }
+  .collapsible.is-open > .collapsible-body {
+    animation: none;
+  }
+}

@@ -28,7 +28,10 @@ import { BandInventory } from '../components/BandInventory'
 import { ExerciseSettings, VolumeTargetsSettings } from '../components/ExerciseSettings'
 import { BackButton } from '../components/BackButton'
 import { Toggle } from '../components/Toggle'
+import { Collapsible } from '../components/Collapsible'
 import { loadPlan } from '../data/plan'
+import { getBandInventory, getVolumeTargets, type VolumeTargets } from '../db/config'
+import { defaultBandInventory, type BandItem } from '../lib/ladder'
 import './settings.css'
 
 export function Settings({
@@ -46,6 +49,8 @@ export function Settings({
   const [status, setStatus] = useState<SyncStatus>({ state: 'idle' })
   const [pending, setPending] = useState(0)
   const [exerciseCount, setExerciseCount] = useState<number | null>(null)
+  const [bands, setBands] = useState<BandItem[] | null>(null)
+  const [targets, setTargets] = useState<VolumeTargets | null>(null)
 
   const [weighInEnabled, setWeighInEnabled] = useState(false)
   const [weighInTime, setWeighInTime] = useState('08:00')
@@ -69,6 +74,14 @@ export function Settings({
     loadPlan()
       .then((p) => {
         if (!cancelled) setExerciseCount(Object.keys(p.exercises).length)
+      })
+      .catch(() => {})
+    Promise.all([loadPlan(), getBandInventory(), getVolumeTargets()])
+      .then(([p, saved, vt]) => {
+        if (cancelled) return
+        const byId = new Map(saved.map((i) => [i.id, i]))
+        setBands(defaultBandInventory(p).map((d) => byId.get(d.id) ?? d))
+        setTargets(vt)
       })
       .catch(() => {})
     loadReminderSettings().then((s) => {
@@ -225,6 +238,21 @@ export function Settings({
     }
   }
 
+  const syncSummary =
+    status.state === 'synced'
+      ? `Synced at ${new Date(status.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+      : status.state === 'syncing'
+        ? 'Syncing'
+        : status.state === 'error'
+          ? 'Sync error'
+          : status.state === 'not-configured'
+            ? 'Not configured'
+            : connected
+              ? pending > 0
+                ? `Connected, ${pending} pending`
+                : 'Connected'
+              : 'Not connected'
+
   if (exercisesOpen) {
     return (
       <div className="screen settings">
@@ -241,202 +269,195 @@ export function Settings({
     <div className="screen settings">
       <h1 className="page-title">Settings</h1>
 
-      <section className="settings-section">
-        <h2 className="section-head">Bands</h2>
-        <BandInventory />
-      </section>
+      <Collapsible id="settings.bands" title="Bands" summary={bands ? `${bands.filter((b) => b.owned).length} of ${bands.length} owned` : undefined}>
+          <BandInventory onChange={setBands} />
+      </Collapsible>
 
-      <section className="settings-section">
-        <h2 className="section-head">Training</h2>
-        <VolumeTargetsSettings />
-        <button type="button" className="prop-row settings-nav-row" onClick={onOpenExercises}>
-          <span className="settings-nav-label">
-            <span className="settings-nav-title">Exercises</span>
-            <span className="settings-nav-sub">Rest time and progression rule{exerciseCount !== null ? ` (${exerciseCount})` : ''}</span>
-          </span>
-          <span aria-hidden="true">Open</span>
-        </button>
-      </section>
+      <Collapsible id="settings.training" title="Training" summary={targets ? `${targets.min} to ${targets.max} sets per week` : undefined}>
+          <VolumeTargetsSettings onSaved={setTargets} />
+          <button type="button" className="prop-row settings-nav-row" onClick={onOpenExercises}>
+            <span className="settings-nav-label">
+              <span className="settings-nav-title">Exercises</span>
+              <span className="settings-nav-sub">Rest time and progression rule{exerciseCount !== null ? ` (${exerciseCount})` : ''}</span>
+            </span>
+            <span aria-hidden="true">Open</span>
+          </button>
+      </Collapsible>
 
-      <section className="settings-section">
-        <h2 className="section-head">Reminders</h2>
-        <div className="settings-sync-card">
-          <div className="settings-row">
-            <span className="settings-label">Weigh-in reminder</span>
-            <Toggle checked={weighInEnabled} onChange={() => void toggleWeighIn()} label="Weigh-in reminder" />
+      <Collapsible id="settings.reminders" title="Reminders" summary={weighInEnabled ? `On at ${weighInTime}` : 'Off'}>
+          <div className="settings-sync-card">
+            <div className="settings-row">
+              <span className="settings-label">Weigh-in reminder</span>
+              <Toggle checked={weighInEnabled} onChange={() => void toggleWeighIn()} label="Weigh-in reminder" />
+            </div>
+            <div className="settings-row">
+              <label className="settings-label" htmlFor="weighin-time">
+                Time
+              </label>
+              <input
+                id="weighin-time"
+                className="settings-time-input"
+                type="time"
+                value={weighInTime}
+                onChange={(e) => changeWeighInTime(e.target.value)}
+              />
+            </div>
+            {reminderNote && <p className="settings-note settings-status-error">{reminderNote}</p>}
+            <p className="settings-note">
+              Sent as a push notification. The app must be installed and online.
+            </p>
           </div>
-          <div className="settings-row">
-            <label className="settings-label" htmlFor="weighin-time">
-              Time
-            </label>
+      </Collapsible>
+
+      <Collapsible id="settings.sync" title="Sync" summary={syncSummary}>
+          <div className="settings-sync-card">
             <input
-              id="weighin-time"
-              className="settings-time-input"
-              type="time"
-              value={weighInTime}
-              onChange={(e) => changeWeighInTime(e.target.value)}
+              className="settings-passphrase"
+              type="password"
+              placeholder="Passphrase"
+              value={passphrase}
+              onChange={(e) => setPassphrase(e.target.value)}
             />
+            <div className="settings-sync-actions">
+              <button type="button" className="settings-connect" onClick={connect}>
+                Connect
+              </button>
+              <button
+                type="button"
+                className="settings-sync-now"
+                onClick={doSync}
+                disabled={!connected || status.state === 'syncing'}
+              >
+                Sync now
+              </button>
+            </div>
+            <p className={`settings-status ${status.state === 'error' ? 'settings-status-error' : ''}`}>
+              {statusText()}
+              {pending > 0 ? `, ${pending} pending` : ''}
+            </p>
+            <p className="settings-note">
+              Changes are saved on this device and sync when connected.
+            </p>
           </div>
-          {reminderNote && <p className="settings-note settings-status-error">{reminderNote}</p>}
-          <p className="settings-note">
-            Sent as a push notification. The app must be installed and online.
-          </p>
-        </div>
-      </section>
+      </Collapsible>
 
-      <section className="settings-section">
-        <h2 className="section-head">Sync</h2>
-        <div className="settings-sync-card">
-          <input
-            className="settings-passphrase"
-            type="password"
-            placeholder="Passphrase"
-            value={passphrase}
-            onChange={(e) => setPassphrase(e.target.value)}
-          />
-          <div className="settings-sync-actions">
-            <button type="button" className="settings-connect" onClick={connect}>
-              Connect
+      <Collapsible id="settings.data" title="Data" summary={'Export, restore, reset'}>
+          <div className="settings-sync-card">
+            <button type="button" className="settings-export" onClick={() => { void exportToCsv() }}>
+              Export CSV
+            </button>
+            <button type="button" className="settings-export" onClick={() => { void exportToJson() }}>
+              Export backup
             </button>
             <button
               type="button"
-              className="settings-sync-now"
-              onClick={doSync}
-              disabled={!connected || status.state === 'syncing'}
+              className="settings-export"
+              onClick={() => fileRef.current?.click()}
+              disabled={restoreBusy}
             >
-              Sync now
+              Restore backup
             </button>
-          </div>
-          <p className={`settings-status ${status.state === 'error' ? 'settings-status-error' : ''}`}>
-            {statusText()}
-            {pending > 0 ? `, ${pending} pending` : ''}
-          </p>
-          <p className="settings-note">
-            Changes are saved on this device and sync when connected.
-          </p>
-        </div>
-      </section>
-
-      <section className="settings-section">
-        <h2 className="section-head">Data</h2>
-        <div className="settings-sync-card">
-          <button type="button" className="settings-export" onClick={() => { void exportToCsv() }}>
-            Export CSV
-          </button>
-          <button type="button" className="settings-export" onClick={() => { void exportToJson() }}>
-            Export backup
-          </button>
-          <button
-            type="button"
-            className="settings-export"
-            onClick={() => fileRef.current?.click()}
-            disabled={restoreBusy}
-          >
-            Restore backup
-          </button>
-          <input
-            ref={fileRef}
-            className="settings-file-input"
-            type="file"
-            accept="application/json,.json"
-            onChange={(e) => {
-              void pickBackupFile(e.target.files?.[0])
-              e.target.value = ''
-            }}
-          />
-          {restore && (
-            <div className="settings-reset-confirm">
-              <p className="settings-reset-note">
-                {(() => {
-                  const { total, write } = totalCounts(restore.plan)
-                  return `This backup has ${total} rows. ${write} are new or newer than this device and will be restored. Nothing is deleted.`
-                })()}
-              </p>
-              <div className="settings-sync-actions">
-                <button
-                  type="button"
-                  className="settings-sync-now"
-                  onClick={confirmRestore}
-                  disabled={restoreBusy}
-                >
-                  Confirm restore
-                </button>
-                <button
-                  type="button"
-                  className="settings-connect"
-                  onClick={() => setRestore(null)}
-                  disabled={restoreBusy}
-                >
-                  Cancel
-                </button>
+            <input
+              ref={fileRef}
+              className="settings-file-input"
+              type="file"
+              accept="application/json,.json"
+              onChange={(e) => {
+                void pickBackupFile(e.target.files?.[0])
+                e.target.value = ''
+              }}
+            />
+            {restore && (
+              <div className="settings-reset-confirm">
+                <p className="settings-reset-note">
+                  {(() => {
+                    const { total, write } = totalCounts(restore.plan)
+                    return `This backup has ${total} rows. ${write} are new or newer than this device and will be restored. Nothing is deleted.`
+                  })()}
+                </p>
+                <div className="settings-sync-actions">
+                  <button
+                    type="button"
+                    className="settings-sync-now"
+                    onClick={confirmRestore}
+                    disabled={restoreBusy}
+                  >
+                    Confirm restore
+                  </button>
+                  <button
+                    type="button"
+                    className="settings-connect"
+                    onClick={() => setRestore(null)}
+                    disabled={restoreBusy}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-          {restoreNote && (
-            <p className={`settings-status ${restoreFailed ? 'settings-status-error' : ''}`}>
-              {restoreNote}
-            </p>
-          )}
-          <button
-            type="button"
-            className="settings-reset"
-            onClick={() => {
-              setResetNote('')
-              setResetConfirmOpen(true)
-            }}
-            disabled={resetBusy}
-          >
-            Reset session history
-          </button>
-          {resetConfirmOpen && (
-            <div className="settings-reset-confirm">
-              <p className="settings-reset-note">
-                This deletes all past sessions and their sets. This cannot be undone.
+            )}
+            {restoreNote && (
+              <p className={`settings-status ${restoreFailed ? 'settings-status-error' : ''}`}>
+                {restoreNote}
               </p>
-              <div className="settings-sync-actions">
-                <button
-                  type="button"
-                  className="settings-sync-now"
-                  onClick={confirmReset}
-                  disabled={resetBusy}
-                >
-                  Confirm reset
-                </button>
-                <button
-                  type="button"
-                  className="settings-connect"
-                  onClick={() => setResetConfirmOpen(false)}
-                  disabled={resetBusy}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-          {resetNote && (
-            <p
-              className={`settings-status ${resetNote === 'Session history reset.' ? '' : 'settings-status-error'}`}
+            )}
+            <button
+              type="button"
+              className="settings-reset"
+              onClick={() => {
+                setResetNote('')
+                setResetConfirmOpen(true)
+              }}
+              disabled={resetBusy}
             >
-              {resetNote}
-            </p>
-          )}
-        </div>
-      </section>
-
-      <section className="settings-section">
-        <h2 className="section-head">Appearance</h2>
-        <div className="settings-sync-card">
-          <div className="settings-row">
-            <span className="settings-label">Dark theme</span>
-            <Toggle checked={theme === 'dark'} onChange={toggleTheme} label="Dark theme" />
+              Reset session history
+            </button>
+            {resetConfirmOpen && (
+              <div className="settings-reset-confirm">
+                <p className="settings-reset-note">
+                  This deletes all past sessions and their sets. This cannot be undone.
+                </p>
+                <div className="settings-sync-actions">
+                  <button
+                    type="button"
+                    className="settings-sync-now"
+                    onClick={confirmReset}
+                    disabled={resetBusy}
+                  >
+                    Confirm reset
+                  </button>
+                  <button
+                    type="button"
+                    className="settings-connect"
+                    onClick={() => setResetConfirmOpen(false)}
+                    disabled={resetBusy}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            {resetNote && (
+              <p
+                className={`settings-status ${resetNote === 'Session history reset.' ? '' : 'settings-status-error'}`}
+              >
+                {resetNote}
+              </p>
+            )}
           </div>
-        </div>
-      </section>
+      </Collapsible>
 
-      <section className="settings-section">
-        <h2 className="section-head">Credits</h2>
-        <p className="settings-note">Body artwork from MuscleMap by Melih Colpan, MIT license.</p>
-      </section>
+      <Collapsible id="settings.appearance" title="Appearance" summary={theme === 'dark' ? 'Dark' : 'Light'}>
+          <div className="settings-sync-card">
+            <div className="settings-row">
+              <span className="settings-label">Dark theme</span>
+              <Toggle checked={theme === 'dark'} onChange={toggleTheme} label="Dark theme" />
+            </div>
+          </div>
+      </Collapsible>
+
+      <Collapsible id="settings.credits" title="Credits" summary={'MuscleMap'}>
+          <p className="settings-note">Body artwork from MuscleMap by Melih Colpan, MIT license.</p>
+      </Collapsible>
     </div>
   )
 }

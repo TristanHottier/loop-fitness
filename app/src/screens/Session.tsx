@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { lastUsedBySlug, type LastUsed } from '../lib/lastUsed'
 import { loadPlan, resolveExercise, type Exercise, type PlanData, type Workout } from '../data/plan'
 import {
   newSession,
@@ -131,6 +132,7 @@ export function Session({
   // Extra rows per exercise (warm-up and drop sets), as set_index values.
   const [extras, setExtras] = useState<Record<string, number[]>>({})
   const [bandPickerKey, setBandPickerKey] = useState<string | null>(null)
+  const [lastTime, setLastTime] = useState<Map<string, LastUsed[]>>(new Map())
   const [latestBands, setLatestBands] = useState<Record<string, string>>({})
   const [completed, setCompleted] = useState(false)
   const [toast, setToast] = useState<{ id: number; message: string } | null>(null)
@@ -261,6 +263,7 @@ export function Session({
           .filter((l) => !l.deleted && slugs.has(l.exercise_slug) && l.session_id !== s.id)
           .toArray()
         const bests = bestByExercise(allPrior, p, inv)
+        const lastMap = lastUsedBySlug(allPrior, await db.sessions.toArray(), 1, s.id)
         const sugg: Record<string, Suggestion> = {}
         const best: Record<string, ExerciseBest | null> = {}
         for (const slug of workout.exercises) {
@@ -276,6 +279,7 @@ export function Session({
         }
         if (cancelled) return
         setSuggestions(sugg)
+        setLastTime(lastMap)
         setPriorBest(best)
       } catch {
         if (!cancelled) setError('Could not start the session.')
@@ -956,6 +960,11 @@ export function Session({
                 {!collapsedForSlug && (
                   <>
                     {ex.unilateral && <p className="session-note">One set per side.</p>}
+                    {lastTime.get(slug)?.[0] ? (
+                      <p className="session-last-time">
+                        Last time: {lastTime.get(slug)![0].text} · {lastTime.get(slug)![0].shortDate}
+                      </p>
+                    ) : null}
                     {!hasLogs && targetBand && (
                       <p className="session-target">
                         Target: {formatBand(targetBand)} × {target.repMin}-{target.repMax}

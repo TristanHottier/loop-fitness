@@ -7,6 +7,7 @@ import {
   setExerciseOverride,
   setVolumeTargets,
   type ExerciseOverride,
+  type VolumeTargets,
   type ProgressionRule,
 } from '../db/config'
 import './band-inventory.css'
@@ -24,7 +25,7 @@ function positiveInt(raw: string): number | null {
   return Number.isFinite(n) && n > 0 ? Math.round(n) : null
 }
 
-export function VolumeTargetsSettings() {
+export function VolumeTargetsSettings({ onSaved }: { onSaved?: (v: VolumeTargets) => void } = {}) {
   const [volMin, setVolMin] = useState(String(DEFAULT_VOLUME_TARGETS.min))
   const [volMax, setVolMax] = useState(String(DEFAULT_VOLUME_TARGETS.max))
   const [error, setError] = useState('')
@@ -54,7 +55,9 @@ export function VolumeTargetsSettings() {
     }
     setError('')
     try {
-      await setVolumeTargets({ min: Math.round(min), max: Math.round(max) })
+      const saved = { min: Math.round(min), max: Math.round(max) }
+      await setVolumeTargets(saved)
+      onSaved?.(saved)
     } catch {
       setError('Could not save. Try again.')
     }

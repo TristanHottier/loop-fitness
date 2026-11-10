@@ -19,74 +19,15 @@
   color: var(--color-text-secondary);
 }
 
-.plan-map-toggle-state {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-/* Workout card: flat row with a 4px stripe in the workout hue. */
+/* Workout block: Collapsible with a 4px stripe in the workout hue. */
 .plan-workout {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   margin-top: 8px;
-}
-
-.plan-cover {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  min-height: 64px;
-  padding: 10px 12px 10px 16px;
-  background-color: var(--color-panel);
-  border: none;
+  padding-left: 12px;
   border-left: 4px solid var(--plan-hue);
-  border-radius: var(--radius-sm);
-  text-align: left;
-  cursor: pointer;
 }
 
-.plan-cover:hover {
-  background-color: var(--color-hover);
-}
-
-.plan-cover:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-.plan-cover-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.plan-cover-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--color-text);
-}
-
-.plan-cover-day {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-.plan-cover-chevron {
-  flex-shrink: 0;
-  color: var(--color-text-secondary);
-  transition: transform 150ms ease;
-}
-
-.plan-cover-chevron-collapsed {
-  transform: rotate(-90deg);
+.plan-workout .collapsible {
+  border-bottom: none;
 }
 
 .plan-muscle-map {

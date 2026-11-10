@@ -2,11 +2,7 @@
    Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
 
 .cal {
-  margin-top: 16px;
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
+  margin-top: 8px;
 }
 
 .cal-streak {
@@ -137,9 +133,7 @@
 }
 
 .cal-summary {
-  margin: 16px 0 0;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-border);
+  margin: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;

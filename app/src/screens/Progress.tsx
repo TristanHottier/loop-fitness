@@ -7,7 +7,9 @@ import {
   type BodyMetricType,
 } from '../db/db'
 import { Chart, type ChartPoint } from '../components/Chart'
-import { StrengthChart } from '../components/StrengthChart'
+import { Collapsible } from '../components/Collapsible'
+import { lastUsedBySlug } from '../lib/lastUsed'
+import type { TrainingData } from '../components/useTrainingData'
 import { useTrainingData } from '../components/useTrainingData'
 import { EmptyState } from '../components/EmptyState'
 import { todayISODate } from '../lib/format'
@@ -173,9 +175,33 @@ function Metric({ type, metrics, showAverage, delta, deltaUnit, deltaNote, onAdd
   const title = TYPE_LABELS[type]
   const unit = TYPE_UNITS[type]
   return (
-    <section className="progress-metric">
+    <Collapsible
+      id={`progress.${type}`}
+      title={title}
+      defaultOpen={type === 'weight_kg'}
+      summary={latest !== null ? `${latest.toFixed(1)} ${unit}` : 'No entries'}
+    >
       <div className="progress-metric-header">
-        <h2 className="section-head">{title}</h2>
+        {latest !== null ? (
+          <div className="progress-card-value">
+            <span className="big-number">{latest.toFixed(1)}</span>
+            <span className="progress-card-unit">{unit}</span>
+            {delta !== null && (
+              <span
+                className={
+                  delta > 0
+                    ? 'progress-delta progress-delta-positive'
+                    : 'progress-delta progress-delta-negative'
+                }
+              >
+                {deltaLabel(delta, deltaUnit)}
+                {deltaNote ? <span className="progress-delta-note">{deltaNote}</span> : null}
+              </span>
+            )}
+          </div>
+        ) : (
+          <span />
+        )}
         <button
           type="button"
           className="icon-button"
@@ -186,24 +212,6 @@ function Metric({ type, metrics, showAverage, delta, deltaUnit, deltaNote, onAdd
           {adding ? <X size={20} strokeWidth={1.75} aria-hidden="true" /> : <Plus size={20} strokeWidth={1.75} aria-hidden="true" />}
         </button>
       </div>
-      {latest !== null && (
-        <div className="progress-card-value">
-          <span className="big-number">{latest.toFixed(1)}</span>
-          <span className="progress-card-unit">{unit}</span>
-          {delta !== null && (
-            <span
-              className={
-                delta > 0
-                  ? 'progress-delta progress-delta-positive'
-                  : 'progress-delta progress-delta-negative'
-              }
-            >
-              {deltaLabel(delta, deltaUnit)}
-              {deltaNote ? <span className="progress-delta-note">{deltaNote}</span> : null}
-            </span>
-          )}
-        </div>
-      )}
       {adding && (
         <MetricAdd
           type={type}
@@ -216,29 +224,59 @@ function Metric({ type, metrics, showAverage, delta, deltaUnit, deltaNote, onAdd
       {latest !== null && (
         <Chart title={title} points={toPoints(metrics)} unit={unit} showAverage={showAverage} />
       )}
-    </section>
+    </Collapsible>
   )
 }
 
-export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
-  const training = useTrainingData()
-  const [strengthSlug, setStrengthSlug] = useState<string | null>(null)
-  // Exercises with at least one log, most recently trained first.
-  const trained = useMemo(() => {
-    if (!training) return []
-    const dateOf = new Map(training.sessions.map((x) => [x.id, x.date]))
-    const last = new Map<string, string>()
-    for (const l of training.logs) {
-      const d = dateOf.get(l.session_id)
-      if (!d || !training.plan.exercises[l.exercise_slug]) continue
-      if ((last.get(l.exercise_slug) ?? '') < d) last.set(l.exercise_slug, d)
+// Every exercise of the plan by workout with the sets of its last session.
+function LastUsedList({ training, onOpenExercise }: { training: TrainingData; onOpenExercise: (slug: string) => void }) {
+  const { plan, logs, sessions } = training
+  const map = useMemo(() => lastUsedBySlug(logs, sessions, 1), [logs, sessions])
+  let total = 0
+  let done = 0
+  for (const w of plan.workouts) {
+    for (const slug of w.exercises) {
+      total += 1
+      if (map.has(slug)) done += 1
     }
-    return [...last.entries()].sort((a, b) => b[1].localeCompare(a[1])).map(([slug]) => slug)
-  }, [training])
-  const selectedSlug = strengthSlug && trained.includes(strengthSlug) ? strengthSlug : (trained[0] ?? null)
+  }
+  return (
+    <Collapsible id="progress.lastused" title="Last used" summary={`${done} of ${total} exercises`}>
+      {plan.workouts.map((w) => (
+        <div key={w.id} className="progress-lastused-group">
+          <h3 className="section-head progress-lastused-head">{w.name}</h3>
+          {w.exercises.map((slug) => {
+            const last = map.get(slug)?.[0]
+            return (
+              <button
+                key={slug}
+                type="button"
+                className="prop-row progress-lastused-row"
+                onClick={() => onOpenExercise(slug)}
+              >
+                <span className="progress-lastused-name">{plan.exercises[slug]?.name ?? slug}</span>
+                <span className="progress-lastused-value">
+                  {last ? `${last.text} · ${last.shortDate}` : 'Not done yet'}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      ))}
+    </Collapsible>
+  )
+}
+
+export function Progress({
+  onOpenHistory,
+  onOpenExercise,
+}: {
+  onOpenHistory: () => void
+  onOpenExercise: (slug: string) => void
+}) {
+  const training = useTrainingData()
   const [metrics, setMetrics] = useState<BodyMetric[]>([])
   const [loading, setLoading] = useState(true)
-  const [addOpen, setAddOpen] = useState(false)
 
   async function refresh() {
     const all = await Promise.all(VISIBLE_TYPES.map((t) => getBodyMetrics(t)))
@@ -289,28 +327,6 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
         </button>
       </div>
 
-      {training && selectedSlug ? (
-        <section className="progress-metric">
-          <h2 className="section-head">Strength</h2>
-          <label className="progress-strength-label" htmlFor="strength-exercise">
-            Exercise
-          </label>
-          <select
-            id="strength-exercise"
-            className="progress-input progress-strength-select"
-            value={selectedSlug}
-            onChange={(e) => setStrengthSlug(e.target.value)}
-          >
-            {trained.map((slug) => (
-              <option key={slug} value={slug}>
-                {training.plan.exercises[slug].name}
-              </option>
-            ))}
-          </select>
-          <StrengthChart slug={selectedSlug} data={training} />
-        </section>
-      ) : null}
-
       {filled.map((type) => (
         <Metric
           key={type}
@@ -324,28 +340,22 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
         />
       ))}
 
-      {filled.length === 0 && (!training || !selectedSlug) && (
+      {filled.length === 0 && (!training || training.logs.length === 0) && (
         <EmptyState>Add a measurement or finish a workout to see progress here.</EmptyState>
       )}
 
+      {training ? <LastUsedList training={training} onOpenExercise={onOpenExercise} /> : null}
+
       {empty.length > 0 && (
-        <section className="progress-metric">
-          <button
-            type="button"
-            className="prop-row"
-            aria-expanded={addOpen}
-            onClick={() => setAddOpen((o) => !o)}
-          >
-            <span>Add measurements</span>
-            <span className="progress-add-summary">
-              {empty.map((t) => TYPE_LABELS[t]).join(', ')}
-            </span>
-          </button>
-          {addOpen &&
-            empty.map((t) => (
-              <MetricAdd key={t} type={t} onAdded={refresh} showLabel />
-            ))}
-        </section>
+        <Collapsible
+          id="progress.add"
+          title="Add measurements"
+          summary={empty.map((t) => TYPE_LABELS[t]).join(', ')}
+        >
+          {empty.map((t) => (
+            <MetricAdd key={t} type={t} onAdded={refresh} showLabel />
+          ))}
+        </Collapsible>
       )}
     </div>
   )

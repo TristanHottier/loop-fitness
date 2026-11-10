@@ -7,7 +7,9 @@ import {
   monthSummary,
   prsInRange,
   recordsByBand,
+  muscleVolumeStatus,
   streakWeeks,
+  targetFor,
   volumeStatus,
   weeklyVolume,
 } from '../analytics'
@@ -88,6 +90,34 @@ describe('weeklyVolume', () => {
       'within',
       'above',
     ])
+  })
+
+  it('judges each muscle against its own plan target, with a fallback', () => {
+    const fb = { min: 10, max: 20 }
+    const pt = { obliques: { min: 3, max: 8 }, bad: { min: 9, max: 2 } }
+    expect(targetFor('obliques', pt, fb)).toEqual({ min: 3, max: 8 })
+    expect(targetFor('chest', pt, fb)).toBe(fb)
+    expect(targetFor('bad', pt, fb)).toBe(fb) // inverted range ignored
+    expect(targetFor('chest', undefined, fb)).toBe(fb)
+    expect(muscleVolumeStatus('obliques', 3, pt, fb)).toBe('within') // would be below 10
+    expect(muscleVolumeStatus('obliques', 9, pt, fb)).toBe('above')
+    expect(muscleVolumeStatus('chest', 9, pt, fb)).toBe('below')
+  })
+
+  it('keeps every planned muscle inside its plan target', () => {
+    const planned: Record<string, number> = {}
+    for (const w of plan.workouts) {
+      for (const slug of w.exercises) {
+        const ex = { ...plan.exercises[slug], ...w.overrides[slug] }
+        for (const m of ex.muscles.primary) planned[m] = (planned[m] ?? 0) + ex.sets
+        for (const m of ex.muscles.secondary) planned[m] = (planned[m] ?? 0) + ex.sets / 2
+      }
+    }
+    const fb = { min: 10, max: 20 }
+    for (const [m, v] of Object.entries(planned)) {
+      expect(plan.muscleTargets?.[m], `target for ${m}`).toBeDefined()
+      expect(muscleVolumeStatus(m, v, plan.muscleTargets, fb), m).toBe('within')
+    }
   })
 })
 

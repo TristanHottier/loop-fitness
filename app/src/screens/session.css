@@ -248,6 +248,13 @@
   color: var(--color-text-secondary);
 }
 
+.session-last-time {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
 .session-target {
   margin-top: 0;
   margin-bottom: 4px;

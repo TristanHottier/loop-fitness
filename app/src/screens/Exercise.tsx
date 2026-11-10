@@ -3,9 +3,10 @@ import { loadMedia, loadPlan, resolveExercise } from '../data/plan'
 import type { MediaMap, PlanData } from '../data/plan'
 import { BackButton } from '../components/BackButton'
 import { MuscleMap } from '../components/MuscleMap'
-import { StrengthChart } from '../components/StrengthChart'
+import { Collapsible } from '../components/Collapsible'
 import { useTrainingData } from '../components/useTrainingData'
-import { exerciseHistory, recordsByBand } from '../lib/analytics'
+import { recordsByBand } from '../lib/analytics'
+import { lastUsed, type LastUsed } from '../lib/lastUsed'
 import './exercise.css'
 
 const EQUIPMENT_WORDS: Record<string, string> = {
@@ -19,16 +20,40 @@ function equipmentWord(code: string): string {
   return EQUIPMENT_WORDS[code] ?? code.replace(/\bT\b/g, 'Tube band').replace(/\bL\b/g, 'Loop band').replace(' + ', ' with ')
 }
 
-function Collapsible({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
-  const [open, setOpen] = useState(defaultOpen)
+function LastTime({ history }: { history: LastUsed[] }) {
+  const [latest, ...earlier] = history
   return (
-    <section className="exercise-section exercise-collapsible">
-      <button type="button" className="prop-row exercise-collapsible-head" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-        <span className="exercise-collapsible-title">{title}</span>
-        <span aria-hidden="true">{open ? 'Hide' : 'Show'}</span>
-      </button>
-      {open ? <div className="exercise-collapsible-body">{children}</div> : null}
-    </section>
+    <>
+      <section className="exercise-last" aria-label="Last time">
+        <div className="exercise-last-head">
+          <h2 className="section-head">Last time</h2>
+          {latest ? <span className="exercise-last-date">{latest.dayLabel}</span> : null}
+        </div>
+        {latest ? (
+          <p className="exercise-last-sets">
+            {latest.text}
+            {latest.rir ? <span className="exercise-chip">{latest.rir}</span> : null}
+          </p>
+        ) : (
+          <p className="exercise-last-empty">Not done yet.</p>
+        )}
+      </section>
+      {earlier.length > 0 ? (
+        <Collapsible id="exercise.earlier" title="Earlier sessions" summary={String(earlier.length)}>
+          <ul className="exercise-history exercise-history-earlier">
+            {earlier.map((h) => (
+              <li key={h.sessionId}>
+                <span className="exercise-history-date">{h.dayLabel}</span>
+                <span className="exercise-history-sets">
+                  {h.text}
+                  {h.rir ? <span className="exercise-chip">{h.rir}</span> : null}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Collapsible>
+      ) : null}
+    </>
   )
 }
 
@@ -96,6 +121,7 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
   }
 
   const exercise = resolveExercise(plan, workout, slug)
+  const records = training ? recordsByBand(training.logs, training.sessions, slug, training.plan, training.inventory) : []
   const videoId = entry?.youtube ? youtubeId(entry.youtube) : null
 
   const reps =
@@ -134,48 +160,9 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
       {exercise.unilateral ? <p className="exercise-note">One set per side.</p> : null}
       {exercise.optional ? <p className="exercise-note">Optional.</p> : null}
 
-      {training && training.logs.some((l) => l.exercise_slug === slug) ? (
-        <>
-          <section className="exercise-section">
-            <h2 className="section-head">Strength</h2>
-            <StrengthChart slug={slug} data={training} />
-          </section>
+      {training ? <LastTime history={lastUsed(training.logs, training.sessions, slug, 6)} /> : null}
 
-          <section className="exercise-section">
-            <h2 className="section-head">History</h2>
-            <ul className="exercise-history">
-              {exerciseHistory(training.logs, training.sessions, slug, 5).map((h) => (
-                <li key={h.sessionId}>
-                  <span className="exercise-history-date">{h.date}</span> , {h.text}
-                </li>
-              ))}
-            </ul>
-          </section>
-
-          <section className="exercise-section">
-            <h2 className="section-head">Records</h2>
-            <ul className="exercise-history">
-              {recordsByBand(training.logs, training.sessions, slug, training.plan, training.inventory).map((r) => (
-                <li key={r.band}>
-                  <span className="exercise-history-date">{r.band}</span> , {r.reps} reps
-                </li>
-              ))}
-            </ul>
-          </section>
-        </>
-      ) : null}
-
-      <section className="exercise-section">
-        <h2 className="section-head">Targets</h2>
-        <p>{exercise.targets}</p>
-      </section>
-
-      <section className="exercise-section">
-        <h2 className="section-head">Muscles</h2>
-        <MuscleMap primary={exercise.muscles.primary} secondary={exercise.muscles.secondary} />
-      </section>
-
-      <Collapsible title="Setup" defaultOpen>
+      <Collapsible id="exercise.setup" title="Setup" defaultOpen>
         <ul className="exercise-list">
           {exercise.instructions.setup.map((step, i) => (
             <li key={i}>{step}</li>
@@ -183,7 +170,7 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
         </ul>
       </Collapsible>
 
-      <Collapsible title="Execution">
+      <Collapsible id="exercise.execution" title="Execution">
         <ol className="exercise-list">
           {exercise.instructions.execution.map((step, i) => (
             <li key={i}>{step}</li>
@@ -191,49 +178,63 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
         </ol>
       </Collapsible>
 
+      <Collapsible id="exercise.targets" title="Targets and muscles">
+        <h3 className="exercise-subhead">Targets</h3>
+        <p>{exercise.targets}</p>
+        <h3 className="exercise-subhead">Muscles</h3>
+        <MuscleMap primary={exercise.muscles.primary} secondary={exercise.muscles.secondary} />
+      </Collapsible>
+
+      {records.length > 0 ? (
+        <Collapsible id="exercise.records" title="Records" summary={`${records.length} ${records.length === 1 ? 'band' : 'bands'}`}>
+          <ul className="exercise-history">
+            {records.map((r) => (
+              <li key={r.band}>
+                <span className="exercise-history-date">{r.band}</span> , {r.reps} reps
+              </li>
+            ))}
+          </ul>
+        </Collapsible>
+      ) : null}
+
       {exercise.instructions.cues ? (
-        <section className="exercise-section">
-          <h2 className="section-head">Cues</h2>
-          <p>{exercise.instructions.cues}</p>
-        </section>
+        <Collapsible id="exercise.cues" title="Cues">
+        <p>{exercise.instructions.cues}</p>
+        </Collapsible>
       ) : null}
 
       {exercise.instructions.mistakes ? (
-        <section className="exercise-section">
-          <h2 className="section-head">Common mistakes</h2>
-          <p>{exercise.instructions.mistakes}</p>
-        </section>
+        <Collapsible id="exercise.mistakes" title="Common mistakes">
+        <p>{exercise.instructions.mistakes}</p>
+        </Collapsible>
       ) : null}
 
       {exercise.instructions.progress ? (
-        <section className="exercise-section">
-          <h2 className="section-head">Progress</h2>
-          <p>{exercise.instructions.progress}</p>
-        </section>
+        <Collapsible id="exercise.progress" title="Progress">
+        <p>{exercise.instructions.progress}</p>
+        </Collapsible>
       ) : null}
 
       {videoId ? (
-        <section className="exercise-section">
-          <h2 className="section-head">Video</h2>
-          <iframe
-            className="exercise-video"
-            src={`https://www.youtube-nocookie.com/embed/${videoId}`}
-            title={`${exercise.name} video`}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </section>
+        <Collapsible id="exercise.video" title="Video">
+        <iframe
+          className="exercise-video"
+          src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+          title={`${exercise.name} video`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+        </Collapsible>
       ) : null}
 
       {entry && entry.images.length > 0 ? (
-        <section className="exercise-section">
-          <h2 className="section-head">Pictures</h2>
-          <div className="exercise-images">
-            {entry.images.map((src) => (
-              <img key={src} src={src} alt={`${exercise.name} picture`} className="exercise-image" />
-            ))}
-          </div>
-        </section>
+        <Collapsible id="exercise.pictures" title="Pictures">
+        <div className="exercise-images">
+          {entry.images.map((src) => (
+            <img key={src} src={src} alt={`${exercise.name} picture`} className="exercise-image" />
+          ))}
+        </div>
+        </Collapsible>
       ) : null}
     </div>
   )

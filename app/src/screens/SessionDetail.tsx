@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Collapsible } from '../components/Collapsible'
 import { loadPlan, resolveExercise, type PlanData, type Workout } from '../data/plan'
 import {
   getSession,
@@ -71,7 +72,6 @@ export function SessionDetail({
   const [saving, setSaving] = useState(false)
   const [notFound, setNotFound] = useState(false)
   const [extraRows, setExtraRows] = useState<Record<string, Row[]>>({})
-  const [showNotDone, setShowNotDone] = useState(false)
   const [noteDraft, setNoteDraft] = useState<string | null>(null)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -363,25 +363,14 @@ export function SessionDetail({
         </section>
       ))}
       {notDone.length > 0 ? (
-        <section className="session-detail-notdone">
-          <button
-            type="button"
-            className="prop-row session-detail-notdone-toggle"
-            aria-expanded={showNotDone}
-            onClick={() => setShowNotDone((v) => !v)}
-          >
-            <span>{`Not done (${notDone.length})`}</span>
-            <span aria-hidden="true">{showNotDone ? 'Hide' : 'Show'}</span>
-          </button>
-          {showNotDone
-            ? notDone.map((r) => (
-                <div className="prop-row" key={r.slug}>
-                  <span className="session-detail-notdone-name">{r.ex.name}</span>
-                  {addButton(r)}
-                </div>
-              ))
-            : null}
-        </section>
+        <Collapsible id="sessiondetail.notdone" title="Not done" summary={String(notDone.length)}>
+          {notDone.map((r) => (
+            <div className="prop-row" key={r.slug}>
+              <span className="session-detail-notdone-name">{r.ex.name}</span>
+              {addButton(r)}
+            </div>
+          ))}
+        </Collapsible>
       ) : null}
       <section className="session-detail-danger">
         {confirmDelete ? (

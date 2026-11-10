@@ -1,9 +1,9 @@
 # Workout 3: Shoulders and arms
-### Shoulder width, rear delts, arm size, extra back and chest volume
+### Priority day: arm size, rear delts and extra lat work, with side delts at maintenance
 
 | | |
 |---|---|
-| **Duration** | About 70 min |
+| **Duration** | About 65 min (about 70 with the optional finisher) |
 | **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), door anchor, handles, loop bands |
 | **Rest between sets** | 45-75 s (see the overview table) |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s lifting |
@@ -31,7 +31,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Bend over fly | Tube 30 lb |
 | Close grip lift | Tube 30-40 lb |
 | Pull down (underhand) | Tube 40 lb |
-| Cable crossover | Tube 40 lb |
+| Push down (straight-arm) | Tube 30 lb |
 | Wide grip barbell, Side pull biceps | Tube 30 lb |
 | Push-down tricep | Tube 30 lb |
 | Triceps extension, Bicep curls | Loop 15-50 |
@@ -43,14 +43,14 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | # | Exercise | Equipment | Sets × Reps | Rest |
 |---|---|---|---|---|
 | | Warm-up | | 8 min | |
-| 1 | Lateral raise | Loop | 5 × 15-20 | 60 s |
+| 1 | Lateral raise | Loop | 3 × 15-20 | 60 s |
 | 2 | Bend over fly | Tube, bar under feet | 3 × 15-20 | 60 s |
-| 3 | Close grip lift | Tube, bar in hands | 3 × 12-15 | 60 s |
+| 3 | Close grip lift | Tube, bar in hands | 4 × 12-15 | 60 s |
 | 4 | Pull down (underhand) | Tube, bar, door (top) | 3 × 12-15 | 75 s |
-| 5 | Cable crossover | Tube, handles, door (top) | 3 × 12-15 | 60 s |
+| 5 | Push down (straight-arm) | Tube, bar, door (top) | 3 × 15 | 60 s |
 | 6 | Wide grip barbell | Tube, bar in hands | 3 × 10-12 | 75 s |
-| 7 | Side pull biceps | Tube, handle, door (top) | 3 × 12-15 each arm | 60 s |
-| 8 | Push-down tricep | Tube, handles, door (top) | 3 × 12-15 | 60 s |
+| 7 | Side pull biceps | Tube, handle, door (top) | 2 × 12-15 each arm | 60 s |
+| 8 | Push-down tricep | Tube, handles, door (top) | 4 × 12-15 | 60 s |
 | 9 | Triceps extension | Loop | 3 × 12-15 | 60 s |
 | 10 | Bicep curls (finisher, optional) | Loop | 2 × 20 | 45 s |
 | | Cool-down | | 5 min | |
@@ -69,7 +69,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ## The exercises
 
-### 1. Lateral raise: loop, 5 × 15-20
+### 1. Lateral raise: loop, 3 × 15-20
 **Targets:** side delts (the main driver of shoulder width)
 
 **Setup**
@@ -112,7 +112,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 3. Close grip lift: tube and Pilates bar in hands, 3 × 12-15
+### 3. Close grip lift: tube and Pilates bar in hands, 4 × 12-15
 **Targets:** side delts, upper traps, biceps
 
 **Setup**
@@ -152,23 +152,26 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 5. Cable crossover: tube and handles on door, 3 × 12-15
-**Targets:** chest (lower and mid), front delts
+### 5. Push down (straight-arm): tube, Pilates bar and door, 3 × 15
+**Targets:** lats (isolation)
+
+> *On your chart this is "Push down". I use it as the straight-arm lat push down.*
 
 **Setup**
-- Door anchor at the **top** of the door, with a tube and a handle in each hand (40 lb).
-- Face away from the door in a staggered stance, hinge slightly at the hips, arms out to your sides slightly above shoulder height with a slight elbow bend.
+- Door anchor at the **top** of the door, a tube from the anchor to each end of the bar (30 lb).
+- Face the door, step back until taut, and hinge slightly at the hips (about 20°).
+- Hold the bar overhand, shoulder-width, in front of you at head height, arms straight with a slight elbow bend.
 
 **Execution**
-1. Sweep both hands down and across in an arc until they meet in front of your hips or lower chest.
-2. Squeeze your chest for 1 s.
-3. Return in 3 s with your elbow bend unchanged.
+1. Sweep the bar down in an arc until it reaches your thighs, arms straight.
+2. Squeeze your lats hard for 1 s.
+3. Return in 3 s.
 
-**Cues:** "Hug a big tree downward."
+**Cues:** Keep your elbow angle fixed the whole time.
 
-**Mistakes:** pressing instead of sweeping, shrugging, standing up straight.
+**Mistakes:** bending the elbows (this turns it into a triceps push down), swinging from the hips.
 
-**Progress:** step forward or stack tubes.
+**Progress:** step back or stack tubes.
 
 ---
 
@@ -194,7 +197,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 7. Side pull biceps: tube and handle on door, 3 × 12-15 each arm
+### 7. Side pull biceps: tube and handle on door, 2 × 12-15 each arm
 **Targets:** biceps (peak)
 
 > *On your chart this is "Side pull biceps". I use it as a single-arm curl with the arm out to the side.*
@@ -217,7 +220,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 8. Push-down tricep: tube and handles on door, 3 × 12-15
+### 8. Push-down tricep: tube and handles on door, 4 × 12-15
 **Targets:** triceps
 
 **Setup**

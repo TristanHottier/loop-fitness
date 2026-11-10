@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { getSessions, type Session } from '../db/db'
 import { loadPlan, type PlanData } from '../data/plan'
 import { ConsistencyCalendar } from '../components/ConsistencyCalendar'
+import { Collapsible } from '../components/Collapsible'
 import { BackButton } from '../components/BackButton'
 import { useTrainingData } from '../components/useTrainingData'
 import './history.css'
@@ -25,7 +26,6 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
   const [sessions, setSessions] = useState<Session[]>([])
   const training = useTrainingData([version])
   const [plan, setPlan] = useState<PlanData | null>(null)
-  const [showEmpty, setShowEmpty] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -113,17 +113,9 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
             {filled.length === 0 ? <p className="history-empty">No sessions with logged sets.</p> : filled.map(row)}
           </div>
           {empty.length > 0 ? (
-            <>
-              <button
-                type="button"
-                className="history-empty-toggle"
-                aria-expanded={showEmpty}
-                onClick={() => setShowEmpty((v) => !v)}
-              >
-                {showEmpty ? `Hide empty sessions (${empty.length})` : `Show empty sessions (${empty.length})`}
-              </button>
-              {showEmpty ? <div className="history-list">{empty.map(row)}</div> : null}
-            </>
+            <Collapsible id="history.empty" title="Empty sessions" summary={String(empty.length)}>
+              <div className="history-list">{empty.map(row)}</div>
+            </Collapsible>
           ) : null}
         </>
       )}

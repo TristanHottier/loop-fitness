@@ -66,23 +66,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.history-empty-toggle {
-  align-self: flex-start;
-  min-height: var(--touch-min);
-  padding: 0 12px;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text-secondary);
-  font-size: 13px;
-  cursor: pointer;
-  margin-top: 8px;
-}
-
-.history-empty-toggle:hover {
-  background-color: var(--color-hover);
-}
-
 .history-empty {
   font-size: 14px;
   color: var(--color-text-secondary);

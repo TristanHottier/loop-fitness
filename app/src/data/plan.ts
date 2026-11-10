@@ -30,11 +30,20 @@ export interface Workout {
   overrides: { [slug: string]: Partial<Exercise> }
 }
 
+// Weekly hard-set range for one muscle (primary 1, secondary 0.5).
+export interface MuscleTarget {
+  min: number
+  max: number
+}
+
 export interface PlanData {
   bandLadders: {
     tube: string[]
     loop: string[]
   }
+  // Per-muscle weekly set targets. Optional: muscles without an entry fall
+  // back to the user's default range (see targetFor in lib/analytics.ts).
+  muscleTargets?: { [muscle: string]: MuscleTarget }
   exercises: { [slug: string]: Exercise }
   workouts: Workout[]
 }

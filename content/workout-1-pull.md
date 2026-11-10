@@ -1,9 +1,9 @@
 # Workout 1: Pull day
-### Back width and thickness, rear delts, biceps, abs
+### Priority day: back width and thickness, rear delts, biceps; abs and obliques at maintenance
 
 | | |
 |---|---|
-| **Duration** | About 70 min |
+| **Duration** | About 65 min |
 | **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), door anchor, handles, loop bands |
 | **Rest between sets** | 45-90 s (see the overview table) |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s lifting |
@@ -29,10 +29,10 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 |---|---|
 | Pull down, Seated row | Tube 40 lb |
 | Bend over rows | Loop 35-95 or 50-145 |
-| Push down (straight-arm) | Tube 30 lb |
 | Reverse fly, Face pull | Tube 30 lb |
-| Close grip barbell, Curl biceps | Tube 30 lb |
+| Close grip barbell | Tube 30 lb |
 | V-ups | Tube 30 lb |
+| Trunk twist | Loop 15-50 |
 
 ---
 
@@ -44,12 +44,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | 1 | Pull down | Tube, bar, door (top) | 4 × 10-15 | 90 s |
 | 2 | Seated row | Tube, bar, door (bottom) | 4 × 10-15 | 90 s |
 | 3 | Bend over rows | Loop | 3 × 10-15 | 90 s |
-| 4 | Push down (straight-arm) | Tube, bar, door (top) | 3 × 15 | 60 s |
-| 5 | Reverse fly | Tube, bar under feet | 3 × 15-20 | 60 s |
-| 6 | Face pull | Tube, handles, door (face height) | 3 × 15-20 | 60 s |
-| 7 | Close grip barbell | Tube, bar in hands | 3 × 10-12 | 75 s |
-| 8 | Curl biceps (neutral grip) | Tube, bar under feet | 3 × 12-15 | 60 s |
-| 9 | V-ups | Tube, handles, door (bottom) | 3 × 10-15 | 60 s |
+| 4 | Reverse fly | Tube, bar under feet | 3 × 15-20 | 60 s |
+| 5 | Face pull | Tube, handles, door (face height) | 3 × 15-20 | 60 s |
+| 6 | Close grip barbell | Tube, bar in hands | 3 × 10-12 | 75 s |
+| 7 | V-ups | Tube, handles, door (bottom) | 3 × 10-15 | 60 s |
+| 8 | Trunk twist | Loop, door (chest height) | 2 × 12-15 each side | 45 s |
 | | Cool-down | | 5 min | |
 
 > *Face pull is not on your chart. I added it for rear delts, upper traps and shoulder health.*
@@ -132,30 +131,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 4. Push down (straight-arm): tube, Pilates bar and door, 3 × 15
-**Targets:** lats (isolation)
-
-> *On your chart this is "Push down". I use it as the straight-arm lat push down.*
-
-**Setup**
-- Door anchor at the **top** of the door, a tube from the anchor to each end of the bar (30 lb).
-- Face the door, step back until taut, and hinge slightly at the hips (about 20°).
-- Hold the bar overhand, shoulder-width, in front of you at head height, arms straight with a slight elbow bend.
-
-**Execution**
-1. Sweep the bar down in an arc until it reaches your thighs, arms straight.
-2. Squeeze your lats hard for 1 s.
-3. Return in 3 s.
-
-**Cues:** Keep your elbow angle fixed the whole time.
-
-**Mistakes:** bending the elbows (this turns it into a triceps push down), swinging from the hips.
-
-**Progress:** step back or stack tubes.
-
----
-
-### 5. Reverse fly: tube and Pilates bar under feet, 3 × 15-20
+### 4. Reverse fly: tube and Pilates bar under feet, 3 × 15-20
 **Targets:** rear delts, mid-back
 
 **Setup**
@@ -177,7 +153,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 6. Face pull: tube and handles on door, 3 × 15-20
+### 5. Face pull: tube and handles on door, 3 × 15-20
 **Targets:** rear delts, upper traps, rotator cuff (shoulder health)
 
 **Setup**
@@ -198,7 +174,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 7. Close grip barbell: tube and Pilates bar in hands, 3 × 10-12
+### 6. Close grip barbell: tube and Pilates bar in hands, 3 × 10-12
 **Targets:** biceps
 
 > *On your chart this is "Close grip barbell". I use it as a narrow-grip curl with the Pilates bar.*
@@ -220,27 +196,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 8. Curl biceps (neutral grip): tube and Pilates bar under feet, 3 × 12-15
-**Targets:** biceps, brachialis (arm thickness)
-
-**Setup**
-- Stand on the bar with feet shoulder-width apart, a tube on each end with a handle at the far end (30 lb).
-- Hold one handle in each hand with palms facing each other, elbows at your sides.
-
-**Execution**
-1. Curl both hands toward your shoulders without rotating your wrists.
-2. Squeeze for 1 s.
-3. Lower in 3 s.
-
-**Cues:** Elbows stay pinned to your ribs.
-
-**Mistakes:** swinging, elbows drifting forward.
-
-**Progress:** choke up on the tubes, or use heavier tubes.
-
----
-
-### 9. V-ups: tube and handles on door, 3 × 10-15
+### 7. V-ups: tube and handles on door, 3 × 10-15
 **Targets:** abs, hip flexors
 
 > *On your chart this is "V-ups". I use it as a V-up with a tube held overhead.*
@@ -259,6 +215,29 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** swinging with momentum, arching the lower back, bending the arms.
 
 **Progress:** use a heavier tube or lower in 4 s. Easier: tuck your knees. If your lower back complains, use the tuck version.
+
+---
+
+### 8. Trunk twist: loop on door, 2 × 12-15 each side
+**Targets:** obliques, abs
+
+> *On your chart this is "Trunk twist". I use it as a standing rotation against a band.*
+
+**Setup**
+- Loop a band (15-50) through the door anchor at **chest height**. If the loop won't attach, use a 30 lb tube with a handle.
+- Stand side-on to the door, feet shoulder-width apart, hold the band with both hands at chest height, arms slightly bent, band taut.
+
+**Execution**
+1. Rotate your torso away from the door until you face forward, hips square.
+2. Squeeze your obliques for 1 s.
+3. Return in 3 s.
+4. Do all reps on one side, then switch.
+
+**Cues:** "Turn the ribs, not the arms."
+
+**Mistakes:** swinging the arms, letting the hips rotate, leaning back.
+
+**Progress:** step away from the door or use the next loop up.
 
 ---
 

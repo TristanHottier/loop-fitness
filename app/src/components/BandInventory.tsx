@@ -10,7 +10,7 @@ const GROUPS: { ladder: LadderName; title: string }[] = [
   { ladder: 'loop', title: 'Loop bands' },
 ]
 
-export function BandInventory() {
+export function BandInventory({ onChange }: { onChange?: (items: BandItem[]) => void } = {}) {
   const [items, setItems] = useState<BandItem[] | null>(null)
   const [drafts, setDrafts] = useState<Record<string, string>>({})
   const [error, setError] = useState('')
@@ -36,6 +36,7 @@ export function BandInventory() {
 
   async function persist(next: BandItem[]) {
     setItems(next)
+    onChange?.(next)
     setError('')
     try {
       await saveBandInventory(next)

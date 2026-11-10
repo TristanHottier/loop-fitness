@@ -3,6 +3,26 @@
     "tube": ["30", "40", "50", "30+40", "30+50", "40+50", "30+40+50"],
     "loop": ["5-30", "15-50", "25-75", "35-95", "50-145"]
   },
+  "muscleTargets": {
+    "chest": { "min": 6, "max": 12 },
+    "lats": { "min": 16, "max": 26 },
+    "mid_back": { "min": 16, "max": 26 },
+    "front_delts": { "min": 4, "max": 10 },
+    "side_delts": { "min": 6, "max": 12 },
+    "rear_delts": { "min": 14, "max": 20 },
+    "biceps": { "min": 16, "max": 28 },
+    "triceps": { "min": 16, "max": 26 },
+    "upper_traps": { "min": 8, "max": 14 },
+    "forearms": { "min": 12, "max": 20 },
+    "abs": { "min": 4, "max": 10 },
+    "obliques": { "min": 2, "max": 6 },
+    "lower_back": { "min": 2, "max": 8 },
+    "rotator_cuff": { "min": 1, "max": 6 },
+    "quads": { "min": 4, "max": 10 },
+    "glutes": { "min": 4, "max": 10 },
+    "hamstrings": { "min": 4, "max": 10 },
+    "calves": { "min": 3, "max": 8 }
+  },
   "exercises": {
     "pull-down": {
       "slug": "pull-down",
@@ -233,7 +253,7 @@
       "equipment": "T",
       "repMin": 12,
       "repMax": 15,
-      "sets": 3,
+      "sets": 2,
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
@@ -327,7 +347,7 @@
       "equipment": "T + Pilates bar",
       "repMin": 8,
       "repMax": 15,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 90,
       "startBand": "T40",
       "unilateral": false,
@@ -359,7 +379,7 @@
       "equipment": "T",
       "repMin": 12,
       "repMax": 15,
-      "sets": 3,
+      "sets": 2,
       "restSeconds": 75,
       "startBand": "T30",
       "unilateral": false,
@@ -390,7 +410,7 @@
       "equipment": "T",
       "repMin": 10,
       "repMax": 12,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 90,
       "startBand": "T40",
       "unilateral": false,
@@ -422,7 +442,7 @@
       "equipment": "T",
       "repMin": 15,
       "repMax": 20,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
@@ -579,7 +599,7 @@
       "equipment": "L",
       "repMin": 12,
       "repMax": 15,
-      "sets": 3,
+      "sets": 2,
       "restSeconds": 45,
       "startBand": "L15-50",
       "unilateral": true,
@@ -611,7 +631,7 @@
       "equipment": "L",
       "repMin": 15,
       "repMax": 20,
-      "sets": 5,
+      "sets": 3,
       "restSeconds": 60,
       "startBand": "L5-30",
       "unilateral": false,
@@ -673,7 +693,7 @@
       "equipment": "T + Pilates bar",
       "repMin": 12,
       "repMax": 15,
-      "sets": 3,
+      "sets": 4,
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": false,
@@ -797,7 +817,7 @@
       "equipment": "T",
       "repMin": 12,
       "repMax": 15,
-      "sets": 3,
+      "sets": 2,
       "restSeconds": 60,
       "startBand": "T30",
       "unilateral": true,
@@ -858,7 +878,7 @@
       "equipment": "T + Pilates bar",
       "repMin": 12,
       "repMax": 20,
-      "sets": 4,
+      "sets": 3,
       "restSeconds": 90,
       "startBand": "T50",
       "unilateral": false,
@@ -923,7 +943,7 @@
       "equipment": "L",
       "repMin": 10,
       "repMax": 12,
-      "sets": 3,
+      "sets": 2,
       "restSeconds": 75,
       "startBand": "L25-75",
       "unilateral": true,
@@ -1113,12 +1133,11 @@
         "pull-down",
         "seated-row",
         "bend-over-rows",
-        "push-down-straight-arm",
         "reverse-fly",
         "face-pull",
         "close-grip-barbell",
-        "curl-biceps-neutral-grip",
-        "v-ups"
+        "v-ups",
+        "trunk-twist"
       ],
       "overrides": {}
     },
@@ -1131,13 +1150,13 @@
         "hex-press",
         "standing-press",
         "lateral-raises",
-        "upright-row",
         "push-down-tricep",
         "triceps-extension",
-        "kneeling-crunch",
-        "trunk-twist"
+        "kneeling-crunch"
       ],
-      "overrides": {}
+      "overrides": {
+        "triceps-extension": { "sets": 4 }
+      }
     },
     {
       "id": "shoulders-arms",
@@ -1148,33 +1167,34 @@
         "bend-over-fly",
         "close-grip-lift",
         "pull-down-underhand",
-        "cable-crossover",
+        "push-down-straight-arm",
         "wide-grip-barbell",
         "side-pull-biceps",
         "push-down-tricep",
         "triceps-extension",
         "bicep-curls"
       ],
-      "overrides": {
-        "push-down-tricep": { "sets": 3, "restSeconds": 60 },
-        "triceps-extension": { "sets": 3, "restSeconds": 60 }
-      }
+      "overrides": {}
     },
     {
       "id": "legs-forearms",
       "name": "Legs and forearms",
       "day": "Saturday",
       "exercises": [
+        "seated-row",
+        "curl-biceps-neutral-grip",
+        "triceps-extension",
         "squat",
         "romanian-deadlift",
         "lunges",
-        "glute-bridge",
         "ankle-plantarflexion",
         "reverse-curl",
         "wrist-curl",
         "wrist-extension"
       ],
-      "overrides": {}
+      "overrides": {
+        "triceps-extension": { "sets": 2 }
+      }
     }
   ]
 }

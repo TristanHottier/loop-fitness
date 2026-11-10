@@ -5,6 +5,7 @@ import type { Session, SetLog } from '../db/db'
 import { dayKey, monthGrid, parseDayKey, weekStart } from '../lib/dates'
 import type { BandItem } from '../lib/ladder'
 import { monthSummary, muscleLabel, sessionsByDay, streakWeeks, weekCounts } from '../lib/analytics'
+import { Collapsible } from './Collapsible'
 import './consistency-calendar.css'
 
 const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -70,6 +71,12 @@ export function ConsistencyCalendar({ sessions, logs, plan, inventory, todayKey 
 
   return (
     <section className="cal" aria-label="Consistency">
+      <Collapsible
+        id="history.calendar"
+        title="Consistency"
+        defaultOpen
+        summary={`Streak ${streak} ${streak === 1 ? 'week' : 'weeks'}`}
+      >
       <div className="cal-streak">
         <div>
           <p className="cal-streak-value">
@@ -137,7 +144,13 @@ export function ConsistencyCalendar({ sessions, logs, plan, inventory, todayKey 
           </li>
         ))}
       </ul>
+      </Collapsible>
 
+      <Collapsible
+        id="history.month"
+        title="Month summary"
+        summary={`${MONTHS[ym.month - 1].slice(0, 3)}: ${summary.sessions} ${summary.sessions === 1 ? 'session' : 'sessions'}`}
+      >
       <dl className="cal-summary" aria-label={`Summary for ${monthTitle}`}>
         <div>
           <dt>Sessions</dt>
@@ -160,6 +173,7 @@ export function ConsistencyCalendar({ sessions, logs, plan, inventory, todayKey 
           <dd>{summary.topMuscle ? `${muscleLabel(summary.topMuscle.muscle)}, ${fmt(summary.topMuscle.sets)} sets` : 'None yet'}</dd>
         </div>
       </dl>
+      </Collapsible>
     </section>
   )
 }

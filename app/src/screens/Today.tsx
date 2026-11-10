@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Minus, Plus } from 'lucide-react'
+import { Collapsible } from '../components/Collapsible'
 import { loadPlan, resolveExercise, type PlanData, type Workout } from '../data/plan'
 import {
   createBodyMetric,
@@ -475,8 +476,7 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
       {deloadError && <p className="today-error">{deloadError}</p>}
 
       {others.length > 0 && (
-        <section className="today-section">
-          <h2 className="section-head">Other workouts</h2>
+        <Collapsible id="today.others" title="Other workouts" summary={String(others.length)}>
           <div className="today-list">
             {others.map((workout) => (
               <button
@@ -490,7 +490,7 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
               </button>
             ))}
           </div>
-        </section>
+        </Collapsible>
       )}
     </div>
   )

@@ -1,11 +1,11 @@
 # Workout 2: Push day
-### Chest, shoulders, triceps, abs
+### Triceps (priority), with chest, shoulders and abs at maintenance
 
 | | |
 |---|---|
-| **Duration** | About 70 min |
+| **Duration** | About 55 min |
 | **Equipment** | Pilates bar, tube bands (30, 40, 50 lb), door anchor, handles, loop bands |
-| **Rest between sets** | 45-90 s (see the overview table) |
+| **Rest between sets** | 60-90 s (see the overview table) |
 | **Tempo (all exercises)** | 3 s lowering, 1 s squeeze at the hardest point, 1 s pressing |
 | **Effort** | Most sets end with 1-2 reps left in reserve. The last set of each exercise goes to failure when it is safe |
 
@@ -31,11 +31,9 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Hex press | Tube 30 lb |
 | Standing press | Tube 40 lb |
 | Lateral raises | Tube 30 lb |
-| Upright row | Loop 25-75 |
 | Push-down tricep | Tube 30-40 lb |
 | Triceps extension | Loop 15-50 |
 | Kneeling crunch | Tube 40 lb |
-| Trunk twist | Loop 15-50 |
 
 ---
 
@@ -44,15 +42,13 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | # | Exercise | Equipment | Sets × Reps | Rest |
 |---|---|---|---|---|
 | | Warm-up | | 8 min | |
-| 1 | Grip press | Tube, bar | 4 × 8-15 | 90 s |
-| 2 | Hex press | Tube, bar under feet | 3 × 12-15 | 75 s |
-| 3 | Standing press | Tube, bar, door (top) | 4 × 10-12 | 90 s |
-| 4 | Lateral raises | Tube, bar under feet | 4 × 15-20 | 60 s |
-| 5 | Upright row | Loop | 3 × 12-15 | 60 s |
-| 6 | Push-down tricep | Tube, bar, door (top) | 4 × 12-15 | 60 s |
-| 7 | Triceps extension | Loop | 3 × 12-15 | 60 s |
-| 8 | Kneeling crunch | Tube, handles, door (top) | 3 × 12-15 | 60 s |
-| 9 | Trunk twist | Loop, door (chest height) | 3 × 12-15 each side | 45 s |
+| 1 | Grip press | Tube, bar | 3 × 8-15 | 90 s |
+| 2 | Hex press | Tube, bar under feet | 2 × 12-15 | 75 s |
+| 3 | Standing press | Tube, bar, door (top) | 3 × 10-12 | 90 s |
+| 4 | Lateral raises | Tube, bar under feet | 3 × 15-20 | 60 s |
+| 5 | Push-down tricep | Tube, bar, door (top) | 4 × 12-15 | 60 s |
+| 6 | Triceps extension | Loop | 4 × 12-15 | 60 s |
+| 7 | Kneeling crunch | Tube, handles, door (top) | 3 × 12-15 | 60 s |
 | | Cool-down | | 5 min | |
 
 ---
@@ -69,7 +65,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ## The exercises
 
-### 1. Grip press: tube and Pilates bar, 4 × 8-15
+### 1. Grip press: tube and Pilates bar, 3 × 8-15
 **Targets:** chest, front delts, triceps
 
 **Setup**
@@ -90,7 +86,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 2. Hex press: tube and Pilates bar under feet, 3 × 12-15
+### 2. Hex press: tube and Pilates bar under feet, 2 × 12-15
 **Targets:** inner and upper chest, front delts, triceps
 
 **Setup**
@@ -110,7 +106,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 3. Standing press: tube, Pilates bar and door, 4 × 10-12
+### 3. Standing press: tube, Pilates bar and door, 3 × 10-12
 **Targets:** front delts, upper chest, triceps
 
 **Setup**
@@ -132,7 +128,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 4. Lateral raises: tube and Pilates bar under feet, 4 × 15-20
+### 4. Lateral raises: tube and Pilates bar under feet, 3 × 15-20
 **Targets:** side delts (shoulder width)
 
 **Setup**
@@ -152,28 +148,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 5. Upright row: loop, 3 × 12-15
-**Targets:** side delts, upper traps, biceps
-
-**Setup**
-- Stand on the middle of a loop band (25-75) with feet shoulder-width apart.
-- Hold the top of the loop with hands about shoulder-width apart, arms down.
-
-**Execution**
-1. Pull your hands up along your body toward your chest, leading with your elbows.
-2. Stop when your elbows reach shoulder height. Don't go higher.
-3. Hold for 1 s.
-4. Lower in 3 s.
-
-**Cues:** Elbows stay higher than your wrists. Keep your shoulders down, away from your ears.
-
-**Mistakes:** pulling the elbows above shoulder height, a very narrow grip, shrugging.
-
-**Progress:** move to the next loop up, or widen your stance.
-
----
-
-### 6. Push-down tricep: tube, Pilates bar and door, 4 × 12-15
+### 5. Push-down tricep: tube, Pilates bar and door, 4 × 12-15
 **Targets:** triceps
 
 **Setup**
@@ -194,7 +169,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 7. Triceps extension: loop, 3 × 12-15
+### 6. Triceps extension: loop, 4 × 12-15
 **Targets:** triceps (long head)
 
 **Setup**
@@ -214,7 +189,7 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 ---
 
-### 8. Kneeling crunch: tube and handles on door, 3 × 12-15
+### 7. Kneeling crunch: tube and handles on door, 3 × 12-15
 **Targets:** abs
 
 > *On your chart this is "Kneeling crunch". I use it as a kneeling cable-style crunch.*
@@ -233,29 +208,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** sitting back on your heels, hinging at the hips instead of curling the spine, pulling with the arms.
 
 **Progress:** use a heavier tube or step back.
-
----
-
-### 9. Trunk twist: loop on door, 3 × 12-15 each side
-**Targets:** obliques, abs
-
-> *On your chart this is "Trunk twist". I use it as a standing rotation against a band.*
-
-**Setup**
-- Loop a band (15-50) through the door anchor at **chest height**. If the loop won't attach, use a 30 lb tube with a handle.
-- Stand side-on to the door, feet shoulder-width apart, hold the band with both hands at chest height, arms slightly bent, band taut.
-
-**Execution**
-1. Rotate your torso away from the door until you face forward, hips square.
-2. Squeeze your obliques for 1 s.
-3. Return in 3 s.
-4. Do all reps on one side, then switch.
-
-**Cues:** "Turn the ribs, not the arms."
-
-**Mistakes:** swinging the arms, letting the hips rotate, leaning back.
-
-**Progress:** step away from the door or use the next loop up.
 
 ---
 

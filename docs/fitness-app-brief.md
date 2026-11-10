@@ -81,43 +81,62 @@ Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only 
 - Tube: `30`, `40`, `50`, `30+40`, `30+50`, `40+50`, `30+40+50`
 - Loop: `5-30`, `15-50`, `25-75`, `35-95`, `50-145`
 
-**Workout 1: Pull**
+**Workout 1: Pull** (Monday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
 | Pull down | T | 4 x 10-15 | 90 | T40 |
 | Seated row | T | 4 x 10-15 | 90 | T40 |
-| Bend over rows | L | 4 x 10-15 | 90 | L35-95 |
-| Push down (straight-arm) | T | 3 x 15 | 60 | T30 |
+| Bend over rows | L | 3 x 10-15 | 90 | L35-95 |
 | Reverse fly | T | 3 x 15-20 | 60 | T30 |
-| Close grip barbell | T + Pilates bar | 4 x 10-12 | 75 | T30 |
-| Curl biceps (neutral grip) | T | 3 x 12-15 | 60 | T30 |
+| Face pull | T + handles | 3 x 15-20 | 60 | T30 |
+| Close grip barbell | T + Pilates bar | 3 x 10-12 | 75 | T30 |
+| V-ups | T + handles | 3 x 10-15 | 60 | T30 |
+| Trunk twist (each side) | L | 2 x 12-15 | 45 | L15-50 |
 
-**Workout 2: Push**
+**Workout 2: Push** (Wednesday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
-| Lying chest press | L | 4 x 8-15 | 90 | L25-75 |
-| Hex press | T | 4 x 12-15 | 75 | T40 |
-| Standing press | T | 4 x 10-12 | 90 | T40 |
-| Lateral raises | T | 4 x 15-20 | 60 | T30 |
+| Grip press | T + Pilates bar | 3 x 8-15 | 90 | T40 |
+| Hex press | T | 2 x 12-15 | 75 | T30 |
+| Standing press | T | 3 x 10-12 | 90 | T40 |
+| Lateral raises | T | 3 x 15-20 | 60 | T30 |
+| Push-down tricep | T | 4 x 12-15 | 60 | T30 |
+| Triceps extension | L | 4 x 12-15 | 60 | L15-50 |
+| Kneeling crunch | T + handles | 3 x 12-15 | 60 | T40 |
+
+**Workout 3: Shoulders and arms** (Friday)
+
+| Exercise | Equip | Sets x reps | Rest | Start |
+|---|---|---|---|---|
+| Lateral raise | L | 3 x 15-20 | 60 | L5-30 |
+| Bend over fly | T | 3 x 15-20 | 60 | T30 |
+| Close grip lift | T + Pilates bar | 4 x 12-15 | 60 | T30 |
+| Pull down (underhand) | T | 3 x 12-15 | 75 | T40 |
+| Push down (straight-arm) | T | 3 x 15 | 60 | T30 |
+| Wide grip barbell | T + Pilates bar | 3 x 10-12 | 75 | T30 |
+| Side pull biceps (each arm) | T | 2 x 12-15 | 60 | T30 |
 | Push-down tricep | T | 4 x 12-15 | 60 | T30 |
 | Triceps extension | L | 3 x 12-15 | 60 | L15-50 |
+| Bicep curls (optional) | L | 2 x 20 | 45 | L15-50 |
 
-**Workout 3: Shoulders and arms**
+**Workout 4: Legs and forearms** (Saturday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
-| Lateral raise | L | 4 x 15-20 | 60 | L5-30 |
-| Bend over fly | T | 3 x 15-20 | 60 | T30 |
-| Upright row | L | 3 x 12-15 | 60 | L25-75 |
-| Pull down (underhand) | T | 3 x 12-15 | 75 | T40 |
-| Cable crossover | T | 3 x 12-15 | 60 | T40 |
-| Wide grip barbell | T + Pilates bar | 3 x 10-12 | 75 | T30 |
-| Push-down tricep | T | 3 x 12-15 | 75 | T30 |
-| Side pull biceps (each side) | T | 3 x 12-15 | 75 | T30 |
-| Triceps extension | L | 3 x 12-15 | 75 | L15-50 |
-| Bicep curls (optional finisher) | L | 2 x 20 | 45 | L15-50 |
+| Seated row | T | 4 x 10-15 | 90 | T40 |
+| Curl biceps (neutral grip) | T | 2 x 12-15 | 60 | T30 |
+| Triceps extension | L | 2 x 12-15 | 60 | L15-50 |
+| Squat | T + Pilates bar | 3 x 12-20 | 90 | T50 |
+| Romanian deadlift | T + Pilates bar | 3 x 10-15 | 75 | T40 |
+| Lunges (each side) | L | 2 x 10-12 | 75 | L25-75 |
+| Ankle plantarflexion (each side) | L | 3 x 15-20 | 45 | L15-50 |
+| Reverse curl | T + Pilates bar | 3 x 12-15 | 60 | T30 |
+| Wrist curl | T + Pilates bar | 3 x 15-20 | 45 | T30 |
+| Wrist extension | T + Pilates bar | 3 x 15-20 | 45 | T30 |
+
+**Weekly volume targets.** `plan.json` has a top-level `muscleTargets: { [muscle]: { min, max } }` (weekly hard sets, primary 1, secondary 0.5, unilateral round = 1 set). Each muscle is judged against its own range; muscles without an entry fall back to the user's default range (`getVolumeTargets()`, 10 to 20). The program is an arms and back specialization (M27). Priority muscles: biceps 16-28, triceps, lats, mid back 16-26, rear delts 14-20, forearms 12-20, upper traps 8-14 (planned: biceps 26, triceps 21, lats 21, mid back 19, rear delts 16.5, forearms 17, upper traps 8.5). Maintenance-to-moderate: chest, side delts 6-12; front delts, abs 4-10; obliques 2-6; quads, glutes, hamstrings 4-10; calves 3-8; lower back 2-8; rotator cuff 1-6. Exercises can be in `plan.json` without being in any workout (Upright row, Glute bridge, Cable crossover, Lying chest press); logged history for them stays valid. Estimated working time (sets x (45 s + rest), unilateral doubled): Pull 52.5, Push 42, Shoulders and arms 54 (57 with the finisher), Legs and forearms 60 min, plus 13 min warm-up and cool-down.
 
 **Schema notes.** An exercise has `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `optional`. Side pull biceps is `unilateral`: one logged set per side.
 
