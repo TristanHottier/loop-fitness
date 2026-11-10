@@ -343,3 +343,18 @@ Tasks:
 15. [x] Migrations 0003 + 0004 applied + Worker + PWA deploy + commit
 
 Status: complete (typecheck + 88 unit tests + build pass; headless phone-size click-through of every new flow with no console errors, which fixed 4 bugs; D1 migrations 0003 + 0004 applied, Worker + PWA deployed, both live URLs HTTP 200; not yet tried on a real phone. Not done by design: supersets (removed in M15), lock-screen rest timer (a PWA can't), weekday missed-session reminders)
+
+## M26: UI/UX polish pass, first-run bands, in-progress strip, tube ladder 30+50 rung
+Done when: the shared UI primitives and navigation are cleaned up, a first-run band-inventory sheet and an in-progress resume strip are in place, and the tube ladder gains the 30+50 rung (synced across plan.json, the content guide, and the brief).
+
+Tasks:
+1. [x] `app/src/components/`: new shared primitives `BackButton` (icon chevron on `.icon-button`), `EmptyState` (infinity line + one sentence), `Toggle` (accessible `role=switch`), `workoutHue` (`hueFor` helper extracted from the screens)
+2. [x] `app/src/components/FirstRunBands.tsx` + `first-run-bands.css`: self-managing first-run sheet ("Which bands do you own?") that shows only when no band inventory is saved and no session has been completed; Done/Skip saves an inventory so it never shows again; lazy-loaded in `App.tsx` via `import.meta.glob` so the app builds with or without it
+3. [x] `app/src/components/InProgressStrip.tsx` + `in-progress-strip.css`: slim strip above the bottom nav while a session is open and the user is on another tab, showing "workout in progress, N of M" with a Resume button; deload-aware set counting
+4. [x] `app/src/App.tsx`: back-gesture support (each sub-screen pushes one history entry, `popstate` closes the top-most, UI back buttons call `history.back()` so the entry and screen always close together); wires `InProgressStrip` + `resumeSession`, the Settings exercises sub-screen, and the lazy `FirstRunBands`
+5. [x] `app/src/styles/tokens.css`: `--color-disabled-text` token (both themes) + shared type scale/utilities (`.section-head`, `.page-title`, `.big-number`, `.prop-row`, `.icon-button`) to replace per-screen copies
+6. [x] UI/UX polish across `Session`, `Today`, `Plan`, `Progress`, `History`, `Nutrition`, `Settings`, `Exercise` screens + their CSS (rest timer, RIR picker, toast, band inventory, muscle volume list, exercise menu)
+7. [x] `app/public/plan.json`: tube ladder gains the `30+50` rung (now 7 rungs: 30, 40, 50, 30+40, 30+50, 40+50, 30+40+50); `content/00-program-guide.md` + `docs/fitness-app-brief.md` ladder tables synced to match
+8. [x] PWA deploy + commit
+
+Status: complete (typecheck + 88 unit tests + build pass, 75 precache entries; PWA deployed, live URL HTTP 200; no Worker or migration change in this batch)
