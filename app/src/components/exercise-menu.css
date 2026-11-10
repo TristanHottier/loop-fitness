@@ -10,7 +10,7 @@
   min-width: var(--touch-min);
   min-height: var(--touch-min);
   background: none;
-  border: 1px solid var(--color-border);
+  border: none;
   border-radius: var(--radius);
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -31,7 +31,7 @@
   right: 0;
   top: calc(100% + 4px);
   z-index: 30;
-  min-width: 200px;
+  min-width: 220px;
   display: flex;
   flex-direction: column;
   background-color: var(--color-sheet);
@@ -57,7 +57,6 @@
 }
 
 .exmenu-item:disabled {
-  color: var(--color-text-secondary);
-  opacity: 0.6;
+  color: var(--color-disabled-text);
   cursor: default;
 }

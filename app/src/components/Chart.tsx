@@ -26,8 +26,8 @@ interface ChartProps {
 
 const W = 320
 const H = 160
-const PAD_L = 40
-const PAD_R = 8
+const PAD_L = 54
+const PAD_R = 24
 const PAD_T = 8
 const PAD_B = 24
 const DAY_MS = 86400000
@@ -150,6 +150,21 @@ export function Chart({ title, points, unit, showAverage, yTicks, pointLabels, l
   const labelAbove = lastY - 8 >= 12
   const labelY = labelAbove ? lastY - 8 : lastY + 14
   const showAll = pointLabels && n <= 14
+  // Point labels: the latest point always, then earlier points (newest first)
+  // whose x is at least 56 units from every label already placed. This drops
+  // same-date and crowded points.
+  const labelled = new Set<number>()
+  if (showAll) {
+    const placed = [lastX]
+    for (let i = n - 2; i >= 0; i--) {
+      const x = xFor(i)
+      if (!sorted[i].label) continue
+      if (placed.every((px) => Math.abs(px - x) >= 56)) {
+        placed.push(x)
+        labelled.add(i)
+      }
+    }
+  }
 
   const gridLines = yTicks
     ? yTicks.map((t) => ({ y: yFor(t.value), label: t.label }))
@@ -210,8 +225,13 @@ export function Chart({ title, points, unit, showAverage, yTicks, pointLabels, l
             >
               <title>{`${p.date}: ${p.label ?? fmt(p.value)}`}</title>
             </circle>
-            {showAll && i !== n - 1 && p.label ? (
-              <text className="chart-point-label" x={xFor(i)} y={yFor(p.value) - 6} textAnchor="middle">
+            {labelled.has(i) && p.label ? (
+              <text
+                className="chart-point-label"
+                x={xFor(i)}
+                y={yFor(p.value) - 6}
+                textAnchor={xFor(i) < PAD_L + 12 ? 'start' : xFor(i) > W - PAD_R - 12 ? 'end' : 'middle'}
+              >
                 {p.label}
               </text>
             ) : null}

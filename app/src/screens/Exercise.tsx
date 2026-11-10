@@ -1,26 +1,35 @@
 import { useEffect, useState } from 'react'
-import { ChevronLeft } from 'lucide-react'
 import { loadMedia, loadPlan, resolveExercise } from '../data/plan'
 import type { MediaMap, PlanData } from '../data/plan'
+import { BackButton } from '../components/BackButton'
 import { MuscleMap } from '../components/MuscleMap'
 import { StrengthChart } from '../components/StrengthChart'
 import { useTrainingData } from '../components/useTrainingData'
 import { exerciseHistory, recordsByBand } from '../lib/analytics'
 import './exercise.css'
 
-function hueFor(workoutId: string): string {
-  switch (workoutId) {
-    case 'pull':
-      return 'var(--hue-pull)'
-    case 'push':
-      return 'var(--hue-push)'
-    case 'shoulders-arms':
-      return 'var(--hue-shoulders)'
-    case 'legs-forearms':
-      return 'var(--hue-legs)'
-    default:
-      return 'var(--color-accent)'
-  }
+const EQUIPMENT_WORDS: Record<string, string> = {
+  T: 'Tube band',
+  L: 'Loop band',
+  'T + Pilates bar': 'Tube band with Pilates bar',
+  'T + handles': 'Tube band with handles',
+}
+
+function equipmentWord(code: string): string {
+  return EQUIPMENT_WORDS[code] ?? code.replace(/\bT\b/g, 'Tube band').replace(/\bL\b/g, 'Loop band').replace(' + ', ' with ')
+}
+
+function Collapsible({ title, defaultOpen = false, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <section className="exercise-section exercise-collapsible">
+      <button type="button" className="prop-row exercise-collapsible-head" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+        <span className="exercise-collapsible-title">{title}</span>
+        <span aria-hidden="true">{open ? 'Hide' : 'Show'}</span>
+      </button>
+      {open ? <div className="exercise-collapsible-body">{children}</div> : null}
+    </section>
+  )
 }
 
 function youtubeId(value: string): string {
@@ -63,10 +72,9 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
   const entry = media ? media[slug] : undefined
 
   const backButton = (
-    <button type="button" className="exercise-back" onClick={onBack}>
-      <ChevronLeft size={18} strokeWidth={1.75} aria-hidden="true" />
-      Back
-    </button>
+    <div className="exercise-header">
+      <BackButton onClick={onBack} />
+    </div>
   )
 
   if (failed) {
@@ -96,52 +104,31 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
       : `${exercise.repMin} to ${exercise.repMax}`
 
   return (
-    <div
-      className="screen"
-      style={{ ['--exercise-hue' as string]: hueFor(workout.id) }}
-    >
-      {backButton}
-      <div className="exercise-cover">
-        <svg
-          className="exercise-cover-logo"
-          viewBox="0 0 100 50"
-          aria-hidden="true"
-        >
-          <path
-            d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
-            fill="none"
-            stroke="var(--exercise-hue)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <div className="exercise-cover-text">
-          <p className="exercise-cover-day">{workout.day}</p>
-          <h1 className="exercise-cover-title">{workout.name}</h1>
-        </div>
+    <div className="screen exercise">
+      <div className="exercise-header">
+        <BackButton onClick={onBack} />
+        <h1 className="exercise-title">{exercise.name}</h1>
       </div>
-      <h1>{exercise.name}</h1>
       <div className="exercise-props">
-        <div className="exercise-prop-row">
+        <div className="prop-row">
           <span className="exercise-prop-label">Sets</span>
           <span className="exercise-prop-value">{exercise.sets}</span>
         </div>
-        <div className="exercise-prop-row">
+        <div className="prop-row">
           <span className="exercise-prop-label">Reps</span>
           <span className="exercise-prop-value">{reps}</span>
         </div>
-        <div className="exercise-prop-row">
+        <div className="prop-row">
           <span className="exercise-prop-label">Band</span>
           <span className="exercise-prop-value">{exercise.startBand}</span>
         </div>
-        <div className="exercise-prop-row">
+        <div className="prop-row">
           <span className="exercise-prop-label">Rest</span>
           <span className="exercise-prop-value">{exercise.restSeconds} s</span>
         </div>
-        <div className="exercise-prop-row">
+        <div className="prop-row">
           <span className="exercise-prop-label">Equipment</span>
-          <span className="exercise-prop-value">{exercise.equipment}</span>
+          <span className="exercise-prop-value">{equipmentWord(exercise.equipment)}</span>
         </div>
       </div>
       {exercise.unilateral ? <p className="exercise-note">One set per side.</p> : null}
@@ -150,27 +137,27 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
       {training && training.logs.some((l) => l.exercise_slug === slug) ? (
         <>
           <section className="exercise-section">
-            <h2>Strength</h2>
+            <h2 className="section-head">Strength</h2>
             <StrengthChart slug={slug} data={training} />
           </section>
 
           <section className="exercise-section">
-            <h2>History</h2>
+            <h2 className="section-head">History</h2>
             <ul className="exercise-history">
               {exerciseHistory(training.logs, training.sessions, slug, 5).map((h) => (
                 <li key={h.sessionId}>
-                  <span className="exercise-history-date">{h.date}</span> {'\u2014'} {h.text}
+                  <span className="exercise-history-date">{h.date}</span> , {h.text}
                 </li>
               ))}
             </ul>
           </section>
 
           <section className="exercise-section">
-            <h2>Records</h2>
+            <h2 className="section-head">Records</h2>
             <ul className="exercise-history">
               {recordsByBand(training.logs, training.sessions, slug, training.plan, training.inventory).map((r) => (
                 <li key={r.band}>
-                  <span className="exercise-history-date">{r.band}</span> {'\u2014'} {r.reps} reps
+                  <span className="exercise-history-date">{r.band}</span> , {r.reps} reps
                 </li>
               ))}
             </ul>
@@ -179,57 +166,55 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
       ) : null}
 
       <section className="exercise-section">
-        <h2>Targets</h2>
+        <h2 className="section-head">Targets</h2>
         <p>{exercise.targets}</p>
       </section>
 
       <section className="exercise-section">
-        <h2>Muscles</h2>
+        <h2 className="section-head">Muscles</h2>
         <MuscleMap primary={exercise.muscles.primary} secondary={exercise.muscles.secondary} />
       </section>
 
-      <section className="exercise-section">
-        <h2>Setup</h2>
+      <Collapsible title="Setup" defaultOpen>
         <ul className="exercise-list">
           {exercise.instructions.setup.map((step, i) => (
             <li key={i}>{step}</li>
           ))}
         </ul>
-      </section>
+      </Collapsible>
 
-      <section className="exercise-section">
-        <h2>Execution</h2>
+      <Collapsible title="Execution">
         <ol className="exercise-list">
           {exercise.instructions.execution.map((step, i) => (
             <li key={i}>{step}</li>
           ))}
         </ol>
-      </section>
+      </Collapsible>
 
       {exercise.instructions.cues ? (
         <section className="exercise-section">
-          <h2>Cues</h2>
+          <h2 className="section-head">Cues</h2>
           <p>{exercise.instructions.cues}</p>
         </section>
       ) : null}
 
       {exercise.instructions.mistakes ? (
         <section className="exercise-section">
-          <h2>Common mistakes</h2>
+          <h2 className="section-head">Common mistakes</h2>
           <p>{exercise.instructions.mistakes}</p>
         </section>
       ) : null}
 
       {exercise.instructions.progress ? (
         <section className="exercise-section">
-          <h2>Progress</h2>
+          <h2 className="section-head">Progress</h2>
           <p>{exercise.instructions.progress}</p>
         </section>
       ) : null}
 
-      <section className="exercise-section">
-        <h2>Video</h2>
-        {videoId ? (
+      {videoId ? (
+        <section className="exercise-section">
+          <h2 className="section-head">Video</h2>
           <iframe
             className="exercise-video"
             src={`https://www.youtube-nocookie.com/embed/${videoId}`}
@@ -237,23 +222,19 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-        ) : (
-          <p className="exercise-note">No video yet.</p>
-        )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="exercise-section">
-        <h2>Pictures</h2>
-        {entry && entry.images.length > 0 ? (
+      {entry && entry.images.length > 0 ? (
+        <section className="exercise-section">
+          <h2 className="section-head">Pictures</h2>
           <div className="exercise-images">
             {entry.images.map((src) => (
               <img key={src} src={src} alt={`${exercise.name} picture`} className="exercise-image" />
             ))}
           </div>
-        ) : (
-          <p className="exercise-note">No pictures yet.</p>
-        )}
-      </section>
+        </section>
+      ) : null}
     </div>
   )
 }

@@ -8,58 +8,44 @@
   gap: 8px;
 }
 
-/* Chart card: a flat panel that wraps the chart and carries the header row. */
+/* Metric sections: flat, no card chrome. Header row has the label and a
+   "+" icon button for an inline add form. */
 
-.progress-card {
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-top: 16px;
-}
-
-.progress-card-header {
+.progress-top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
 }
 
-.progress-card-title {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0;
+.progress-metric {
+  margin-top: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.progress-metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--touch-min);
 }
 
 .progress-card-value {
   display: flex;
   align-items: baseline;
-  gap: 6px;
-}
-
-.progress-card-latest {
-  font-family: var(--font-display);
-  font-size: 30px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text);
-  line-height: 1;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .progress-card-unit {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-.progress-card-empty {
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--color-text-secondary);
 }
 
 .progress-delta {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -78,10 +64,9 @@
   color: var(--color-text-secondary);
 }
 
-/* The chart renders its own panel chrome and title. Inside a card the card
-   owns the chrome and the header owns the title, so drop both. */
+/* The chart renders its own panel chrome and title. The section owns both. */
 
-.progress-card .chart {
+.progress-metric .chart {
   background: none;
   border: none;
   border-radius: 0;
@@ -89,30 +74,25 @@
   margin-top: 12px;
 }
 
-.progress-card .chart-title {
+.progress-metric .chart-title {
   display: none;
 }
 
-/* View session history button, flat and full width. */
+/* Session history: text button, top right. */
 
 .progress-history {
   min-height: var(--touch-min);
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--color-accent);
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .progress-history:hover {
-  background-color: var(--color-hover);
+  text-decoration: underline;
 }
 
 .progress-history:focus-visible {
@@ -120,35 +100,24 @@
   outline-offset: -2px;
 }
 
-/* Entries section. */
+/* Inline add form. */
 
-.progress-section {
-  margin-top: 24px;
-}
-
-.progress-section-title {
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0 0 8px;
-}
-
-.progress-form {
+.progress-add-form {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
-  margin-top: 16px;
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
+  margin: 4px 0 8px;
 }
 
-.progress-form-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+.progress-add-label {
+  flex: 0 0 76px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.progress-add-summary {
+  font-size: 14px;
+  color: var(--color-text-secondary);
 }
 
 .progress-input {
@@ -158,6 +127,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
+  font: inherit;
   font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
@@ -168,41 +138,40 @@
 }
 
 .progress-input-date {
-  flex: 1 1 140px;
-}
-
-.progress-input-type {
-  flex: 1 1 120px;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .progress-input-value {
-  flex: 1 1 96px;
+  flex: 0 0 72px;
+  width: 72px;
 }
 
 .progress-add {
   min-height: var(--touch-min);
-  padding: 0 16px;
-  width: 100%;
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid var(--color-accent);
   border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 14px;
+  color: var(--color-accent);
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.progress-add:hover {
+.progress-add:hover:not(:disabled) {
   background-color: var(--color-hover);
 }
 
-.progress-add:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
+.progress-add:disabled {
+  border-color: var(--color-border);
+  color: var(--color-disabled-text);
+  cursor: default;
 }
 
 .progress-strength-label {
   display: block;
-  margin: 12px 0 4px;
+  margin: 4px 0;
   font-size: 14px;
   color: var(--color-text-secondary);
 }
@@ -211,4 +180,8 @@
   width: 100%;
   min-height: var(--touch-min);
   font-size: 16px;
+}
+
+.progress-metric:last-child {
+  border-bottom: none;
 }

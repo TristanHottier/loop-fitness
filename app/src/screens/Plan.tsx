@@ -122,7 +122,7 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
   if (failed) {
     return (
       <div className="screen">
-        <h1>Plan</h1>
+        <h1 className="page-title">Plan</h1>
         <p className="screen-subtitle">Could not load the plan.</p>
       </div>
     )
@@ -131,44 +131,43 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
   if (!plan) {
     return (
       <div className="screen">
-        <h1>Plan</h1>
+        <h1 className="page-title">Plan</h1>
         <p className="screen-subtitle">Loading plan</p>
       </div>
     )
   }
 
   return (
-    <div className="screen">
-      <h1>Plan</h1>
+    <div className="screen plan">
+      <h1 className="page-title">Plan</h1>
+      <ProgramSection
+        plan={plan}
+        view={view}
+        onView={setView}
+        targets={targets}
+        training={training}
+      />
+      <h2 className="section-head plan-workouts-head">Workouts</h2>
       {plan.workouts.map((workout) => {
         const isOpen = expanded.has(workout.id)
         return (
-          <section key={workout.id} className="plan-workout">
+          <section
+            key={workout.id}
+            className="plan-workout"
+            style={{ ['--plan-hue' as string]: hueFor(workout.id) }}
+          >
             <button
               type="button"
               className="plan-cover"
               aria-expanded={isOpen}
-              style={{ ['--plan-hue' as string]: hueFor(workout.id) }}
               onClick={() => toggleWorkout(workout.id)}
             >
-              <svg
-                className="plan-cover-logo"
-                viewBox="0 0 100 50"
-                aria-hidden="true"
-              >
-                <path
-                  d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
-                  fill="none"
-                  stroke="var(--plan-hue)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <div className="plan-cover-text">
-                <span className="plan-cover-day">{workout.day}</span>
+              <span className="plan-cover-text">
                 <span className="plan-cover-name">{workout.name}</span>
-              </div>
+                <span className="plan-cover-day">
+                  {workout.day}, {workout.exercises.length} exercises, {totalSetsFor(plan, workout)} sets
+                </span>
+              </span>
               <ChevronDown
                 className={
                   'plan-cover-chevron' +
@@ -179,19 +178,8 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
                 aria-hidden="true"
               />
             </button>
-            <div className="plan-tags">
-              <span className="plan-card-tag">{workout.exercises.length} exercises</span>
-              <span className="plan-card-tag">{totalSetsFor(plan, workout)} sets</span>
-            </div>
             {isOpen && (
               <>
-                <div className="plan-muscle-map">
-                  <MuscleMap
-                    primary={[]}
-                    secondary={[]}
-                    volume={workoutVolume(plan, workout)}
-                  />
-                </div>
                 <div className="plan-exercise-list">
                   {workout.exercises.map((slug) => {
                     const exercise = resolveExercise(plan, workout, slug)
@@ -211,18 +199,18 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
                     )
                   })}
                 </div>
+                <div className="plan-muscle-map">
+                  <MuscleMap
+                    primary={[]}
+                    secondary={[]}
+                    volume={workoutVolume(plan, workout)}
+                  />
+                </div>
               </>
             )}
           </section>
         )
       })}
-      <ProgramSection
-        plan={plan}
-        view={view}
-        onView={setView}
-        targets={targets}
-        training={training}
-      />
     </div>
   )
 }
@@ -245,6 +233,7 @@ function ProgramSection({
   const logged = training ? weeklyVolume(training.logs, training.sessions, plan, week) : {}
   const lastWeek = training ? weeklyVolume(training.logs, training.sessions, plan, addDays(week, -7)) : {}
   const isWeek = view === 'week'
+  const [mapOpen, setMapOpen] = useState(false)
   // List every muscle the program trains, plus anything logged outside of it.
   const values: Record<string, number> = {}
   for (const k of Object.keys(planned)) values[k] = isWeek ? (logged[k] ?? 0) : planned[k]
@@ -254,8 +243,8 @@ function ProgramSection({
     { id: 'week', label: 'This week' },
   ]
   return (
-    <section className="plan-program-map">
-      <h2 className="plan-program-map-title">Muscles trained across the program</h2>
+    <section className="plan-program">
+      <h2 className="section-head">Muscle volume</h2>
       <div className="plan-toggle" role="group" aria-label="Volume view">
         {options.map((o) => (
           <button
@@ -274,9 +263,6 @@ function ProgramSection({
           ? 'Hard sets logged since Monday. Warmups are not counted, drop sets count half.'
           : `Planned set volume across ${plan.workouts.length} workouts`}
       </p>
-      <div className="plan-muscle-map">
-        <MuscleMap primary={[]} secondary={[]} volume={isWeek ? logged : planned} />
-      </div>
       {isWeek && !training ? (
         <p className="plan-program-map-sub">Loading logged sets</p>
       ) : (
@@ -286,6 +272,28 @@ function ProgramSection({
           previous={isWeek ? lastWeek : undefined}
           caption={isWeek ? 'Logged sets per muscle this week' : 'Planned sets per muscle per week'}
         />
+      )}
+      <button
+        type="button"
+        className="prop-row plan-map-toggle"
+        aria-expanded={mapOpen}
+        onClick={() => setMapOpen((o) => !o)}
+      >
+        <span>Muscle map</span>
+        <span className="plan-map-toggle-state">
+          {mapOpen ? 'Hide' : 'Show'}
+          <ChevronDown
+            size={18}
+            strokeWidth={1.75}
+            aria-hidden="true"
+            className={mapOpen ? '' : 'plan-cover-chevron-collapsed'}
+          />
+        </span>
+      </button>
+      {mapOpen && (
+        <div className="plan-muscle-map">
+          <MuscleMap primary={[]} secondary={[]} volume={isWeek ? logged : planned} />
+        </div>
       )}
     </section>
   )

@@ -26,13 +26,14 @@ import {
   type BandItem,
   type ExerciseOverride,
 } from '../db/config'
-import { ChevronDown, ChevronRight, Tag, X } from 'lucide-react'
+import { Check, ChevronDown, Ellipsis, X } from 'lucide-react'
 import { RestTimer } from '../components/RestTimer'
 import { BandPicker } from '../components/BandPicker'
-import { RirPicker } from '../components/RirPicker'
+import { RirChip, RirPicker } from '../components/RirPicker'
+import { hueFor } from '../components/workoutHue'
 import { Toast } from '../components/Toast'
 import { ExerciseMenu } from '../components/ExerciseMenu'
-import { todayISODate } from '../lib/format'
+import { formatClock, todayISODate } from '../lib/format'
 import { suggestForExercise, type BandSuggestion } from '../lib/suggestions'
 import { isDeloadActive } from '../lib/progression'
 import { bestByExercise, type ExerciseBest } from '../lib/records'
@@ -52,31 +53,21 @@ import './session.css'
 
 type InputState = { reps: string; band: string; note: string; rir: number | null; type: SetType }
 type Suggestion = BandSuggestion | null
+type PrevStats = { sets: number; reps: number }
+
+function naturalType(kind: 'planned' | 'warmup' | 'drop'): SetType {
+  return kind === 'warmup' ? 'warmup' : kind === 'drop' ? 'drop' : 'normal'
+}
+
+function reducedMotion(): boolean {
+  return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
 
 const TYPE_LABEL: Record<SetType, string> = {
   normal: 'Normal',
   warmup: 'Warm-up',
   drop: 'Drop',
   failure: 'Failure',
-}
-
-function nextType(t: SetType): SetType {
-  return SET_TYPES[(SET_TYPES.indexOf(t) + 1) % SET_TYPES.length]
-}
-
-function hueFor(workoutId: string): string {
-  switch (workoutId) {
-    case 'pull':
-      return 'var(--hue-pull)'
-    case 'push':
-      return 'var(--hue-push)'
-    case 'shoulders-arms':
-      return 'var(--hue-shoulders)'
-    case 'legs-forearms':
-      return 'var(--hue-legs)'
-    default:
-      return 'var(--color-accent)'
-  }
 }
 
 // Planned sets for an exercise: half (rounded up) in a deload week.
@@ -150,6 +141,34 @@ export function Session({
   // Set keys with a write in flight, and when each set was last logged.
   const busyKeys = useRef<Set<string>>(new Set())
   const loggedAt = useRef<Record<string, number>>({})
+  const rootRef = useRef<HTMLDivElement>(null)
+  // Rows with the note / set type panel open.
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
+  // Per exercise, the set key whose RIR picker is open (the latest log).
+  const [rirOpen, setRirOpen] = useState<Record<string, string | null>>({})
+  // The most recent rest length used for an exercise, offered as a default.
+  const [lastRest, setLastRest] = useState<{ slug: string; seconds: number } | null>(null)
+  const [confirmFinish, setConfirmFinish] = useState(false)
+  const [prevStats, setPrevStats] = useState<PrevStats | null>(null)
+  const [advance, setAdvance] = useState<{ slug: string; n: number } | null>(null)
+  const advanceTimer = useRef<number | null>(null)
+
+  // Smooth-scroll the newly opened exercise into view after auto-advance.
+  useEffect(() => {
+    if (!advance) return
+    const id = window.requestAnimationFrame(() => {
+      const el = rootRef.current?.querySelector<HTMLElement>(`[data-slug="${advance.slug}"]`)
+      el?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' })
+    })
+    return () => window.cancelAnimationFrame(id)
+  }, [advance])
+
+  useEffect(
+    () => () => {
+      if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current)
+    },
+    []
+  )
 
   useEffect(() => {
     let cancelled = false
@@ -309,15 +328,14 @@ export function Session({
     }
   }
 
-  function setRir(key: string, rir: number | null) {
+  function setRir(key: string, slug: string, rir: number | null) {
     patchInput(key, { rir })
     void patchLog(key, { rir })
+    // Picking a value folds the picker into the small chip.
+    setRirOpen((prev) => ({ ...prev, [slug]: null }))
   }
 
-  function cycleType(key: string) {
-    const input = inputs[key]
-    if (!input) return
-    const type = nextType(input.type)
+  function changeType(key: string, type: SetType) {
     patchInput(key, { type })
     void patchLog(key, { set_type: type })
   }
@@ -338,6 +356,7 @@ export function Session({
     if (busyKeys.current.has(key)) return
     busyKeys.current.add(key)
     let log: SetLog
+    let nextRecords: Record<string, SetLog> = logRecords
     try {
       const existing = logRecords[key]
       if (existing) {
@@ -351,6 +370,7 @@ export function Session({
           return next
         })
         patchInput(key, { rir: null })
+        setRirOpen((prev) => (prev[slug] === key ? { ...prev, [slug]: null } : prev))
         return
       }
       const reps = parseInt(input.reps, 10) || 0
@@ -367,12 +387,13 @@ export function Session({
       )
       await createSetLog(log)
       loggedAt.current[key] = Date.now()
-      const nextRecords = { ...logRecords, [key]: log }
+      nextRecords = { ...logRecords, [key]: log }
       setLogRecords(nextRecords)
+      setRirOpen((prev) => ({ ...prev, [slug]: key }))
       // Live new best: flagged now but not before this log.
       const before = prKeys(logRecords, priorBest, activePlan, inventory)
       const after = prKeys(nextRecords, priorBest, activePlan, inventory)
-      if (after.has(key) && !before.has(key)) showToast(`New best: ${prMessage(log)}`)
+      if (after.has(key) && !before.has(key)) showToast(`New best, ${prMessage(log)}`)
     } catch {
       setError('Could not save the set.')
       return
@@ -388,13 +409,66 @@ export function Session({
     // Unilateral: the timer starts only after the second side (R) is logged.
     if (ex.unilateral && side !== 'R') return
 
-    setActiveTimer({ seconds: restFor(ex, overrides), label: ex.name, slug })
+    const restSeconds = restFor(ex, overrides)
+    setActiveTimer({ seconds: restSeconds, label: ex.name, slug })
+    setLastRest({ slug, seconds: restSeconds })
     setTimerKey((k) => k + 1)
+
+    // Last working set of the exercise: fold it and open the next one.
+    if (kindOf(setIndex) === 'planned' && setKeysFor(slug).every((k) => nextRecords[k])) {
+      const order = workout.exercises
+      const from = order.indexOf(slug)
+      const hasOpen = (sl: string) => setKeysFor(sl).some((k) => !nextRecords[k])
+      const next =
+        order.slice(from + 1).find(hasOpen) ?? order.slice(0, from).find(hasOpen) ?? null
+      if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current)
+      advanceTimer.current = window.setTimeout(() => {
+        setCollapsed((prev) => ({ ...prev, [slug]: true, ...(next ? { [next]: false } : {}) }))
+        if (next) setAdvance((a) => ({ slug: next, n: (a?.n ?? 0) + 1 }))
+      }, 450)
+    }
+  }
+
+  async function loadPrevStats(): Promise<PrevStats | null> {
+    const prevs = await db.sessions
+      .filter(
+        (x) =>
+          !x.deleted && x.ended_at !== null && x.workout_id === workout.id && x.id !== activeSession.id
+      )
+      .toArray()
+    if (prevs.length === 0) return null
+    const last = prevs.reduce((a, b) =>
+      a.date > b.date || (a.date === b.date && a.started_at >= b.started_at) ? a : b
+    )
+    const logs = (await getSetLogsForSession(last.id)).filter((l) => l.set_type !== 'warmup')
+    return { sets: logs.length, reps: logs.reduce((sum, l) => sum + l.reps, 0) }
   }
 
   async function finish() {
-    await endSession(activeSession.id)
-    setCompleted(true)
+    try {
+      await endSession(activeSession.id)
+      let stats: PrevStats | null = null
+      try {
+        stats = await loadPrevStats()
+      } catch {
+        stats = null
+      }
+      setPrevStats(stats)
+      setConfirmFinish(false)
+      setCompleted(true)
+    } catch {
+      setError('Could not finish the session.')
+    }
+  }
+
+  async function saveRestDefault(slug: string, seconds: number) {
+    try {
+      await setExerciseOverride(slug, { restSeconds: seconds })
+      setOverrides((prev) => ({ ...prev, [slug]: { ...prev[slug], restSeconds: seconds } }))
+      showToast(`Rest default saved, ${formatClock(seconds)}`)
+    } catch {
+      setError('Could not save the rest default.')
+    }
   }
 
   function plannedCount(slug: string): number {
@@ -492,7 +566,13 @@ export function Session({
 
   const prSet = prKeys(logRecords, priorBest, plan, inventory)
 
-  function setRow(key: string, slug: string, setIndex: number, side: string | null) {
+  function setLine(
+    key: string,
+    slug: string,
+    setIndex: number,
+    side: string | null,
+    labelText: string
+  ) {
     const input = inputs[key]
     const log = logRecords[key]
     const isLogged = Boolean(log)
@@ -504,81 +584,123 @@ export function Session({
     const type = input?.type ?? 'normal'
     const ex = resolveExercise(activePlan, workout, slug)
     const anyLogged = sidesOf(ex).some((sd) => logRecords[setKey(slug, setIndex, sd)])
+    const expanded = Boolean(expandedRows[key])
+    const picking = isLogged && rirOpen[slug] === key
+    const note = (input?.note ?? '').trim()
+    const showType = type !== naturalType(kind)
     return (
-      <>
-        <input
-          className="session-input session-input-reps"
-          type="number"
-          inputMode="numeric"
-          value={input?.reps ?? ''}
-          aria-label={`Reps, ${name}`}
-          onChange={(e) => updateInput(key, 'reps', e.target.value)}
-        />
-        <button
-          type="button"
-          className="session-input session-input-band session-input-band-button"
-          onClick={() => setBandPickerKey(key)}
-        >
-          {input?.band ?? ''}
-        </button>
-        <input
-          className="session-input session-input-note"
-          type="text"
-          placeholder="Note"
-          aria-label={`Note, ${name}`}
-          value={input?.note ?? ''}
-          onChange={(e) => updateInput(key, 'note', e.target.value)}
-        />
-        <button
-          type="button"
-          className={'session-tag' + (type !== 'normal' ? ' session-tag-on' : '')}
-          aria-label={`Set type, ${name}: ${TYPE_LABEL[type].toLowerCase()}. Tap to change`}
-          onClick={() => cycleType(key)}
-        >
-          {type === 'normal' ? (
-            <Tag size={16} strokeWidth={1.75} aria-hidden="true" />
-          ) : (
-            TYPE_LABEL[type]
-          )}
-        </button>
-        <button
-          className={'session-check' + (isLogged ? ' session-check-logged' : '')}
-          onClick={() => logSet(key, slug, setIndex, side)}
-          aria-label={`Log ${name}`}
-          aria-pressed={isLogged}
-        >
-          <span className="session-check-box" aria-hidden="true">
-            <svg
-              className="session-check-mark"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#FFFFFF"
-              strokeWidth={3}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
+      <div
+        className={
+          'session-set-wrap' +
+          (isPr ? ' session-set-pr' : '') +
+          (isLogged ? ' session-set-logged' : '')
+        }
+        key={key}
+      >
+        <div className="session-set">
+          <div className="session-set-lead">
+            <button
+              type="button"
+              className="session-set-label"
+              aria-expanded={expanded}
+              aria-label={`Note and set type, ${name}`}
+              onClick={() => setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }))}
             >
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-          </span>
-        </button>
-        {kind !== 'planned' && !anyLogged && (
+              <span className="session-set-label-text">{labelText}</span>
+              <Ellipsis size={14} strokeWidth={1.75} aria-hidden="true" />
+            </button>
+            {(showType || (isLogged && !picking) || isPr) && (
+              <span className="session-set-sub">
+                {showType && <span className="session-set-type">{TYPE_LABEL[type]}</span>}
+                {isLogged && !picking && (
+                  <RirChip value={log.rir} onOpen={() => setRirOpen((p) => ({ ...p, [slug]: key }))} name={name} />
+                )}
+                {isPr && <span className="session-pr-note">New best</span>}
+              </span>
+            )}
+          </div>
+          <input
+            className="session-input session-input-reps"
+            type="number"
+            inputMode="numeric"
+            value={input?.reps ?? ''}
+            aria-label={`Reps, ${name}`}
+            onChange={(e) => updateInput(key, 'reps', e.target.value)}
+          />
           <button
             type="button"
-            className="session-remove"
-            aria-label={`Remove ${nameBase}`}
-            onClick={() => removeExtra(slug, setIndex)}
+            className="session-input session-input-band session-input-band-button"
+            aria-label={`Band, ${name}: ${input?.band ?? 'none'}`}
+            onClick={() => setBandPickerKey(key)}
           >
-            <X size={16} strokeWidth={1.75} aria-hidden="true" />
+            {input?.band ?? ''}
           </button>
-        )}
-        {isLogged && (
-          <div className="session-set-meta">
-            <RirPicker value={log.rir} onChange={(v) => setRir(key, v)} name={name} />
-            {isPr && <span className="session-pr-note">New best</span>}
+          <button
+            type="button"
+            className={'session-check' + (isLogged ? ' session-check-logged' : '')}
+            onClick={() => logSet(key, slug, setIndex, side)}
+            aria-label={`Log ${name}`}
+            aria-pressed={isLogged}
+          >
+            <span className="session-check-box" aria-hidden="true">
+              <svg
+                className="session-check-mark"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth={3}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 13l4 4L19 7" />
+              </svg>
+            </span>
+          </button>
+        </div>
+        {note !== '' && !expanded && <p className="session-set-note">{note}</p>}
+        {expanded && (
+          <div className="session-set-panel">
+            <input
+              className="session-input session-input-note"
+              type="text"
+              placeholder="Note"
+              aria-label={`Note, ${name}`}
+              value={input?.note ?? ''}
+              onChange={(e) => updateInput(key, 'note', e.target.value)}
+            />
+            <div className="session-type-row" role="group" aria-label={`Set type, ${name}`}>
+              {SET_TYPES.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  className={'session-type-chip' + (type === t ? ' session-type-chip-on' : '')}
+                  aria-pressed={type === t}
+                  onClick={() => changeType(key, t)}
+                >
+                  {TYPE_LABEL[t]}
+                </button>
+              ))}
+            </div>
+            {kind !== 'planned' && !anyLogged && (
+              <button
+                type="button"
+                className="session-remove"
+                aria-label={`Remove ${nameBase}`}
+                onClick={() => removeExtra(slug, setIndex)}
+              >
+                <X size={16} strokeWidth={1.75} aria-hidden="true" />
+                <span>Remove set</span>
+              </button>
+            )}
           </div>
         )}
-      </>
+        {picking && log && (
+          <div className="session-set-meta">
+            <RirPicker value={log.rir} onChange={(v) => setRir(key, slug, v)} name={name} />
+          </div>
+        )}
+      </div>
     )
   }
 
@@ -587,31 +709,14 @@ export function Session({
     if (ex.unilateral) {
       return (
         <div key={setIndex}>
-          <div className="session-set">
-            <span className="session-set-label">{label}</span>
-          </div>
-          {['L', 'R'].map((side) => {
-            const key = setKey(slug, setIndex, side)
-            return (
-              <div className="session-side" key={side}>
-                <span className="session-side-label">{side}</span>
-                {setRow(key, slug, setIndex, side)}
-              </div>
-            )
-          })}
+          <p className="session-set-heading">{label}</p>
+          {['L', 'R'].map((side) =>
+            setLine(setKey(slug, setIndex, side), slug, setIndex, side, side === 'L' ? 'Left' : 'Right')
+          )}
         </div>
       )
     }
-    const key = setKey(slug, setIndex, null)
-    return (
-      <div
-        className={'session-set' + (prSet.has(key) ? ' session-set-pr' : '')}
-        key={setIndex}
-      >
-        <span className="session-set-label">{label}</span>
-        {setRow(key, slug, setIndex, null)}
-      </div>
-    )
+    return setLine(setKey(slug, setIndex, null), slug, setIndex, null, label)
   }
 
   const logged: Record<string, boolean> = {}
@@ -660,38 +765,26 @@ export function Session({
     setCollapsed((prev) => ({ ...prev, [slug]: !current }))
   }
 
+  const unloggedCount = totalSets - doneSets
+  function onFinishClick() {
+    if (unloggedCount > 0) setConfirmFinish(true)
+    else void finish()
+  }
+
+  function deltaText(delta: number): string {
+    if (delta === 0) return 'same'
+    return delta > 0 ? `+${delta}` : `-${Math.abs(delta)}`
+  }
+
   return (
     <div
-      className="session"
+      className={'session' + (activeTimer && !completed ? ' session-has-timer' : '')}
+      ref={rootRef}
       style={{ ['--session-hue' as string]: hueFor(workout.id) }}
     >
-      <div className="session-cover">
-        <svg
-          className="session-cover-logo"
-          viewBox="0 0 100 50"
-          aria-hidden="true"
-        >
-          <path
-            d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
-            fill="none"
-            stroke="var(--session-hue)"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <div className="session-cover-text">
-          <p className="session-cover-day">{workout.day}</p>
-          <h1 className="session-cover-title">{workout.name}</h1>
-        </div>
-      </div>
       {completed ? (
         <div className="session-complete">
-          <svg
-            className="session-complete-logo"
-            viewBox="0 0 100 50"
-            aria-hidden="true"
-          >
+          <svg className="session-complete-logo" viewBox="0 0 100 50" aria-hidden="true">
             <path
               d="M50,25 C50,8 18,8 18,25 C18,42 50,42 50,25 C50,8 82,8 82,25 C82,42 50,42 50,25 Z"
               fill="none"
@@ -705,17 +798,30 @@ export function Session({
           <div className="session-complete-rows">
             <div className="session-complete-row">
               <span className="session-complete-label">Sets</span>
-              <span className="session-complete-value">{workingLogs.length}</span>
+              <span className="session-complete-value">
+                {workingLogs.length}
+                {prevStats && (
+                  <span className="session-complete-delta">{deltaText(workingLogs.length - prevStats.sets)}</span>
+                )}
+              </span>
             </div>
             <div className="session-complete-row">
               <span className="session-complete-label">Total reps</span>
-              <span className="session-complete-value">{totalReps}</span>
+              <span className="session-complete-value">
+                {totalReps}
+                {prevStats && (
+                  <span className="session-complete-delta">{deltaText(totalReps - prevStats.reps)}</span>
+                )}
+              </span>
             </div>
-            <div className="session-complete-row">
-              <span className="session-complete-label">New bests</span>
-              <span className="session-complete-value">{newBestCount}</span>
-            </div>
+            {newBestCount > 0 && (
+              <div className="session-complete-row">
+                <span className="session-complete-label">New bests</span>
+                <span className="session-complete-value">{newBestCount}</span>
+              </div>
+            )}
           </div>
+          {prevStats && <p className="session-complete-hint">Compared with your last {workout.name} session.</p>}
           {prList.length > 0 && (
             <ul className="session-complete-prs" aria-label="New bests">
               {prList.map((m) => (
@@ -723,146 +829,162 @@ export function Session({
               ))}
             </ul>
           )}
-          <button
-            type="button"
-            className="session-complete-done"
-            onClick={onExit}
-          >
+          <button type="button" className="session-complete-done" onClick={onExit}>
             Done
           </button>
         </div>
       ) : (
         <>
-        {deload && (
-          <p className="session-banner" role="status">
-            Deload week. Half the sets, one band lighter.
-          </p>
-        )}
-        <div className="session-progress">
-        <div
-          className="session-progress-track"
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={totalSets}
-          aria-valuenow={doneSets}
-        >
-          <div
-            className="session-progress-fill"
-            style={{ width: `${progressPct}%` }}
-          />
-        </div>
-        <div className="session-progress-caption">
-          <span>
-            {doneSets} of {totalSets} sets
-          </span>
-          <span>{progressPct}%</span>
-        </div>
-      </div>
-      <div className="session-header">
-        <button className="session-finish" onClick={finish}>
-          Finish
-        </button>
-      </div>
-      {workout.exercises.map((slug) => {
-        const ex = resolveExercise(plan, workout, slug)
-        const collapsedForSlug = isCollapsedFor(slug)
-        const isActive = slug === activeSlug
-        const suggestion = suggestions[slug]
-        const reason = suggestion?.reason ?? null
-        const hasLogs = Object.values(logRecords).some((l) => l.exercise_slug === slug)
-        const prefillBand = inputs[setKey(slug, 1, sidesOf(ex)[0])]?.band
-        // Deload weeks target the lighter prefilled band, not the progression step.
-        const target = suggestion?.target ?? { band: prefillBand, repMin: ex.repMin, repMax: ex.repMax }
-        const targetBand = deload ? prefillBand : (target.band ?? prefillBand)
-        const rowIndices = [
-          ...(extras[slug] ?? []),
-          ...Array.from({ length: plannedCount(slug) }, (_, i) => i + 1),
-        ].sort((a, b) => orderOf(a) - orderOf(b))
-        return (
-          <section
-            className={
-              'session-exercise' + (isActive ? ' session-exercise-active' : '')
-            }
-            key={slug}
-          >
-            <div className="session-exercise-row">
-              <button
-                type="button"
-                className="session-exercise-toggle"
-                aria-expanded={!collapsedForSlug}
-                aria-label={collapsedForSlug ? `Expand ${ex.name}` : `Collapse ${ex.name}`}
-                onClick={() => toggleCollapsed(slug)}
-              >
-                <ChevronDown
-                  className={
-                    'session-exercise-toggle-chevron' +
-                    (collapsedForSlug ? ' session-exercise-toggle-chevron-collapsed' : '')
-                  }
-                  size={18}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                />
+          <div className="session-bar">
+            <div className="session-header">
+              <div className="session-header-text">
+                <h1 className="session-header-title">{workout.name}</h1>
+                <p className="session-header-count">
+                  {doneSets} of {totalSets}
+                </p>
+              </div>
+              <button type="button" className="session-finish" onClick={onFinishClick}>
+                Finish
               </button>
-              <button
-                type="button"
-                className="session-exercise-title"
-                onClick={() => onOpenExercise(slug)}
+              <div
+                className="session-progress-track"
+                role="progressbar"
+                aria-label="Sets logged"
+                aria-valuemin={0}
+                aria-valuemax={totalSets}
+                aria-valuenow={doneSets}
               >
-                <span className="session-exercise-title-text">{ex.name}</span>
-                {prBySlug[slug] && (
-                  <span className="session-new-best">new best</span>
-                )}
-                <ChevronRight
-                  className="session-exercise-title-chevron"
-                  size={18}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                />
-              </button>
-              <ExerciseMenu
-                name={ex.name}
-                items={[
-                  { label: 'Add warm-up set', onSelect: () => addWarmup(slug) },
-                  {
-                    label: 'Add drop set',
-                    onSelect: () => addDrop(slug),
-                    disabled: lastWorkingLog(slug) === null,
-                  },
-                ]}
-              />
+                <div className="session-progress-fill" style={{ width: `${progressPct}%` }} />
+              </div>
             </div>
-            {!collapsedForSlug && (
-              <>
-                {ex.unilateral && <p className="session-note">One set per side.</p>}
-                {!hasLogs && targetBand && (
-                  <p className="session-target">
-                    Target: {formatBand(targetBand)} × {target.repMin}-{target.repMax}
-                  </p>
-                )}
-                {suggestion && (
-                  <p
-                    className={
-                      'session-suggestion ' +
-                      (suggestion.kind === 'progress' ? 'session-suggestion-progress' : '')
-                    }
-                  >
-                    {suggestion.message}
-                    {reason && <span className="session-suggestion-reason"> {reason}</span>}
-                    {suggestion.note && <span className="session-suggestion-reason"> {suggestion.note}.</span>}
-                    {suggestion.intermediate && (
-                      <span className="session-suggestion-reason">
-                        {' '}
-                        Before moving up, try: {suggestion.intermediate.text}.
-                      </span>
-                    )}
-                  </p>
-                )}
-                {rowIndices.map((setIndex) => renderRow(slug, ex, setIndex))}
-              </>
+            {confirmFinish && (
+              <div className="session-confirm" role="alertdialog" aria-label="Finish workout">
+                <p className="session-confirm-text">
+                  {unloggedCount} {unloggedCount === 1 ? 'set is' : 'sets are'} not logged yet.
+                </p>
+                <button type="button" className="session-confirm-btn" onClick={() => setConfirmFinish(false)}>
+                  Keep going
+                </button>
+                <button
+                  type="button"
+                  className="session-confirm-btn session-confirm-btn-primary"
+                  onClick={() => void finish()}
+                >
+                  Finish
+                </button>
+              </div>
             )}
-          </section>
-        )
-      })}
+          </div>
+          {deload && (
+            <p className="session-banner" role="status">
+              Deload week. Half the sets, one band lighter.
+            </p>
+          )}
+          {workout.exercises.map((slug) => {
+            const ex = resolveExercise(plan, workout, slug)
+            const collapsedForSlug = isCollapsedFor(slug)
+            const isActive = slug === activeSlug
+            const suggestion = suggestions[slug]
+            const reason = suggestion?.reason ?? null
+            const hasLogs = Object.values(logRecords).some((l) => l.exercise_slug === slug)
+            const prefillBand = inputs[setKey(slug, 1, sidesOf(ex)[0])]?.band
+            // Deload weeks target the lighter prefilled band, not the progression step.
+            const target = suggestion?.target ?? { band: prefillBand, repMin: ex.repMin, repMax: ex.repMax }
+            const targetBand = deload ? prefillBand : (target.band ?? prefillBand)
+            const slugKeys = setKeysFor(slug)
+            const slugDone = slugKeys.filter((k) => logged[k]).length
+            const rowIndices = [
+              ...(extras[slug] ?? []),
+              ...Array.from({ length: plannedCount(slug) }, (_, i) => i + 1),
+            ].sort((a, b) => orderOf(a) - orderOf(b))
+            const menuItems = [
+              { label: 'View exercise', onSelect: () => onOpenExercise(slug) },
+              { label: 'Add warm-up set', onSelect: () => addWarmup(slug) },
+              {
+                label: 'Add drop set',
+                onSelect: () => addDrop(slug),
+                disabled: lastWorkingLog(slug) === null,
+              },
+            ]
+            if (lastRest && lastRest.slug === slug) {
+              menuItems.push({
+                label: `Set rest as default (${formatClock(lastRest.seconds)})`,
+                onSelect: () => void saveRestDefault(slug, lastRest.seconds),
+                disabled: false,
+              })
+            }
+            return (
+              <section
+                className={'session-exercise' + (isActive ? ' session-exercise-active' : '')}
+                key={slug}
+                data-slug={slug}
+              >
+                <div className="session-exercise-row">
+                  <button
+                    type="button"
+                    className="session-exercise-toggle"
+                    aria-expanded={!collapsedForSlug}
+                    onClick={() => toggleCollapsed(slug)}
+                  >
+                    <span className="session-exercise-text">
+                      <span className="session-exercise-name">{ex.name}</span>
+                      <span className="session-exercise-sub">
+                        {slugDone} of {slugKeys.length} sets
+                        {prefillBand ? `, ${prefillBand}` : ''}
+                      </span>
+                    </span>
+                    {slugDone === slugKeys.length && slugKeys.length > 0 && (
+                      <Check
+                        className="session-exercise-done"
+                        size={18}
+                        strokeWidth={2}
+                        aria-label="All sets logged"
+                      />
+                    )}
+                    <ChevronDown
+                      className={
+                        'session-exercise-toggle-chevron' +
+                        (collapsedForSlug ? ' session-exercise-toggle-chevron-collapsed' : '')
+                      }
+                      size={18}
+                      strokeWidth={1.75}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <ExerciseMenu name={ex.name} items={menuItems} />
+                </div>
+                {!collapsedForSlug && (
+                  <>
+                    {ex.unilateral && <p className="session-note">One set per side.</p>}
+                    {!hasLogs && targetBand && (
+                      <p className="session-target">
+                        Target: {formatBand(targetBand)} × {target.repMin}-{target.repMax}
+                      </p>
+                    )}
+                    {suggestion && (
+                      <p
+                        className={
+                          'session-suggestion ' +
+                          (suggestion.kind === 'progress' ? 'session-suggestion-progress' : '')
+                        }
+                      >
+                        {suggestion.message}
+                        {reason && <span className="session-suggestion-reason"> {reason}</span>}
+                        {suggestion.note && <span className="session-suggestion-reason"> {suggestion.note}.</span>}
+                        {suggestion.intermediate && (
+                          <span className="session-suggestion-reason">
+                            {' '}
+                            Before moving up, try: {suggestion.intermediate.text}.
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    {rowIndices.map((setIndex) => renderRow(slug, ex, setIndex))}
+                  </>
+                )}
+              </section>
+            )
+          })}
         </>
       )}
       {!completed && activeTimer && (
@@ -871,23 +993,26 @@ export function Session({
           seconds={activeTimer.seconds}
           label={activeTimer.label}
           onDone={() => setActiveTimer(null)}
-          onSaveDefault={async (s) => {
-            const slug = activeTimer.slug
-            await setExerciseOverride(slug, { restSeconds: s })
-            setOverrides((prev) => ({ ...prev, [slug]: { ...prev[slug], restSeconds: s } }))
-          }}
+          onTotalChange={(sec) =>
+            setLastRest((prev) => (prev ? { ...prev, seconds: sec } : prev))
+          }
         />
       )}
-      {toast && <Toast id={toast.id} message={toast.message} onClose={() => setToast(null)} />}
+      {toast && (
+        <Toast
+          id={toast.id}
+          message={toast.message}
+          aboveTimer={Boolean(activeTimer) && !completed}
+          onClose={() => setToast(null)}
+        />
+      )}
       {!completed && (
         <BandPicker
           open={bandPickerKey !== null}
           tube={plan.bandLadders.tube}
           loop={plan.bandLadders.loop}
           current={bandPickerKey ? inputs[bandPickerKey]?.band ?? '' : ''}
-          lastUsed={
-            bandPickerKey ? latestBands[bandPickerKey.split('|')[0]] ?? null : null
-          }
+          lastUsed={bandPickerKey ? latestBands[bandPickerKey.split('|')[0]] ?? null : null}
           onPick={(band) => {
             if (bandPickerKey) updateInput(bandPickerKey, 'band', band)
             setBandPickerKey(null)

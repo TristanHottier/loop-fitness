@@ -24,24 +24,94 @@ function positiveInt(raw: string): number | null {
   return Number.isFinite(n) && n > 0 ? Math.round(n) : null
 }
 
-export function ExerciseSettings() {
-  const [plan, setPlan] = useState<PlanData | null>(null)
-  const [overrides, setOverrides] = useState<Record<string, ExerciseOverride>>({})
-  const [openSlug, setOpenSlug] = useState<string | null>(null)
-  const [drafts, setDrafts] = useState<Record<string, string>>({})
+export function VolumeTargetsSettings() {
   const [volMin, setVolMin] = useState(String(DEFAULT_VOLUME_TARGETS.min))
   const [volMax, setVolMax] = useState(String(DEFAULT_VOLUME_TARGETS.max))
   const [error, setError] = useState('')
 
   useEffect(() => {
     let cancelled = false
-    Promise.all([loadPlan(), getExerciseOverrides(), getVolumeTargets()])
-      .then(([p, o, v]) => {
+    getVolumeTargets()
+      .then((v) => {
+        if (cancelled) return
+        setVolMin(String(v.min))
+        setVolMax(String(v.max))
+      })
+      .catch(() => {
+        if (!cancelled) setError('Could not load volume targets.')
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  async function commitVolume() {
+    const min = Number(volMin)
+    const max = Number(volMax)
+    if (!Number.isFinite(min) || !Number.isFinite(max) || min < 0 || max < min) {
+      setError('Weekly volume needs a min of 0 or more and a max at least as large.')
+      return
+    }
+    setError('')
+    try {
+      await setVolumeTargets({ min: Math.round(min), max: Math.round(max) })
+    } catch {
+      setError('Could not save. Try again.')
+    }
+  }
+
+  return (
+    <div className="settings-sync-card">
+      <span className="settings-label">Weekly volume target, sets per muscle</span>
+      <div className="settings-row">
+        <label className="settings-label" htmlFor="vol-min">
+          Minimum
+        </label>
+        <input
+          id="vol-min"
+          className="settings-time-input exercise-settings-number"
+          type="number"
+          inputMode="numeric"
+          min="0"
+          value={volMin}
+          onChange={(e) => setVolMin(e.target.value)}
+          onBlur={() => void commitVolume()}
+        />
+      </div>
+      <div className="settings-row">
+        <label className="settings-label" htmlFor="vol-max">
+          Maximum
+        </label>
+        <input
+          id="vol-max"
+          className="settings-time-input exercise-settings-number"
+          type="number"
+          inputMode="numeric"
+          min="0"
+          value={volMax}
+          onChange={(e) => setVolMax(e.target.value)}
+          onBlur={() => void commitVolume()}
+        />
+      </div>
+      {error && <p className="settings-note settings-status-error">{error}</p>}
+    </div>
+  )
+}
+
+export function ExerciseSettings() {
+  const [plan, setPlan] = useState<PlanData | null>(null)
+  const [overrides, setOverrides] = useState<Record<string, ExerciseOverride>>({})
+  const [openSlug, setOpenSlug] = useState<string | null>(null)
+  const [drafts, setDrafts] = useState<Record<string, string>>({})
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let cancelled = false
+    Promise.all([loadPlan(), getExerciseOverrides()])
+      .then(([p, o]) => {
         if (cancelled) return
         setPlan(p)
         setOverrides(o)
-        setVolMin(String(v.min))
-        setVolMax(String(v.max))
       })
       .catch(() => {
         if (!cancelled) setError('Could not load exercise settings.')
@@ -61,21 +131,6 @@ export function ExerciseSettings() {
     }
   }
 
-  async function commitVolume() {
-    const min = Number(volMin)
-    const max = Number(volMax)
-    if (!Number.isFinite(min) || !Number.isFinite(max) || min < 0 || max < min) {
-      setError('Weekly volume needs a min of 0 or more and a max at least as large.')
-      return
-    }
-    setError('')
-    try {
-      await setVolumeTargets({ min: Math.round(min), max: Math.round(max) })
-    } catch {
-      setError('Could not save. Try again.')
-    }
-  }
-
   if (!plan) {
     return <p className="settings-note">{error || 'Loading exercises'}</p>
   }
@@ -84,40 +139,6 @@ export function ExerciseSettings() {
 
   return (
     <>
-      <div className="settings-sync-card">
-        <span className="settings-label">Weekly volume target, sets per muscle</span>
-        <div className="settings-row">
-          <label className="settings-label" htmlFor="vol-min">
-            Minimum
-          </label>
-          <input
-            id="vol-min"
-            className="settings-time-input exercise-settings-number"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            value={volMin}
-            onChange={(e) => setVolMin(e.target.value)}
-            onBlur={() => void commitVolume()}
-          />
-        </div>
-        <div className="settings-row">
-          <label className="settings-label" htmlFor="vol-max">
-            Maximum
-          </label>
-          <input
-            id="vol-max"
-            className="settings-time-input exercise-settings-number"
-            type="number"
-            inputMode="numeric"
-            min="0"
-            value={volMax}
-            onChange={(e) => setVolMax(e.target.value)}
-            onBlur={() => void commitVolume()}
-          />
-        </div>
-      </div>
-
       <div className="settings-sync-card">
         <p className="settings-note">
           Tap an exercise to choose when the app suggests a heavier band, and how long to rest.

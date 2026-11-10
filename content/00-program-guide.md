@@ -93,8 +93,9 @@ You can't add a 2 kg plate, so you progress by making the band harder or the set
 | 2 | 40 lb |
 | 3 | 50 lb |
 | 4 | 30 + 40 |
-| 5 | 40 + 50 |
-| 6 | 30 + 40 + 50 |
+| 5 | 30 + 50 |
+| 6 | 40 + 50 |
+| 7 | 30 + 40 + 50 |
 
 **Loop ladder:** 5-30, 15-50, 25-75, 35-95, 50-145.
 

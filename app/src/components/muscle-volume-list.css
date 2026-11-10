@@ -6,7 +6,7 @@
 
 .mvl-row {
   display: grid;
-  grid-template-columns: 96px 32px 1fr auto;
+  grid-template-columns: 96px 32px 1fr 92px;
   align-items: center;
   gap: 8px;
   padding: 8px 0;
@@ -51,7 +51,7 @@
 .mvl-note {
   display: inline-flex;
   gap: 8px;
-  min-width: 84px;
+  min-width: 0;
   justify-content: flex-end;
   font-size: 12px;
   color: var(--color-text-secondary);

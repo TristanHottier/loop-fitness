@@ -1,203 +1,86 @@
 /* History screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
-   Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
+   Reference: docs/design-v2.md, Direction A. Flat property rows, hairline borders. */
 
 .history {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  /* Keep the last row clear of the bottom nav. */
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
 }
 
-.history-back {
-  min-height: var(--touch-min);
-  padding: 0 12px;
-  display: inline-flex;
+.history-header {
+  display: flex;
   align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 14px;
-  cursor: pointer;
-  align-self: flex-start;
+  gap: 4px;
+  margin-left: -12px;
 }
 
-.history-back:hover {
-  background-color: var(--color-hover);
-}
-
-.history-back:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
+.history-section {
+  margin-top: 16px;
 }
 
 .history-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
 }
 
-.history-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
+.history-row {
+  align-items: flex-start;
+  min-height: 56px;
 }
 
-.history-card-head {
+.history-row-main {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.history-card-name {
+.prop-row.history-row > .history-row-main {
   font-size: 16px;
-  font-weight: 600;
   color: var(--color-text);
 }
 
-.history-card-date {
+.history-row-name {
+  font-weight: 600;
+}
+
+.history-row-meta,
+.history-row-note {
   font-size: 13px;
   color: var(--color-text-secondary);
   font-variant-numeric: tabular-nums;
 }
 
-.history-card-meta {
+.history-row-note {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-row-date {
+  flex: none;
   font-size: 13px;
   color: var(--color-text-secondary);
-  margin-top: 4px;
   font-variant-numeric: tabular-nums;
 }
 
-.history-card-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.history-card-toggle {
+.history-empty-toggle {
+  align-self: flex-start;
   min-height: var(--touch-min);
-  padding: 0 10px;
+  padding: 0 12px;
   background: none;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   color: var(--color-text-secondary);
   font-size: 13px;
   cursor: pointer;
+  margin-top: 8px;
 }
 
-.history-card-toggle:hover {
+.history-empty-toggle:hover {
   background-color: var(--color-hover);
-}
-
-.history-card-toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-.history-card-delete {
-  min-height: var(--touch-min);
-  padding: 0 10px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-error);
-  border-radius: var(--radius-sm);
-  color: var(--color-error);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.history-card-delete:hover {
-  background-color: var(--color-hover);
-}
-
-.history-card-delete:focus-visible {
-  outline: 2px solid var(--color-error);
-  outline-offset: -2px;
-}
-
-.history-delete-confirm {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-border);
-}
-
-.history-delete-note {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-}
-
-.history-card-delete-confirm {
-  min-height: var(--touch-min);
-  padding: 0 10px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-error);
-  border-radius: var(--radius-sm);
-  color: var(--color-error);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.history-card-delete-confirm:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.history-card-cancel {
-  min-height: var(--touch-min);
-  padding: 0 10px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  color: var(--color-text);
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.history-card-cancel:hover {
-  background-color: var(--color-hover);
-}
-
-.history-card-cancel:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-.history-card-cancel:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.history-note {
-  margin-top: 12px;
-}
-
-.history-note-label {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  display: block;
-  margin-bottom: 4px;
-}
-
-.history-note-input {
-  width: 100%;
-  min-height: var(--touch-min);
-  padding: 8px 12px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 16px;
-}
-
-.history-note-input:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
 }
 
 .history-empty {

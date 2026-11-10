@@ -25,7 +25,7 @@
 }
 
 .band-inventory-kg:disabled {
-  opacity: 0.5;
+  color: var(--color-disabled-text);
 }
 
 .band-inventory-off {

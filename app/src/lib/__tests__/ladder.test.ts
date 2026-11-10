@@ -19,7 +19,8 @@ describe('ladder', () => {
   it('ranks band ids per ladder, -1 when unknown', () => {
     expect(rankOf('T30', plan)).toBe(0)
     expect(rankOf('T40', plan)).toBe(1)
-    expect(rankOf('T30+40+50', plan)).toBe(5)
+    expect(rankOf('T30+50', plan)).toBe(4)
+    expect(rankOf('T30+40+50', plan)).toBe(6)
     expect(rankOf('L5-30', plan)).toBe(0)
     expect(rankOf('L50-145', plan)).toBe(4)
     expect(rankOf('T99', plan)).toBe(-1)

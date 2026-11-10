@@ -18,6 +18,8 @@
   --color-error: #F87171;
   --color-positive: #5E9E7A;
   --color-on-accent: #191919;
+  /* Disabled text: 3.7:1 on panel, 3.4:1 on sheet (dimmed, still legible). */
+  --color-disabled-text: #777777;
 
   --hue-pull: #529CCA;
   --hue-push: #5E9E7A;
@@ -67,6 +69,8 @@
   --color-error: #C0392B;
   --color-positive: #2E7D5B;
   --color-on-accent: #000000;
+  /* Disabled text: 3.5:1 on panel, 3.8:1 on bg. */
+  --color-disabled-text: #85837E;
 
   --hue-pull: #2383E2;
   --hue-push: #2E7D5B;
@@ -231,4 +235,105 @@ button {
 
 .bottom-nav-item.active {
   color: var(--color-accent);
+}
+
+/* Shared type scale and utilities (use these instead of per-screen copies).
+   Contrast of --color-text-secondary at 12px: dark 6.33 (bg), 5.93 (panel),
+   5.44 (sheet); light 5.48 (bg), 5.07 (panel), 4.73 (hover). All >= 4.5:1.
+   Numerals use the Inter / Figtree tabular figures, never a monospace face.
+
+   .section-head   14px, secondary, sentence case, 600. Section label.
+   .page-title     26px display title for a screen.
+   .big-number     48px display numeral, tabular-nums (key values).
+   .prop-row       flat property row: label left, value right, hairline
+                   bottom border, min-height 48px. Add <button> or <a> for taps.
+   .icon-button    48px square, no border, transparent. */
+
+.section-head {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+.page-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.big-number {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.prop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--touch-min);
+  padding: 8px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  font-size: 16px;
+  color: var(--color-text);
+  text-align: left;
+}
+
+.prop-row > :first-child {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.prop-row > :last-child:not(:first-child) {
+  margin-left: auto;
+  text-align: right;
+}
+
+button.prop-row,
+a.prop-row {
+  width: 100%;
+  cursor: pointer;
+}
+
+button.prop-row:hover,
+a.prop-row:hover {
+  background-color: var(--color-hover);
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background-color: var(--color-hover);
+  color: var(--color-text);
+}
+
+.icon-button:disabled,
+.prop-row:disabled {
+  color: var(--color-disabled-text);
+  cursor: not-allowed;
 }

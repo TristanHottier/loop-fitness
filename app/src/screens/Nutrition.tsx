@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { EmptyState } from '../components/EmptyState'
 import {
   newNutritionEntry,
   createNutritionEntry,
@@ -65,6 +67,7 @@ function goalStatus(total: number, min: number, max: number) {
 export function Nutrition() {
   const [entries, setEntries] = useState<NutritionEntry[]>([])
   const [loading, setLoading] = useState(true)
+  const [goalsOpen, setGoalsOpen] = useState(false)
 
   // Add-entry form state.
   const [formDate, setFormDate] = useState(todayISODate())
@@ -209,141 +212,173 @@ export function Nutrition() {
   if (loading) {
     return (
       <div className="screen">
-        <h1>Nutrition</h1>
+        <h1 className="page-title">Nutrition</h1>
         <p className="screen-subtitle">Loading</p>
       </div>
     )
   }
 
+  const hasEntries = entries.length > 0
+
   return (
     <div className="screen nutrition">
-      <h1>Nutrition</h1>
+      <h1 className="page-title">Nutrition</h1>
 
-      <section className="nutrition-goal-card">
-        <h2 className="nutrition-card-title">Today</h2>
-        <div className="nutrition-goal-row">
-          <span className="nutrition-goal-label">Calories</span>
-          <div className="nutrition-goal-meta">
-            <span className="nutrition-goal-value">
-              {todayCalories} / {calorieGoal.min}-{calorieGoal.max} kcal
+      <form
+        className="nutrition-quick"
+        aria-label="Quick add"
+        onSubmit={(e) => {
+          e.preventDefault()
+          void addEntry()
+        }}
+      >
+        <input
+          className="nutrition-input"
+          type="number"
+          inputMode="numeric"
+          min="0"
+          placeholder="Calories"
+          aria-label="Calories"
+          value={formCalories}
+          onChange={(e) => setFormCalories(e.target.value)}
+        />
+        <input
+          className="nutrition-input"
+          type="number"
+          inputMode="numeric"
+          min="0"
+          placeholder="Protein g"
+          aria-label="Protein in grams"
+          value={formProtein}
+          onChange={(e) => setFormProtein(e.target.value)}
+        />
+        <button type="submit" className="nutrition-add">
+          Add
+        </button>
+      </form>
+      {formDate !== today && (
+        <p className="nutrition-date-note">Adding to {formDate}.</p>
+      )}
+
+      <section className="nutrition-section">
+        <h2 className="section-head">Today</h2>
+        <div className="prop-row nutrition-total">
+          <span>Calories</span>
+          <span className="nutrition-total-value">
+            <span className="big-number nutrition-big">{todayCalories}</span>
+            <span className="nutrition-total-goal">
+              of {calorieGoal.min} to {calorieGoal.max} kcal
             </span>
             {goalStatus(todayCalories, calorieGoal.min, calorieGoal.max)}
-          </div>
+          </span>
         </div>
-        <div className="nutrition-goal-row">
-          <span className="nutrition-goal-label">Protein</span>
-          <div className="nutrition-goal-meta">
-            <span className="nutrition-goal-value">
-              {todayProtein} / {proteinGoal.min}-{proteinGoal.max} g
+        <div className="prop-row nutrition-total">
+          <span>Protein</span>
+          <span className="nutrition-total-value">
+            <span className="big-number nutrition-big">{todayProtein}</span>
+            <span className="nutrition-total-goal">
+              of {proteinGoal.min} to {proteinGoal.max} g
             </span>
             {goalStatus(todayProtein, proteinGoal.min, proteinGoal.max)}
-          </div>
+          </span>
         </div>
       </section>
 
-      <Chart title="Calories" points={caloriePoints} unit="kcal" showAverage />
-      <Chart title="Protein" points={proteinPoints} unit="g" />
+      {hasEntries ? (
+        <>
+          <Chart title="Calories" points={caloriePoints} unit="kcal" showAverage />
+          <Chart title="Protein" points={proteinPoints} unit="g" />
+        </>
+      ) : (
+        <EmptyState>Add your first meal above to see daily totals.</EmptyState>
+      )}
 
       <section className="nutrition-section">
-        <h2 className="nutrition-section-title">Entries</h2>
-        <form
-          className="nutrition-form"
-          onSubmit={(e) => {
-            e.preventDefault()
-            void addEntry()
-          }}
+        <button
+          type="button"
+          className="prop-row"
+          aria-expanded={goalsOpen}
+          onClick={() => setGoalsOpen((o) => !o)}
         >
-          <div className="nutrition-form-row">
-            <input
-              className="nutrition-input nutrition-input-date"
-              type="date"
-              value={formDate}
-              onChange={(e) => setFormDate(e.target.value)}
+          <span>Daily goals</span>
+          <span className="nutrition-goals-summary">
+            {calorieGoal.min} to {calorieGoal.max} kcal
+            <ChevronDown
+              size={18}
+              strokeWidth={1.75}
+              aria-hidden="true"
+              className={'nutrition-chevron' + (goalsOpen ? ' nutrition-chevron-open' : '')}
             />
-            <input
-              className="nutrition-input nutrition-input-number"
-              type="number"
-              inputMode="numeric"
-              min="0"
-              placeholder="Calories"
-              value={formCalories}
-              onChange={(e) => setFormCalories(e.target.value)}
-            />
-            <input
-              className="nutrition-input nutrition-input-number"
-              type="number"
-              inputMode="numeric"
-              min="0"
-              placeholder="Protein"
-              value={formProtein}
-              onChange={(e) => setFormProtein(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="nutrition-add">
-            Add entry
-          </button>
-        </form>
-      </section>
-
-      <section className="nutrition-section">
-        <h2 className="nutrition-section-title">Goals</h2>
-        <form
-          className="nutrition-form"
-          onSubmit={(e) => {
-            e.preventDefault()
-            void saveGoals()
-          }}
-        >
-          <div className="nutrition-goal-grid">
+          </span>
+        </button>
+        {goalsOpen && (
+          <form
+            className="nutrition-goals-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              void saveGoals()
+            }}
+          >
+            <div className="nutrition-goal-grid">
+              <label className="nutrition-goal-field">
+                <span className="nutrition-goal-field-label">Calories min</span>
+                <input
+                  className="nutrition-input"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  value={calorieGoalMinInput}
+                  onChange={(e) => setCalorieGoalMinInput(e.target.value)}
+                />
+              </label>
+              <label className="nutrition-goal-field">
+                <span className="nutrition-goal-field-label">Calories max</span>
+                <input
+                  className="nutrition-input"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  value={calorieGoalMaxInput}
+                  onChange={(e) => setCalorieGoalMaxInput(e.target.value)}
+                />
+              </label>
+              <label className="nutrition-goal-field">
+                <span className="nutrition-goal-field-label">Protein min</span>
+                <input
+                  className="nutrition-input"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  value={proteinGoalMinInput}
+                  onChange={(e) => setProteinGoalMinInput(e.target.value)}
+                />
+              </label>
+              <label className="nutrition-goal-field">
+                <span className="nutrition-goal-field-label">Protein max</span>
+                <input
+                  className="nutrition-input"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  value={proteinGoalMaxInput}
+                  onChange={(e) => setProteinGoalMaxInput(e.target.value)}
+                />
+              </label>
+            </div>
             <label className="nutrition-goal-field">
-              <span className="nutrition-goal-field-label">Calorie goal (min)</span>
+              <span className="nutrition-goal-field-label">Log entries for date</span>
               <input
-                className="nutrition-input nutrition-input-number"
-                type="number"
-                inputMode="numeric"
-                min="0"
-                value={calorieGoalMinInput}
-                onChange={(e) => setCalorieGoalMinInput(e.target.value)}
+                className="nutrition-input"
+                type="date"
+                value={formDate}
+                onChange={(e) => setFormDate(e.target.value)}
               />
             </label>
-            <label className="nutrition-goal-field">
-              <span className="nutrition-goal-field-label">Calorie goal (max)</span>
-              <input
-                className="nutrition-input nutrition-input-number"
-                type="number"
-                inputMode="numeric"
-                min="0"
-                value={calorieGoalMaxInput}
-                onChange={(e) => setCalorieGoalMaxInput(e.target.value)}
-              />
-            </label>
-            <label className="nutrition-goal-field">
-              <span className="nutrition-goal-field-label">Protein goal (min)</span>
-              <input
-                className="nutrition-input nutrition-input-number"
-                type="number"
-                inputMode="numeric"
-                min="0"
-                value={proteinGoalMinInput}
-                onChange={(e) => setProteinGoalMinInput(e.target.value)}
-              />
-            </label>
-            <label className="nutrition-goal-field">
-              <span className="nutrition-goal-field-label">Protein goal (max)</span>
-              <input
-                className="nutrition-input nutrition-input-number"
-                type="number"
-                inputMode="numeric"
-                min="0"
-                value={proteinGoalMaxInput}
-                onChange={(e) => setProteinGoalMaxInput(e.target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit" className="nutrition-add">
-            Save goals
-          </button>
-        </form>
+            <button type="submit" className="nutrition-add nutrition-save">
+              Save goals
+            </button>
+          </form>
+        )}
       </section>
     </div>
   )

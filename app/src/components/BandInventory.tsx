@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { loadPlan } from '../data/plan'
 import { getBandInventory, saveBandInventory } from '../db/config'
 import { defaultBandInventory, type BandItem, type LadderName } from '../lib/ladder'
+import { Toggle } from './Toggle'
 import './band-inventory.css'
 
 const GROUPS: { ladder: LadderName; title: string }[] = [
@@ -76,7 +77,7 @@ export function BandInventory() {
   return (
     <div className="settings-sync-card band-inventory">
       <p className="settings-note">
-        Turn off bands you do not own so they are left out of the ladder. Measured resistance is optional. Enter it
+        Switch off bands you do not own so they are left out of the ladder. Measured resistance is optional. Enter it
         in kg to enable strength scores and to build stacks from your own bands.
       </p>
       {GROUPS.map((g) => (
@@ -101,15 +102,7 @@ export function BandInventory() {
                     onChange={(e) => setDrafts({ ...drafts, [i.id]: e.target.value })}
                     onBlur={() => commitKg(i.id)}
                   />
-                  <button
-                    type="button"
-                    className={'settings-theme-toggle ' + (i.owned ? 'settings-toggle-on' : '')}
-                    aria-pressed={i.owned}
-                    aria-label={`${i.label} owned`}
-                    onClick={() => toggleOwned(i.id)}
-                  >
-                    {i.owned ? 'Owned' : 'Not owned'}
-                  </button>
+                  <Toggle checked={i.owned} onChange={() => toggleOwned(i.id)} label={`${i.label} owned`} />
                 </div>
               </div>
             ))}

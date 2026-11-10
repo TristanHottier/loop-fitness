@@ -1,6 +1,6 @@
 /* Nutrition screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
-   Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
+   Reference: docs/design-v2.md, Direction A. Quick-add first, flat property
+   rows, 16px inputs, 48px targets. */
 
 .nutrition {
   display: flex;
@@ -8,95 +8,26 @@
   gap: 8px;
 }
 
-.nutrition-goal-card {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.nutrition-card-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin: 0;
-}
-
-.nutrition-goal-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  min-height: var(--touch-min);
-}
-
-.nutrition-goal-label {
-  font-size: 16px;
-  color: var(--color-text);
-}
-
-.nutrition-goal-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.nutrition-goal-value {
-  font-size: 14px;
-  color: var(--color-text);
-  font-variant-numeric: tabular-nums;
-}
-
-.nutrition-goal-reached {
-  font-size: 13px;
-  color: var(--color-accent);
-}
-
-.nutrition-goal-remaining {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  font-variant-numeric: tabular-nums;
-}
-
-.nutrition-section {
-  margin-top: 24px;
-}
-
-.nutrition-section-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin: 0 0 8px;
-}
-
-.nutrition-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 16px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
-}
-
-.nutrition-form-row {
+/* Quick add: calories, protein and Add on one line. */
+.nutrition-quick {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.nutrition-quick .nutrition-input {
+  flex: 1;
+  min-width: 0;
 }
 
 .nutrition-input {
   min-height: var(--touch-min);
   padding: 0 12px;
-  background-color: var(--color-surface);
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
+  font: inherit;
   font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
@@ -106,15 +37,86 @@
   outline-offset: -2px;
 }
 
-.nutrition-input-date {
-  width: 160px;
+.nutrition-add {
+  min-height: var(--touch-min);
+  padding: 0 18px;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--color-on-accent);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.nutrition-input-number {
-  width: 96px;
+.nutrition-add:hover {
+  filter: brightness(1.08);
 }
 
-/* Two columns for the four goal inputs (calorie min/max, protein min/max). */
+.nutrition-date-note {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.nutrition-section {
+  margin-top: 16px;
+}
+
+/* Today totals: label left, big numeral and goal right. */
+.nutrition-total {
+  min-height: 72px;
+}
+
+.nutrition-total-value {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.nutrition-big {
+  font-size: 40px;
+}
+
+.nutrition-total-goal {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.nutrition-goal-reached {
+  font-size: 12px;
+  color: var(--color-positive);
+}
+
+.nutrition-goal-remaining {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* Goals toggle and form. */
+.nutrition-goals-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.nutrition-chevron {
+  transition: transform 150ms ease;
+}
+
+.nutrition-chevron-open {
+  transform: rotate(180deg);
+}
+
+.nutrition-goals-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0 4px;
+}
+
 .nutrition-goal-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -125,12 +127,11 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  flex: 1;
   min-width: 0;
 }
 
 .nutrition-goal-field-label {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--color-text-secondary);
 }
 
@@ -138,22 +139,13 @@
   width: 100%;
 }
 
-.nutrition-add {
-  min-height: var(--touch-min);
-  padding: 0 16px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 14px;
-  cursor: pointer;
+.nutrition-save {
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
 }
 
-.nutrition-add:hover {
+.nutrition-save:hover {
   background-color: var(--color-hover);
-}
-
-.nutrition-add:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
+  filter: none;
 }

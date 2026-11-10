@@ -8,7 +8,8 @@ describe('nextBand', () => {
   it('walks the tube ladder, including stacks', () => {
     expect(nextBand('T30', plan)).toBe('T40')
     expect(nextBand('T50', plan)).toBe('T30+40')
-    expect(nextBand('T30+40', plan)).toBe('T40+50')
+    expect(nextBand('T30+40', plan)).toBe('T30+50')
+    expect(nextBand('T30+50', plan)).toBe('T40+50')
     expect(nextBand('T40+50', plan)).toBe('T30+40+50')
   })
   it('walks the loop ladder', () => {

@@ -1,74 +1,21 @@
 /* Today screen styles.
-   Reference: docs/fitness-app-brief.md, section 9.
-   Flat surfaces, 1px borders, 4 to 6px radius, 48px minimum touch targets. */
+   Reference: docs/design-v2.md, Direction A. Flat rows with hairline
+   dividers, big numerals, 48px touch targets. Shared classes (.section-head,
+   .page-title, .big-number, .prop-row, .icon-button) live in tokens.css. */
 
-.today-card {
+.today {
+  gap: 0;
+}
+
+.today-section {
   margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
 }
 
-.today-card-done {
-  background-color: color-mix(
-    in srgb,
-    var(--color-positive) 10%,
-    var(--color-panel)
-  );
-  border: 1px solid
-    color-mix(in srgb, var(--color-positive) 40%, var(--color-border));
-}
-
-.today-card-done-line {
-  font-size: 16px;
-  color: var(--color-text);
-}
-
-.today-card-head {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.today-card-day {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-.today-card-name {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.today-start {
-  min-height: var(--touch-min);
-  padding: 0 16px;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.today-start:hover {
-  background-color: var(--color-hover);
-}
-
-.today-start:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
+/* Week strip: short labels, never wrapping. */
 .today-week {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .today-week-day {
@@ -76,7 +23,7 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  width: 40px;
+  width: 44px;
 }
 
 .today-week-letter {
@@ -85,13 +32,10 @@
 }
 
 .today-week-ring {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 2px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .today-week-ring-scheduled {
@@ -104,7 +48,10 @@
 }
 
 .today-week-name {
-  font-size: 10px;
+  min-height: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
   color: var(--color-text-secondary);
 }
 
@@ -113,8 +60,43 @@
   outline-offset: 2px;
 }
 
-.today-progress {
-  margin-top: 16px;
+/* Primary block: the workout to do now. */
+.today-primary {
+  margin-top: 24px;
+  padding-left: 12px;
+  border-left: 4px solid var(--day-hue);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.today-primary-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+.today-primary-done {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+}
+
+.today-start {
+  min-height: var(--touch-min);
+  padding: 0 16px;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--color-on-accent);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.today-start:hover {
+  filter: brightness(1.08);
 }
 
 .today-progress-track {
@@ -139,34 +121,18 @@
   color: var(--color-text-secondary);
 }
 
-.today-weight {
-  margin-top: 24px;
-}
-
+/* Weight: big numeral, stepper, one-tap Set. */
 .today-weight-row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 10px;
-  min-height: 52px;
-  padding-bottom: 12px;
+  align-items: center;
+  gap: 6px;
+  min-height: 64px;
+  padding: 4px 0;
   border-bottom: 1px solid var(--color-border);
 }
 
-.today-weight-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-}
-
 .today-weight-value {
-  margin-left: auto;
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  color: var(--color-text);
+  font-size: 44px;
 }
 
 .today-weight-unit {
@@ -175,173 +141,114 @@
   color: var(--color-text-secondary);
 }
 
-.today-weight-empty {
-  margin-left: auto;
-  font-size: 16px;
-  color: var(--color-text-secondary);
-}
-
 .today-weight-actions {
   display: flex;
-  flex-basis: 100%;
-  gap: 8px;
-  margin-left: 0;
+  align-items: center;
+  margin-left: auto;
 }
 
-.today-weight-btn {
-  flex: 1;
-  min-height: var(--touch-min);
-  padding: 0 14px;
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-border);
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
+.today-step {
   color: var(--color-text);
+}
+
+.today-set {
+  min-width: 64px;
+  min-height: var(--touch-min);
+  margin-left: 4px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius);
+  color: var(--color-accent);
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
 }
 
-.today-weight-btn:hover {
+.today-set:hover:not(:disabled) {
   background-color: var(--color-hover);
 }
 
-.today-weight-btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
+.today-set:disabled {
+  border-color: var(--color-border);
+  color: var(--color-disabled-text);
+  cursor: default;
 }
 
-.today-weight-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.today-rest {
-  margin-top: 24px;
-  font-size: 16px;
-  color: var(--color-text-secondary);
-}
-
-.today-prompts {
-  margin-top: 24px;
-}
-
-.today-prompts h2 {
-  margin-bottom: 8px;
-}
-
-.today-prompt-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background-color: var(--color-surface);
+.today-weight-input {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--touch-min);
+  padding: 0 12px;
+  background-color: var(--color-panel);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 16px;
+  color: var(--color-text);
+  font: inherit;
+  font-size: 16px;
 }
 
-.today-prompt {
+.today-due > :last-child {
   font-size: 14px;
   color: var(--color-text-secondary);
 }
 
-.today-others {
-  margin-top: 24px;
+/* One calm line with an action (deload advice and active note). */
+.today-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.today-others h2 {
-  margin-bottom: 8px;
+.today-line-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--color-text-secondary);
 }
 
+.today-link {
+  flex-shrink: 0;
+  min-height: var(--touch-min);
+  padding: 0 4px;
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.today-link:hover {
+  text-decoration: underline;
+}
+
+.today-error {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--color-error);
+}
+
+/* Other workouts: flat property rows. */
 .today-list {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  overflow: hidden;
 }
 
 .today-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: var(--touch-min);
-  padding: 10px 16px;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--color-border);
-  text-align: left;
-  cursor: pointer;
+  color: var(--color-text);
 }
 
-.today-row:last-child {
-  border-bottom: none;
-}
-
-.today-row:hover {
-  background-color: var(--color-hover);
-}
-
-.today-row:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-.today-row-day {
-  min-width: 88px;
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-.today-row-name {
+.today-row .today-row-name {
   font-size: 16px;
   font-weight: 500;
   color: var(--color-text);
 }
 
-/* Deload advice and active note: a flat panel with one primary action. */
-.today-deload {
-  margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 16px;
-}
-
-.today-deload h2 {
-  margin: 0;
-}
-
-.today-deload-text {
+.today-row .today-row-day {
   font-size: 14px;
-  color: var(--color-text);
-}
-
-.today-deload-sub {
-  font-size: 13px;
   color: var(--color-text-secondary);
-}
-
-.today-deload-btn {
-  min-height: var(--touch-min);
-  padding: 0 16px;
-  background-color: var(--color-panel);
-  border: 1px solid var(--color-accent);
-  border-radius: var(--radius);
-  color: var(--color-accent);
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.today-deload-btn:hover {
-  background-color: var(--color-hover);
-}
-
-.today-deload-btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
 }

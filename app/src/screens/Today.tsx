@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Minus, Plus } from 'lucide-react'
 import { loadPlan, resolveExercise, type PlanData, type Workout } from '../data/plan'
 import {
   createBodyMetric,
@@ -51,6 +52,17 @@ function hueFor(workoutId: string): string {
   }
 }
 
+const SHORT_NAMES: Record<string, string> = {
+  pull: 'Pull',
+  push: 'Push',
+  'shoulders-arms': 'Arms',
+  'legs-forearms': 'Legs',
+}
+
+function shortName(w: Workout): string {
+  return SHORT_NAMES[w.id] ?? w.name.split(' ')[0]
+}
+
 function toISODate(d: Date): string {
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
@@ -68,6 +80,10 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
   const [sessions, setSessions] = useState<Session[]>([])
   const [doneSets, setDoneSets] = useState(0)
   const [latestWeight, setLatestWeight] = useState<number | null>(null)
+  const [latestWeightDate, setLatestWeightDate] = useState<string | null>(null)
+  // The value the stepper shows; starts from the last logged weight.
+  const [draftWeight, setDraftWeight] = useState<number | null>(null)
+  const [typedWeight, setTypedWeight] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -116,7 +132,10 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
       })
     getLatestBodyMetric('weight_kg')
       .then((metric) => {
-        if (!cancelled) setLatestWeight(metric ? metric.value : null)
+        if (cancelled) return
+        setLatestWeight(metric ? metric.value : null)
+        setLatestWeightDate(metric ? metric.date : null)
+        setDraftWeight(metric ? metric.value : null)
       })
       .catch(() => {
         // The weight row is non-critical; ignore db errors.
@@ -172,9 +191,12 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
     ? plan.workouts.find((w) => w.day === todayKey) ?? null
     : null
 
-  const others = todayWorkout
-    ? plan.workouts.filter((w) => w.id !== todayWorkout.id)
-    : plan.workouts
+  // Next scheduled workout after today (used on rest days).
+  let nextWorkout: Workout | null = null
+  for (let offset = 1; offset <= 7 && !nextWorkout; offset += 1) {
+    const name = DAY_TO_WORKOUT[(new Date().getDay() + offset) % 7]
+    if (name) nextWorkout = plan.workouts.find((w) => w.day === name) ?? null
+  }
 
   const todayDone =
     todayWorkout !== null &&
@@ -222,6 +244,18 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
   const progressPct =
     totalSets > 0 ? Math.min(100, Math.round((doneSets / totalSets) * 100)) : 0
 
+  const primary = inProgressWorkout ?? todayWorkout ?? nextWorkout
+  const primaryLabel =
+    primary === null
+      ? ''
+      : inProgressWorkout && primary.id === inProgressWorkout.id && primary.id !== todayWorkout?.id
+        ? `In progress: ${primary.name}`
+        : todayWorkout && primary.id === todayWorkout.id
+          ? `Today: ${primary.name}`
+          : `Next: ${primary.day}, ${primary.name}`
+  const primaryDone = primary !== null && primary.id === todayWorkout?.id && todayDone
+  const others = plan.workouts.filter((w) => w.id !== primary?.id)
+
   const deloadActive = isDeloadActive(lastDeload, todayISO)
 
   async function startDeload() {
@@ -248,6 +282,8 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
   async function refreshWeight() {
     const metric = await getLatestBodyMetric('weight_kg')
     setLatestWeight(metric ? metric.value : null)
+    setLatestWeightDate(metric ? metric.date : null)
+    setDraftWeight(metric ? metric.value : null)
   }
 
   async function saveTodayWeight(value: number) {
@@ -264,32 +300,37 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
     await refreshWeight()
   }
 
-  function bumpWeight() {
-    void saveTodayWeight((latestWeight ?? 0) + 0.1)
-  }
-
-  function bumpWeightDown() {
-    const next = Math.round(((latestWeight ?? 0) - 0.1) * 10) / 10
+  function stepWeight(delta: number) {
+    if (draftWeight === null) return
+    const next = Math.round((draftWeight + delta) * 10) / 10
     if (next <= 0) return
-    void saveTodayWeight(next)
+    setDraftWeight(next)
   }
 
-  function setDisplayedWeight() {
-    if (latestWeight === null) return
-    void saveTodayWeight(latestWeight)
+  function setWeight() {
+    if (draftWeight === null) return
+    void saveTodayWeight(draftWeight)
   }
+
+  function setTypedWeightValue() {
+    const v = parseFloat(typedWeight.replace(',', '.'))
+    if (!Number.isFinite(v) || v <= 0) return
+    setTypedWeight('')
+    void saveTodayWeight(v)
+  }
+
+  const weightLoggedToday =
+    latestWeightDate === todayISO && draftWeight !== null && draftWeight === latestWeight
 
   return (
-    <div className="screen">
-      <h1>Today</h1>
+    <div className="screen today">
+      <h1 className="page-title">Today</h1>
 
-      <section className="today-week">
+      <section className="today-week" aria-label="This week">
         {weekDays.map((day) => (
           <div
             key={day.dateISO}
-            className={
-              'today-week-day' + (day.isToday ? ' today-week-today' : '')
-            }
+            className={'today-week-day' + (day.isToday ? ' today-week-today' : '')}
           >
             <span className="today-week-letter">{day.letter}</span>
             <span
@@ -305,146 +346,147 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
               }
             />
             <span className="today-week-name">
-              {day.workout ? day.workout.name : ''}
+              {day.workout ? shortName(day.workout) : ''}
             </span>
           </div>
         ))}
       </section>
 
-      {inProgress && inProgressWorkout && (
+      {primary && (
         <section
-          className="today-progress"
-          style={{ ['--day-hue' as string]: hueFor(inProgressWorkout.id) }}
+          className="today-primary"
+          style={{ ['--day-hue' as string]: hueFor(primary.id) }}
         >
-          <div className="today-progress-track">
-            <div
-              className="today-progress-fill"
-              style={{ width: `${progressPct}%` }}
-            />
-          </div>
-          <div className="today-progress-caption">
-            <span>
-              {doneSets} of {totalSets} sets
-            </span>
-            <span>{progressPct}%</span>
-          </div>
-        </section>
-      )}
-
-      <section className="today-weight">
-        <div className="today-weight-row">
-          <span className="today-weight-label">Weight today</span>
-          {latestWeight !== null ? (
-            <>
-              <span className="today-weight-value">
-                {latestWeight.toFixed(1)}
-              </span>
-              <span className="today-weight-unit">kg</span>
-            </>
-          ) : (
-            <span className="today-weight-empty">No weight logged</span>
-          )}
-          <div className="today-weight-actions">
-            <button
-              type="button"
-              className="today-weight-btn"
-              onClick={bumpWeightDown}
-            >
-              -0.1
-            </button>
-            <button
-              type="button"
-              className="today-weight-btn"
-              onClick={bumpWeight}
-            >
-              +0.1
-            </button>
-            <button
-              type="button"
-              className="today-weight-btn"
-              onClick={setDisplayedWeight}
-              disabled={latestWeight === null}
-            >
-              Set
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {todayWorkout ? (
-        <section
-          className={
-            'today-card' + (todayDone ? ' today-card-done' : '')
-          }
-        >
-          <div className="today-card-head">
-            <span className="today-card-day">{todayWorkout.day}</span>
-            <h2 className="today-card-name">{todayWorkout.name}</h2>
-          </div>
-          {todayDone ? (
-            <p className="today-card-done-line">
-              You're all set for today.
-            </p>
+          <h2 className="today-primary-title">{primaryLabel}</h2>
+          {primaryDone ? (
+            <p className="today-primary-done">You're all set for today.</p>
           ) : (
             <button
               type="button"
               className="today-start"
-              onClick={() => onStartWorkout(todayWorkout)}
+              onClick={() => onStartWorkout(primary)}
             >
-              {inProgress && inProgress.workout_id === todayWorkout.id
+              {inProgress && inProgress.workout_id === primary.id
                 ? 'Resume workout'
                 : 'Start workout'}
             </button>
           )}
+          {inProgress && inProgressWorkout && (
+            <div className="today-progress">
+              <div className="today-progress-track">
+                <div
+                  className="today-progress-fill"
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+              <div className="today-progress-caption">
+                <span>
+                  {doneSets} of {totalSets} sets
+                </span>
+                <span>{progressPct}%</span>
+              </div>
+            </div>
+          )}
         </section>
-      ) : (
-        <p className="today-rest">Rest day. No workout scheduled today.</p>
       )}
 
+      <section className="today-section">
+        <h2 className="section-head">Weight today</h2>
+        {draftWeight !== null ? (
+          <div className="today-weight-row">
+            <span className="big-number today-weight-value">{draftWeight.toFixed(1)}</span>
+            <span className="today-weight-unit">kg</span>
+            <div className="today-weight-actions">
+              <button
+                type="button"
+                className="icon-button today-step"
+                aria-label="Decrease by 0.1"
+                onClick={() => stepWeight(-0.1)}
+              >
+                <Minus size={20} strokeWidth={1.75} aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="icon-button today-step"
+                aria-label="Increase by 0.1"
+                onClick={() => stepWeight(0.1)}
+              >
+                <Plus size={20} strokeWidth={1.75} aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className="today-set"
+                onClick={setWeight}
+                disabled={weightLoggedToday}
+              >
+                {weightLoggedToday ? 'Logged' : 'Set'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form
+            className="today-weight-row"
+            onSubmit={(e) => {
+              e.preventDefault()
+              setTypedWeightValue()
+            }}
+          >
+            <input
+              className="today-weight-input"
+              type="number"
+              inputMode="decimal"
+              step="0.1"
+              placeholder="kg"
+              aria-label="Weight in kg"
+              value={typedWeight}
+              onChange={(e) => setTypedWeight(e.target.value)}
+            />
+            <button type="submit" className="today-set" disabled={typedWeight === ''}>
+              Set
+            </button>
+          </form>
+        )}
+        {armDue && (
+          <p className="prop-row today-due">
+            <span>Arm measurement due</span>
+            <span>Add it on Progress</span>
+          </p>
+        )}
+      </section>
+
       {deloadActive && (
-        <section className="today-deload">
-          <p className="today-deload-text">Deload week: half the sets, one band lighter</p>
-          <button type="button" className="today-deload-btn" onClick={() => void endDeload()}>
-            End deload
+        <section className="today-line">
+          <p className="today-line-text">Deload week: half the sets, one band lighter.</p>
+          <button type="button" className="today-link" onClick={() => void endDeload()}>
+            End
           </button>
         </section>
       )}
 
       {!deloadActive && advice?.due && (
-        <section className="today-deload">
-          <h2>Deload week</h2>
-          <p className="today-deload-text">{advice.message}</p>
-          <p className="today-deload-sub">Half the sets, one band lighter, for one week.</p>
-          <button type="button" className="today-deload-btn" onClick={() => void startDeload()}>
+        <section className="today-line">
+          <p className="today-line-text">{advice.message}</p>
+          <button type="button" className="today-link" onClick={() => void startDeload()}>
             Start deload week
           </button>
         </section>
       )}
 
-      {deloadError && <p className="today-prompt">{deloadError}</p>}
-
-      {armDue && (
-        <section className="today-prompts">
-          <h2>Due</h2>
-          <div className="today-prompt-list">
-            <p className="today-prompt">Arm measurement due. Log it on the Progress screen.</p>
-          </div>
-        </section>
-      )}
+      {deloadError && <p className="today-error">{deloadError}</p>}
 
       {others.length > 0 && (
-        <section className="today-others">
-          <h2>Other workouts</h2>
+        <section className="today-section">
+          <h2 className="section-head">Other workouts</h2>
           <div className="today-list">
             {others.map((workout) => (
               <button
                 key={workout.id}
                 type="button"
-                className="today-row"
+                className="today-row prop-row"
                 onClick={() => onStartWorkout(workout)}
               >
-                <span className="today-row-day">{workout.day}</span>
                 <span className="today-row-name">{workout.name}</span>
+                <span className="today-row-day">{workout.day}</span>
               </button>
             ))}
           </div>

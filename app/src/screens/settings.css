@@ -162,12 +162,13 @@
 }
 
 .settings-sync-now:disabled {
-  opacity: 0.5;
+  border-color: var(--color-disabled-text);
+  color: var(--color-disabled-text);
   cursor: default;
 }
 
 .settings-connect:disabled {
-  opacity: 0.5;
+  color: var(--color-disabled-text);
   cursor: default;
 }
 
@@ -213,7 +214,8 @@
 }
 
 .settings-reset:disabled {
-  opacity: 0.5;
+  border-color: var(--color-disabled-text);
+  color: var(--color-disabled-text);
   cursor: default;
 }
 
@@ -249,4 +251,35 @@
 /* Hidden file input behind the "Restore backup" button. */
 .settings-file-input {
   display: none;
+}
+
+.settings {
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: -12px;
+}
+
+.settings-nav-row {
+  margin-top: 8px;
+}
+
+.settings-nav-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.prop-row > .settings-nav-label:first-child {
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.settings-nav-sub {
+  font-size: 13px;
+  color: var(--color-text-secondary);
 }

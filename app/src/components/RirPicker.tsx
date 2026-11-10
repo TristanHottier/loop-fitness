@@ -43,3 +43,31 @@ export function RirPicker({
     </div>
   )
 }
+
+// Small text chip for a logged set: shows "RIR 2" (or "Add RIR") and re-opens
+// the picker when tapped.
+export function RirChip({
+  value,
+  onOpen,
+  name,
+}: {
+  value: number | null
+  onOpen: () => void
+  name?: string
+}) {
+  const text = value === null ? 'Add RIR' : value >= 3 ? 'RIR 3+' : `RIR ${value}`
+  return (
+    <button
+      type="button"
+      className="rir-chip"
+      aria-label={
+        value === null
+          ? `Add reps in reserve${name ? `, ${name}` : ''}`
+          : `${text}${name ? `, ${name}` : ''}. Tap to change`
+      }
+      onClick={onOpen}
+    >
+      {text}
+    </button>
+  )
+}

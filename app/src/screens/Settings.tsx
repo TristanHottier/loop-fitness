@@ -25,15 +25,27 @@ import {
 } from '../lib/backup'
 import { resetSessionHistory } from '../db/db'
 import { BandInventory } from '../components/BandInventory'
-import { ExerciseSettings } from '../components/ExerciseSettings'
+import { ExerciseSettings, VolumeTargetsSettings } from '../components/ExerciseSettings'
+import { BackButton } from '../components/BackButton'
+import { Toggle } from '../components/Toggle'
+import { loadPlan } from '../data/plan'
 import './settings.css'
 
-export function Settings() {
+export function Settings({
+  exercisesOpen,
+  onOpenExercises,
+  onCloseExercises,
+}: {
+  exercisesOpen: boolean
+  onOpenExercises: () => void
+  onCloseExercises: () => void
+}) {
   const [theme, setThemeState] = useState<Theme>(getStoredTheme())
   const [passphrase, setPassphrase] = useState('')
   const [connected, setConnected] = useState<boolean>(getToken() !== null)
   const [status, setStatus] = useState<SyncStatus>({ state: 'idle' })
   const [pending, setPending] = useState(0)
+  const [exerciseCount, setExerciseCount] = useState<number | null>(null)
 
   const [weighInEnabled, setWeighInEnabled] = useState(false)
   const [weighInTime, setWeighInTime] = useState('08:00')
@@ -54,6 +66,11 @@ export function Settings() {
     pendingCount().then((n) => {
       if (!cancelled) setPending(n)
     })
+    loadPlan()
+      .then((p) => {
+        if (!cancelled) setExerciseCount(Object.keys(p.exercises).length)
+      })
+      .catch(() => {})
     loadReminderSettings().then((s) => {
       if (cancelled) return
       setWeighInEnabled(s.enabled)
@@ -208,44 +225,45 @@ export function Settings() {
     }
   }
 
+  if (exercisesOpen) {
+    return (
+      <div className="screen settings">
+        <div className="settings-header">
+          <BackButton onClick={onCloseExercises} />
+          <h1 className="page-title">Exercises</h1>
+        </div>
+        <ExerciseSettings />
+      </div>
+    )
+  }
+
   return (
     <div className="screen settings">
-      <h1>Settings</h1>
+      <h1 className="page-title">Settings</h1>
 
       <section className="settings-section">
-        <h2 className="settings-section-title">Appearance</h2>
-        <div className="settings-row">
-          <span className="settings-label">Theme</span>
-          <button type="button" className="settings-theme-toggle" onClick={toggleTheme}>
-            {theme === 'dark' ? 'Light' : 'Dark'}
-          </button>
-        </div>
-      </section>
-
-      <section className="settings-section">
-        <h2 className="settings-section-title">Bands</h2>
+        <h2 className="section-head">Bands</h2>
         <BandInventory />
       </section>
 
       <section className="settings-section">
-        <h2 className="settings-section-title">Exercises</h2>
-        <ExerciseSettings />
+        <h2 className="section-head">Training</h2>
+        <VolumeTargetsSettings />
+        <button type="button" className="prop-row settings-nav-row" onClick={onOpenExercises}>
+          <span className="settings-nav-label">
+            <span className="settings-nav-title">Exercises</span>
+            <span className="settings-nav-sub">Rest time and progression rule{exerciseCount !== null ? ` (${exerciseCount})` : ''}</span>
+          </span>
+          <span aria-hidden="true">Open</span>
+        </button>
       </section>
 
       <section className="settings-section">
-        <h2 className="settings-section-title">Reminders</h2>
+        <h2 className="section-head">Reminders</h2>
         <div className="settings-sync-card">
           <div className="settings-row">
             <span className="settings-label">Weigh-in reminder</span>
-            <button
-              type="button"
-              className={
-                'settings-theme-toggle ' + (weighInEnabled ? 'settings-toggle-on' : '')
-              }
-              onClick={toggleWeighIn}
-            >
-              {weighInEnabled ? 'On' : 'Off'}
-            </button>
+            <Toggle checked={weighInEnabled} onChange={() => void toggleWeighIn()} label="Weigh-in reminder" />
           </div>
           <div className="settings-row">
             <label className="settings-label" htmlFor="weighin-time">
@@ -267,7 +285,7 @@ export function Settings() {
       </section>
 
       <section className="settings-section">
-        <h2 className="settings-section-title">Sync</h2>
+        <h2 className="section-head">Sync</h2>
         <div className="settings-sync-card">
           <input
             className="settings-passphrase"
@@ -289,6 +307,19 @@ export function Settings() {
               Sync now
             </button>
           </div>
+          <p className={`settings-status ${status.state === 'error' ? 'settings-status-error' : ''}`}>
+            {statusText()}
+            {pending > 0 ? `, ${pending} pending` : ''}
+          </p>
+          <p className="settings-note">
+            Changes are saved on this device and sync when connected.
+          </p>
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h2 className="section-head">Data</h2>
+        <div className="settings-sync-card">
           <button type="button" className="settings-export" onClick={() => { void exportToCsv() }}>
             Export CSV
           </button>
@@ -346,19 +377,6 @@ export function Settings() {
               {restoreNote}
             </p>
           )}
-          <p className={`settings-status ${status.state === 'error' ? 'settings-status-error' : ''}`}>
-            {statusText()}
-            {pending > 0 ? `, ${pending} pending` : ''}
-          </p>
-          <p className="settings-note">
-            Changes are saved on this device and sync when connected.
-          </p>
-        </div>
-      </section>
-
-      <section className="settings-section">
-        <h2 className="settings-section-title">Data</h2>
-        <div className="settings-sync-card">
           <button
             type="button"
             className="settings-reset"
@@ -406,7 +424,17 @@ export function Settings() {
       </section>
 
       <section className="settings-section">
-        <h2 className="settings-section-title">Credits</h2>
+        <h2 className="section-head">Appearance</h2>
+        <div className="settings-sync-card">
+          <div className="settings-row">
+            <span className="settings-label">Dark theme</span>
+            <Toggle checked={theme === 'dark'} onChange={toggleTheme} label="Dark theme" />
+          </div>
+        </div>
+      </section>
+
+      <section className="settings-section">
+        <h2 className="section-head">Credits</h2>
         <p className="settings-note">Body artwork from MuscleMap by Melih Colpan, MIT license.</p>
       </section>
     </div>

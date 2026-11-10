@@ -1,0 +1,56 @@
+.toggle {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.toggle::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 14px;
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-hover);
+}
+
+.toggle-on::before {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.toggle-knob {
+  position: absolute;
+  left: 9px;
+  top: 17px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+}
+
+.toggle-on .toggle-knob {
+  left: 25px;
+  background-color: var(--color-on-accent);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -4px;
+  border-radius: var(--radius);
+}
+
+.toggle:disabled::before {
+  border-color: var(--color-disabled-text);
+}
+
+.toggle:disabled .toggle-knob {
+  background-color: var(--color-disabled-text);
+}

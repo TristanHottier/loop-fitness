@@ -9,7 +9,9 @@ import {
 import { Chart, type ChartPoint } from '../components/Chart'
 import { StrengthChart } from '../components/StrengthChart'
 import { useTrainingData } from '../components/useTrainingData'
+import { EmptyState } from '../components/EmptyState'
 import { todayISODate } from '../lib/format'
+import { Plus, X } from 'lucide-react'
 import './progress.css'
 
 const VISIBLE_TYPES: BodyMetricType[] = ['weight_kg', 'arm_left_cm', 'arm_right_cm']
@@ -103,47 +105,118 @@ function deltaLabel(delta: number, unit: string | null): string {
   return delta > 0 ? `+${text}` : text
 }
 
-interface ChartCardProps {
-  title: string
-  points: ChartPoint[]
-  unit: string
+interface MetricAddProps {
+  type: BodyMetricType
+  onAdded: () => Promise<void>
+  showLabel?: boolean
+}
+
+// Inline add form for one metric: date, value, Add.
+function MetricAdd({ type, onAdded, showLabel }: MetricAddProps) {
+  const [date, setDate] = useState(todayISODate())
+  const [value, setValue] = useState('')
+
+  async function submit() {
+    const v = parseFloat(value.replace(',', '.'))
+    if (!Number.isFinite(v) || !date) return
+    await createBodyMetric(newBodyMetric(type, date, v))
+    setValue('')
+    await onAdded()
+  }
+
+  return (
+    <form
+      className="progress-add-form"
+      onSubmit={(e) => {
+        e.preventDefault()
+        void submit()
+      }}
+    >
+      {showLabel && <span className="progress-add-label">{TYPE_LABELS[type]}</span>}
+      <input
+        className="progress-input progress-input-date"
+        type="date"
+        aria-label={`${TYPE_LABELS[type]} date`}
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+      />
+      <input
+        className="progress-input progress-input-value"
+        type="number"
+        inputMode="decimal"
+        step="0.1"
+        placeholder={TYPE_UNITS[type]}
+        aria-label={`${TYPE_LABELS[type]} in ${TYPE_UNITS[type]}`}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button type="submit" className="progress-add" disabled={value === ''}>
+        Add
+      </button>
+    </form>
+  )
+}
+
+interface MetricProps {
+  type: BodyMetricType
+  metrics: BodyMetric[]
   showAverage?: boolean
-  latest: number | null
   delta: number | null
   deltaUnit: string | null
   deltaNote?: string
+  onAdded: () => Promise<void>
 }
 
-function ChartCard({ title, points, unit, showAverage, latest, delta, deltaUnit, deltaNote }: ChartCardProps) {
+function Metric({ type, metrics, showAverage, delta, deltaUnit, deltaNote, onAdded }: MetricProps) {
+  const [adding, setAdding] = useState(false)
+  const latest = latestValue(metrics)
+  const title = TYPE_LABELS[type]
+  const unit = TYPE_UNITS[type]
   return (
-    <div className="progress-card">
-      <div className="progress-card-header">
-        <h3 className="progress-card-title">{title}</h3>
+    <section className="progress-metric">
+      <div className="progress-metric-header">
+        <h2 className="section-head">{title}</h2>
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={adding ? `Close ${title.toLowerCase()} entry` : `Add ${title.toLowerCase()} entry`}
+          aria-expanded={adding}
+          onClick={() => setAdding((a) => !a)}
+        >
+          {adding ? <X size={20} strokeWidth={1.75} aria-hidden="true" /> : <Plus size={20} strokeWidth={1.75} aria-hidden="true" />}
+        </button>
+      </div>
+      {latest !== null && (
         <div className="progress-card-value">
-          {latest === null ? (
-            <span className="progress-card-empty">No entries</span>
-          ) : (
-            <>
-              <span className="progress-card-latest">{latest.toFixed(1)}</span>
-              <span className="progress-card-unit">{unit}</span>
-              {delta !== null && (
-                <span
-                  className={
-                    delta > 0
-                      ? 'progress-delta progress-delta-positive'
-                      : 'progress-delta progress-delta-negative'
-                  }
-                >
-                  {deltaLabel(delta, deltaUnit)}
-                  {deltaNote ? <span className="progress-delta-note">{deltaNote}</span> : null}
-                </span>
-              )}
-            </>
+          <span className="big-number">{latest.toFixed(1)}</span>
+          <span className="progress-card-unit">{unit}</span>
+          {delta !== null && (
+            <span
+              className={
+                delta > 0
+                  ? 'progress-delta progress-delta-positive'
+                  : 'progress-delta progress-delta-negative'
+              }
+            >
+              {deltaLabel(delta, deltaUnit)}
+              {deltaNote ? <span className="progress-delta-note">{deltaNote}</span> : null}
+            </span>
           )}
         </div>
-      </div>
-      {latest !== null && <Chart title={title} points={points} unit={unit} showAverage={showAverage} />}
-    </div>
+      )}
+      {adding && (
+        <MetricAdd
+          type={type}
+          onAdded={async () => {
+            await onAdded()
+            setAdding(false)
+          }}
+        />
+      )}
+      {latest !== null && (
+        <Chart title={title} points={toPoints(metrics)} unit={unit} showAverage={showAverage} />
+      )}
+    </section>
   )
 }
 
@@ -165,11 +238,7 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
   const selectedSlug = strengthSlug && trained.includes(strengthSlug) ? strengthSlug : (trained[0] ?? null)
   const [metrics, setMetrics] = useState<BodyMetric[]>([])
   const [loading, setLoading] = useState(true)
-
-  // Add-entry form state.
-  const [formType, setFormType] = useState<BodyMetricType>('weight_kg')
-  const [formDate, setFormDate] = useState(todayISODate())
-  const [formValue, setFormValue] = useState('')
+  const [addOpen, setAddOpen] = useState(false)
 
   async function refresh() {
     const all = await Promise.all(VISIBLE_TYPES.map((t) => getBodyMetrics(t)))
@@ -195,41 +264,34 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
     return metrics.filter((m) => m.type === type)
   }
 
-  async function addEntry() {
-    const value = parseFloat(formValue)
-    if (!Number.isFinite(value) || !formDate) return
-    const metric = newBodyMetric(formType, formDate, value)
-    await createBodyMetric(metric)
-    setFormValue('')
-    await refresh()
-  }
-
   if (loading) {
     return (
       <div className="screen">
-        <h1>Progress</h1>
+        <h1 className="page-title">Progress</h1>
         <p className="screen-subtitle">Loading entries</p>
       </div>
     )
   }
 
-  const weightMetrics = byType('weight_kg')
-  const armLeftMetrics = byType('arm_left_cm')
-  const armRightMetrics = byType('arm_right_cm')
+  const filled = VISIBLE_TYPES.filter((t) => byType(t).length > 0)
+  const empty = VISIBLE_TYPES.filter((t) => byType(t).length === 0)
+
+  function deltaFor(type: BodyMetricType): number | null {
+    return type === 'weight_kg' ? weekDelta(byType(type)) : latestDelta(byType(type))
+  }
 
   return (
     <div className="screen progress">
-      <h1>Progress</h1>
-
-      <button type="button" className="progress-history" onClick={onOpenHistory}>
-        View session history
-      </button>
+      <div className="progress-top">
+        <h1 className="page-title">Progress</h1>
+        <button type="button" className="progress-history" onClick={onOpenHistory}>
+          Session history
+        </button>
+      </div>
 
       {training && selectedSlug ? (
-        <section className="progress-card">
-          <div className="progress-card-header">
-            <h3 className="progress-card-title">Strength</h3>
-          </div>
+        <section className="progress-metric">
+          <h2 className="section-head">Strength</h2>
           <label className="progress-strength-label" htmlFor="strength-exercise">
             Exercise
           </label>
@@ -249,75 +311,42 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
         </section>
       ) : null}
 
-      <ChartCard
-        title="Weight"
-        points={toPoints(weightMetrics)}
-        unit="kg"
-        showAverage
-        latest={latestValue(weightMetrics)}
-        delta={weekDelta(weightMetrics)}
-        deltaUnit={null}
-        deltaNote="vs last week"
-      />
-      <ChartCard
-        title="Arm (left)"
-        points={toPoints(armLeftMetrics)}
-        unit="cm"
-        latest={latestValue(armLeftMetrics)}
-        delta={latestDelta(armLeftMetrics)}
-        deltaUnit="cm"
-      />
-      <ChartCard
-        title="Arm (right)"
-        points={toPoints(armRightMetrics)}
-        unit="cm"
-        latest={latestValue(armRightMetrics)}
-        delta={latestDelta(armRightMetrics)}
-        deltaUnit="cm"
-      />
+      {filled.map((type) => (
+        <Metric
+          key={type}
+          type={type}
+          metrics={byType(type)}
+          showAverage={type === 'weight_kg'}
+          delta={deltaFor(type)}
+          deltaUnit={type === 'weight_kg' ? null : 'cm'}
+          deltaNote={type === 'weight_kg' ? 'vs last week' : undefined}
+          onAdded={refresh}
+        />
+      ))}
 
-      <section className="progress-section">
-        <h2 className="progress-section-title">Entries</h2>
+      {filled.length === 0 && (!training || !selectedSlug) && (
+        <EmptyState>Add a measurement or finish a workout to see progress here.</EmptyState>
+      )}
 
-        <form
-          className="progress-form"
-          onSubmit={(e) => {
-            e.preventDefault()
-            void addEntry()
-          }}
-        >
-          <div className="progress-form-row">
-            <input
-              className="progress-input progress-input-date"
-              type="date"
-              value={formDate}
-              onChange={(e) => setFormDate(e.target.value)}
-            />
-            <select
-              className="progress-input progress-input-type"
-              value={formType}
-              onChange={(e) => setFormType(e.target.value as BodyMetricType)}
-            >
-              {VISIBLE_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {TYPE_LABELS[t]}
-                </option>
-              ))}
-            </select>
-            <input
-              className="progress-input progress-input-value"
-              type="number"
-              inputMode="decimal"
-              placeholder={TYPE_UNITS[formType]}
-              value={formValue}
-              onChange={(e) => setFormValue(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="progress-add">
-            Add entry
+      {empty.length > 0 && (
+        <section className="progress-metric">
+          <button
+            type="button"
+            className="prop-row"
+            aria-expanded={addOpen}
+            onClick={() => setAddOpen((o) => !o)}
+          >
+            <span>Add measurements</span>
+            <span className="progress-add-summary">
+              {empty.map((t) => TYPE_LABELS[t]).join(', ')}
+            </span>
           </button>
-        </form>
-      </section>
+          {addOpen &&
+            empty.map((t) => (
+              <MetricAdd key={t} type={t} onAdded={refresh} showLabel />
+            ))}
+        </section>
+      )}
     </div>
   )
 }

@@ -78,7 +78,7 @@ The three workout files and the program guide in `content/` are the source of tr
 Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only a default for the picker.
 
 **Band ladders (lb, ratings at full stretch)**
-- Tube: `30`, `40`, `50`, `30+40`, `40+50`, `30+40+50`
+- Tube: `30`, `40`, `50`, `30+40`, `30+50`, `40+50`, `30+40+50`
 - Loop: `5-30`, `15-50`, `25-75`, `35-95`, `50-145`
 
 **Workout 1: Pull**

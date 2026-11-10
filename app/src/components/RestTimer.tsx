@@ -6,18 +6,38 @@ interface RestTimerProps {
   seconds: number
   label: string
   onDone: () => void
-  // Saves the current rest length (seconds) as the exercise's default.
-  onSaveDefault?: (seconds: number) => void | Promise<void>
+  // Reports the current rest length (seconds) whenever it is adjusted.
+  onTotalChange?: (seconds: number) => void
 }
 
-const RING_RADIUS = 32
+const NOTE_FLAG = 'loopfit.restNoteDismissed'
+
+function noteDismissed(): boolean {
+  try {
+    return window.localStorage.getItem(NOTE_FLAG) === '1'
+  } catch {
+    return false
+  }
+}
+
+function storeNoteDismissed() {
+  try {
+    window.localStorage.setItem(NOTE_FLAG, '1')
+  } catch {
+    // Storage unavailable; the note may show again.
+  }
+}
+
+const RING_RADIUS = 15
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
 
-export function RestTimer({ seconds, label, onDone, onSaveDefault }: RestTimerProps) {
+export function RestTimer({ seconds, label, onDone, onTotalChange }: RestTimerProps) {
   const [remaining, setRemaining] = useState(seconds)
   // Length of this rest including adjustments, for the ring and for saving.
   const [total, setTotal] = useState(seconds)
-  const [saved, setSaved] = useState<'idle' | 'saving' | 'saved' | 'failed'>('idle')
+  const [showNote, setShowNote] = useState(() => !noteDismissed())
+  const onTotalChangeRef = useRef(onTotalChange)
+  onTotalChangeRef.current = onTotalChange
   const endTimeRef = useRef(Date.now() + seconds * 1000)
   const doneRef = useRef(false)
   const audioRef = useRef<AudioContext | null>(null)
@@ -63,6 +83,7 @@ export function RestTimer({ seconds, label, onDone, onSaveDefault }: RestTimerPr
   function finish() {
     if (doneRef.current) return
     doneRef.current = true
+    storeNoteDismissed()
     chime()
     vibrate()
     onDoneRef.current()
@@ -72,19 +93,14 @@ export function RestTimer({ seconds, label, onDone, onSaveDefault }: RestTimerPr
     if (doneRef.current) return
     endTimeRef.current = Math.max(Date.now(), endTimeRef.current + deltaSeconds * 1000)
     setRemaining(Math.max(0, Math.ceil((endTimeRef.current - Date.now()) / 1000)))
-    setTotal((t) => Math.max(15, t + deltaSeconds))
-    setSaved('idle')
+    const next = Math.max(15, total + deltaSeconds)
+    setTotal(next)
+    onTotalChangeRef.current?.(next)
   }
 
-  async function saveDefault() {
-    if (!onSaveDefault || saved === 'saving') return
-    setSaved('saving')
-    try {
-      await onSaveDefault(total)
-      setSaved('saved')
-    } catch {
-      setSaved('failed')
-    }
+  function dismissNote() {
+    storeNoteDismissed()
+    setShowNote(false)
   }
 
   function skip() {
@@ -152,61 +168,44 @@ export function RestTimer({ seconds, label, onDone, onSaveDefault }: RestTimerPr
   const dashOffset = RING_CIRCUMFERENCE * (1 - fraction)
 
   return (
-    <div className="rest-timer" role="timer" aria-live="polite">
-      <div className="rest-timer-ring">
-        <svg
-          className="rest-timer-ring-svg"
-          viewBox="0 0 72 72"
-          aria-hidden="true"
-        >
-          <circle
-            className="rest-timer-ring-track"
-            cx="36"
-            cy="36"
-            r={RING_RADIUS}
-            fill="none"
-          />
-          <circle
-            className="rest-timer-ring-arc"
-            cx="36"
-            cy="36"
-            r={RING_RADIUS}
-            fill="none"
-            strokeDasharray={RING_CIRCUMFERENCE}
-            strokeDashoffset={dashOffset}
-            transform="rotate(-90 36 36)"
-          />
-        </svg>
-        <span className="rest-timer-count">{formatClock(remaining)}</span>
-      </div>
-      <div className="rest-timer-body">
-        <span className="rest-timer-label">{label}</span>
-        <div className="rest-timer-controls">
-          <button type="button" className="rest-timer-btn" aria-label="Shorten rest by 15 seconds" onClick={() => adjust(-15)}>
-            -15s
-          </button>
-          <button type="button" className="rest-timer-btn" aria-label="Lengthen rest by 15 seconds" onClick={() => adjust(15)}>
-            +15s
-          </button>
-          <button type="button" className="rest-timer-btn rest-timer-btn-skip" aria-label="Skip rest" onClick={skip}>
-            Skip
+    <div className="rest-timer" role="timer" aria-label={`Rest, ${label}`}>
+      {showNote && (
+        <div className="rest-timer-note">
+          <span>The timer cannot ring while the screen is locked.</span>
+          <button type="button" className="rest-timer-note-close" onClick={dismissNote}>
+            Got it
           </button>
         </div>
-        {onSaveDefault && (
-          <button
-            type="button"
-            className="rest-timer-link"
-            onClick={saveDefault}
-            disabled={saved === 'saving' || saved === 'saved'}
-          >
-            {saved === 'saved'
-              ? `Saved ${formatClock(total)} as default`
-              : saved === 'failed'
-                ? 'Could not save. Try again'
-                : 'Use as default for this exercise'}
-          </button>
-        )}
-        <p className="rest-timer-note">The timer cannot ring while the screen is locked.</p>
+      )}
+      <svg className="rest-timer-ring-svg" viewBox="0 0 36 36" aria-hidden="true">
+        <circle className="rest-timer-ring-track" cx="18" cy="18" r={RING_RADIUS} fill="none" />
+        <circle
+          className="rest-timer-ring-arc"
+          cx="18"
+          cy="18"
+          r={RING_RADIUS}
+          fill="none"
+          strokeDasharray={RING_CIRCUMFERENCE}
+          strokeDashoffset={dashOffset}
+          transform="rotate(-90 18 18)"
+        />
+      </svg>
+      <div className="rest-timer-main">
+        <span className="rest-timer-count" aria-live="off">
+          {formatClock(remaining)}
+        </span>
+        <span className="rest-timer-label">{label}</span>
+      </div>
+      <div className="rest-timer-controls">
+        <button type="button" className="rest-timer-btn" aria-label="Shorten rest by 15 seconds" onClick={() => adjust(-15)}>
+          -15
+        </button>
+        <button type="button" className="rest-timer-btn" aria-label="Lengthen rest by 15 seconds" onClick={() => adjust(15)}>
+          +15
+        </button>
+        <button type="button" className="rest-timer-btn rest-timer-btn-skip" aria-label="Skip rest" onClick={skip}>
+          Skip
+        </button>
       </div>
     </div>
   )

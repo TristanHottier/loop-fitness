@@ -8,28 +8,80 @@
   gap: 8px;
 }
 
-.session-detail-back {
-  min-height: var(--touch-min);
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  color: var(--color-text);
-  font-size: 14px;
-  cursor: pointer;
-  align-self: flex-start;
+.session-detail {
+  padding-bottom: 24px;
 }
 
-.session-detail-back:hover {
+.session-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: -12px;
+}
+
+.session-detail-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.session-detail-date {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.session-detail-add,
+.session-detail-cancel,
+.session-detail-delete {
+  min-height: var(--touch-min);
+  padding: 0 12px;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.session-detail-add:hover,
+.session-detail-cancel:hover {
   background-color: var(--color-hover);
 }
 
-.session-detail-back:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: -2px;
+.session-detail-delete {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.session-detail-delete:disabled,
+.session-detail-cancel:disabled {
+  border-color: var(--color-disabled-text);
+  color: var(--color-disabled-text);
+}
+
+.session-detail-notdone {
+  margin-top: 8px;
+}
+
+.session-detail-notdone-name {
+  color: var(--color-text) !important;
+  font-size: 14px !important;
+}
+
+.session-detail-danger {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.session-detail-danger-actions {
+  display: flex;
+  gap: 8px;
 }
 
 .session-detail-exercise-title {
@@ -46,9 +98,24 @@
   min-width: 96px;
 }
 
+.session-detail .session-set {
+  flex-wrap: wrap;
+  padding: 8px 0;
+}
+
 .session-detail .session-set-meta {
   flex-basis: 100%;
   display: flex;
   align-items: center;
   padding-left: 8px;
+}
+
+.session-detail .session-input-note {
+  flex: 1 1 140px;
+  width: auto;
+  min-width: 0;
+}
+
+.session-detail-note {
+  width: 100%;
 }
