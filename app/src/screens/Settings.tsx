@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getStoredTheme, setTheme, type Theme } from '../theme'
 import {
   getToken,
@@ -14,7 +14,18 @@ import {
   loadReminderSettings,
 } from '../push/push'
 import { exportToCsv } from '../lib/export'
+import {
+  exportToJson,
+  parseBackup,
+  previewRestore,
+  restoreBackup,
+  totalCounts,
+  type Backup,
+  type MergePlan,
+} from '../lib/backup'
 import { resetSessionHistory } from '../db/db'
+import { BandInventory } from '../components/BandInventory'
+import { ExerciseSettings } from '../components/ExerciseSettings'
 import './settings.css'
 
 export function Settings() {
@@ -31,6 +42,12 @@ export function Settings() {
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
   const [resetBusy, setResetBusy] = useState(false)
   const [resetNote, setResetNote] = useState('')
+
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [restore, setRestore] = useState<{ backup: Backup; plan: MergePlan } | null>(null)
+  const [restoreBusy, setRestoreBusy] = useState(false)
+  const [restoreNote, setRestoreNote] = useState('')
+  const [restoreFailed, setRestoreFailed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -137,6 +154,45 @@ export function Settings() {
     }
   }
 
+  async function pickBackupFile(file: File | undefined) {
+    setRestore(null)
+    setRestoreNote('')
+    setRestoreFailed(false)
+    if (!file) return
+    const parsed = parseBackup(await file.text())
+    if (!parsed.ok) {
+      setRestoreFailed(true)
+      setRestoreNote(parsed.error)
+      return
+    }
+    try {
+      setRestore({ backup: parsed.backup, plan: await previewRestore(parsed.backup) })
+    } catch {
+      setRestoreFailed(true)
+      setRestoreNote('Could not read this device\'s data. Try again.')
+    }
+  }
+
+  async function confirmRestore() {
+    if (!restore) return
+    setRestoreBusy(true)
+    try {
+      const plan = await restoreBackup(restore.backup)
+      const { write } = totalCounts(plan)
+      setRestore(null)
+      setRestoreFailed(false)
+      setRestoreNote(
+        `Restored ${write} ${write === 1 ? 'row' : 'rows'}. They will sync when connected.`
+      )
+      setPending(await pendingCount())
+    } catch {
+      setRestoreFailed(true)
+      setRestoreNote('Restore failed. Nothing was changed.')
+    } finally {
+      setRestoreBusy(false)
+    }
+  }
+
   function statusText(): string {
     switch (status.state) {
       case 'not-configured':
@@ -164,6 +220,16 @@ export function Settings() {
             {theme === 'dark' ? 'Light' : 'Dark'}
           </button>
         </div>
+      </section>
+
+      <section className="settings-section">
+        <h2 className="settings-section-title">Bands</h2>
+        <BandInventory />
+      </section>
+
+      <section className="settings-section">
+        <h2 className="settings-section-title">Exercises</h2>
+        <ExerciseSettings />
       </section>
 
       <section className="settings-section">
@@ -226,6 +292,60 @@ export function Settings() {
           <button type="button" className="settings-export" onClick={() => { void exportToCsv() }}>
             Export CSV
           </button>
+          <button type="button" className="settings-export" onClick={() => { void exportToJson() }}>
+            Export backup
+          </button>
+          <button
+            type="button"
+            className="settings-export"
+            onClick={() => fileRef.current?.click()}
+            disabled={restoreBusy}
+          >
+            Restore backup
+          </button>
+          <input
+            ref={fileRef}
+            className="settings-file-input"
+            type="file"
+            accept="application/json,.json"
+            onChange={(e) => {
+              void pickBackupFile(e.target.files?.[0])
+              e.target.value = ''
+            }}
+          />
+          {restore && (
+            <div className="settings-reset-confirm">
+              <p className="settings-reset-note">
+                {(() => {
+                  const { total, write } = totalCounts(restore.plan)
+                  return `This backup has ${total} rows. ${write} are new or newer than this device and will be restored. Nothing is deleted.`
+                })()}
+              </p>
+              <div className="settings-sync-actions">
+                <button
+                  type="button"
+                  className="settings-sync-now"
+                  onClick={confirmRestore}
+                  disabled={restoreBusy}
+                >
+                  Confirm restore
+                </button>
+                <button
+                  type="button"
+                  className="settings-connect"
+                  onClick={() => setRestore(null)}
+                  disabled={restoreBusy}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+          {restoreNote && (
+            <p className={`settings-status ${restoreFailed ? 'settings-status-error' : ''}`}>
+              {restoreNote}
+            </p>
+          )}
           <p className={`settings-status ${status.state === 'error' ? 'settings-status-error' : ''}`}>
             {statusText()}
             {pending > 0 ? `, ${pending} pending` : ''}

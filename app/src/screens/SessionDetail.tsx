@@ -7,12 +7,51 @@ import {
   createSetLog,
   updateSetLog,
   deleteSetLog,
+  normalizeRir,
+  SET_TYPES,
   type Session as SessionRecord,
   type SetLog,
+  type SetType,
 } from '../db/db'
+import { RirPicker } from '../components/RirPicker'
+import { labelFor, orderOf, setKey } from '../lib/setRows'
 import './session-detail.css'
 
-type InputState = { reps: string; band: string; note: string }
+type InputState = { reps: string; band: string; note: string; rir: number | null; type: SetType }
+
+const TYPE_LABEL: Record<SetType, string> = {
+  normal: 'Normal',
+  warmup: 'Warm-up',
+  drop: 'Drop',
+  failure: 'Failure',
+}
+
+type Row = { key: string; setIndex: number; side: string | null }
+
+// Planned rows (1..sets, both sides when unilateral) plus any extra rows that
+// were logged: warm-up and drop sets, or planned sets beyond the plan.
+function rowsFor(slug: string, sets: number, unilateral: boolean, existing: Record<string, SetLog>): Row[] {
+  const sides: Array<string | null> = unilateral ? ['L', 'R'] : [null]
+  const rows: Row[] = []
+  const seen = new Set<string>()
+  for (let i = 1; i <= sets; i++) {
+    for (const side of sides) {
+      const key = setKey(slug, i, side)
+      rows.push({ key, setIndex: i, side })
+      seen.add(key)
+    }
+  }
+  for (const log of Object.values(existing)) {
+    if (log.exercise_slug !== slug) continue
+    const key = setKey(slug, log.set_index, log.side)
+    if (seen.has(key)) continue
+    seen.add(key)
+    rows.push({ key, setIndex: log.set_index, side: log.side })
+  }
+  return rows.sort(
+    (a, b) => orderOf(a.setIndex) - orderOf(b.setIndex) || (a.side ?? '').localeCompare(b.side ?? '')
+  )
+}
 
 export function SessionDetail({
   sessionId,
@@ -50,20 +89,22 @@ export function SessionDetail({
         if (cancelled) return
         const existing: Record<string, SetLog> = {}
         for (const log of logs) {
-          existing[`${log.exercise_slug}|${log.set_index}|${log.side ?? ''}`] = log
+          existing[setKey(log.exercise_slug, log.set_index, log.side)] = log
         }
         const init: Record<string, InputState> = {}
         for (const slug of w.exercises) {
           const ex = resolveExercise(p, w, slug)
-          for (let i = 1; i <= ex.sets; i++) {
-            const sides = ex.unilateral ? ['L', 'R'] : ['']
-            for (const side of sides) {
-              const key = `${slug}|${i}|${side}`
-              const log = existing[key]
-              init[key] = log
-                ? { reps: String(log.reps), band: log.band, note: log.note ?? '' }
-                : { reps: '', band: '', note: '' }
-            }
+          for (const row of rowsFor(slug, ex.sets, ex.unilateral, existing)) {
+            const log = existing[row.key]
+            init[row.key] = log
+              ? {
+                  reps: String(log.reps),
+                  band: log.band,
+                  note: log.note ?? '',
+                  rir: log.rir,
+                  type: log.set_type,
+                }
+              : { reps: '', band: '', note: '', rir: null, type: 'normal' }
           }
         }
         setPlan(p)
@@ -81,11 +122,15 @@ export function SessionDetail({
     }
   }, [sessionId])
 
-  function updateInput(key: string, field: keyof InputState, value: string) {
+  function updateInput(key: string, field: 'reps' | 'band' | 'note', value: string) {
     setInputs((prev) => ({ ...prev, [key]: { ...prev[key], [field]: value } }))
   }
 
-  function setRow(key: string) {
+  function patchInput(key: string, patch: Partial<InputState>) {
+    setInputs((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }))
+  }
+
+  function setRow(key: string, name: string) {
     const input = inputs[key]
     return (
       <>
@@ -94,6 +139,7 @@ export function SessionDetail({
           type="number"
           inputMode="numeric"
           value={input?.reps ?? ''}
+          aria-label={`Reps, ${name}`}
           onChange={(e) => updateInput(key, 'reps', e.target.value)}
         />
         <input
@@ -109,6 +155,25 @@ export function SessionDetail({
           value={input?.note ?? ''}
           onChange={(e) => updateInput(key, 'note', e.target.value)}
         />
+        <select
+          className="session-input session-detail-type"
+          value={input?.type ?? 'normal'}
+          aria-label={`Set type, ${name}`}
+          onChange={(e) => patchInput(key, { type: e.target.value as SetType })}
+        >
+          {SET_TYPES.map((t) => (
+            <option key={t} value={t}>
+              {TYPE_LABEL[t]}
+            </option>
+          ))}
+        </select>
+        <div className="session-set-meta">
+          <RirPicker
+            value={input?.rir ?? null}
+            onChange={(v) => patchInput(key, { rir: v })}
+            name={name}
+          />
+        </div>
       </>
     )
   }
@@ -120,10 +185,9 @@ export function SessionDetail({
     try {
       for (const slug of workout.exercises) {
         const ex = resolveExercise(plan, workout, slug)
-        for (let i = 1; i <= ex.sets; i++) {
-          const sides = ex.unilateral ? ['L', 'R'] : ['']
-          for (const side of sides) {
-            const key = `${slug}|${i}|${side}`
+        for (const row of rowsFor(slug, ex.sets, ex.unilateral, existingLogs)) {
+          const { key, setIndex: i, side } = row
+          {
             const input = inputs[key]
             if (!input) continue
             const repsParsed = parseInt(input.reps, 10)
@@ -139,16 +203,20 @@ export function SessionDetail({
                 existing.reps = reps
                 existing.band = band
                 existing.note = noteValue
+                existing.rir = normalizeRir(input.rir)
+                existing.set_type = input.type
                 await updateSetLog(existing)
               } else {
                 const log = newSetLog(
                   session.id,
                   slug,
                   i,
-                  side === '' ? null : side,
+                  side,
                   reps,
                   band,
-                  noteValue
+                  noteValue,
+                  input.rir,
+                  input.type
                 )
                 await createSetLog(log)
               }
@@ -201,30 +269,16 @@ export function SessionDetail({
         return (
           <section className="session-exercise" key={slug}>
             <h2 className="session-detail-exercise-title">{ex.name}</h2>
-            {Array.from({ length: ex.sets }, (_, idx) => idx + 1).map((setIndex) => {
-              if (ex.unilateral) {
-                return (
-                  <div key={setIndex}>
-                    <div className="session-set">
-                      <span className="session-set-label">Set {setIndex}</span>
-                    </div>
-                    {['L', 'R'].map((side) => {
-                      const key = `${slug}|${setIndex}|${side}`
-                      return (
-                        <div className="session-side" key={side}>
-                          <span className="session-side-label">{side}</span>
-                          {setRow(key)}
-                        </div>
-                      )
-                    })}
-                  </div>
-                )
-              }
-              const key = `${slug}|${setIndex}|`
+            {rowsFor(slug, ex.sets, ex.unilateral, existingLogs).map((row) => {
+              const label = labelFor(row.setIndex)
+              const name =
+                label.toLowerCase() + (row.side ? `, ${row.side === 'L' ? 'left' : 'right'}` : '')
               return (
-                <div className="session-set" key={setIndex}>
-                  <span className="session-set-label">Set {setIndex}</span>
-                  {setRow(key)}
+                <div className={row.side ? 'session-side' : 'session-set'} key={row.key}>
+                  <span className={row.side ? 'session-side-label' : 'session-set-label'}>
+                    {row.side ? `${label} ${row.side}` : label}
+                  </span>
+                  {setRow(row.key, name)}
                 </div>
               )
             })}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   newBodyMetric,
   createBodyMetric,
@@ -7,6 +7,8 @@ import {
   type BodyMetricType,
 } from '../db/db'
 import { Chart, type ChartPoint } from '../components/Chart'
+import { StrengthChart } from '../components/StrengthChart'
+import { useTrainingData } from '../components/useTrainingData'
 import { todayISODate } from '../lib/format'
 import './progress.css'
 
@@ -146,6 +148,21 @@ function ChartCard({ title, points, unit, showAverage, latest, delta, deltaUnit,
 }
 
 export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
+  const training = useTrainingData()
+  const [strengthSlug, setStrengthSlug] = useState<string | null>(null)
+  // Exercises with at least one log, most recently trained first.
+  const trained = useMemo(() => {
+    if (!training) return []
+    const dateOf = new Map(training.sessions.map((x) => [x.id, x.date]))
+    const last = new Map<string, string>()
+    for (const l of training.logs) {
+      const d = dateOf.get(l.session_id)
+      if (!d || !training.plan.exercises[l.exercise_slug]) continue
+      if ((last.get(l.exercise_slug) ?? '') < d) last.set(l.exercise_slug, d)
+    }
+    return [...last.entries()].sort((a, b) => b[1].localeCompare(a[1])).map(([slug]) => slug)
+  }, [training])
+  const selectedSlug = strengthSlug && trained.includes(strengthSlug) ? strengthSlug : (trained[0] ?? null)
   const [metrics, setMetrics] = useState<BodyMetric[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -207,6 +224,30 @@ export function Progress({ onOpenHistory }: { onOpenHistory: () => void }) {
       <button type="button" className="progress-history" onClick={onOpenHistory}>
         View session history
       </button>
+
+      {training && selectedSlug ? (
+        <section className="progress-card">
+          <div className="progress-card-header">
+            <h3 className="progress-card-title">Strength</h3>
+          </div>
+          <label className="progress-strength-label" htmlFor="strength-exercise">
+            Exercise
+          </label>
+          <select
+            id="strength-exercise"
+            className="progress-input progress-strength-select"
+            value={selectedSlug}
+            onChange={(e) => setStrengthSlug(e.target.value)}
+          >
+            {trained.map((slug) => (
+              <option key={slug} value={slug}>
+                {training.plan.exercises[slug].name}
+              </option>
+            ))}
+          </select>
+          <StrengthChart slug={selectedSlug} data={training} />
+        </section>
+      ) : null}
 
       <ChartCard
         title="Weight"

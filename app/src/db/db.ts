@@ -1,4 +1,8 @@
 import Dexie, { type Table } from 'dexie';
+import { normalizeRir, normalizeSetType, type SetType } from '../lib/setlog';
+
+export type { SetType } from '../lib/setlog';
+export { SET_TYPES, normalizeRir, normalizeSetType, normalizeSetLog } from '../lib/setlog';
 
 export interface Session {
   id: string;
@@ -20,6 +24,8 @@ export interface SetLog {
   reps: number;
   band: string;
   note: string | null;
+  rir: number | null; // reps in reserve, 0-3 (3 means "3+"); null = not logged
+  set_type: SetType; // 'normal' by default
   updated_at: string; // ISO
   deleted: boolean;
 }
@@ -88,6 +94,21 @@ class FitnessDB extends Dexie {
     this.version(4).stores({
       nutrition: 'id, date',
     });
+    // v5: RIR and set type on set logs, plus an exercise_slug index (history,
+    // records and charts query by exercise).
+    this.version(5)
+      .stores({
+        set_logs: 'id, session_id, exercise_slug',
+      })
+      .upgrade((tx) =>
+        tx
+          .table('set_logs')
+          .toCollection()
+          .modify((log: Partial<SetLog>) => {
+            if (log.rir === undefined) log.rir = null;
+            if (log.set_type === undefined) log.set_type = 'normal';
+          })
+      );
   }
 }
 
@@ -171,7 +192,9 @@ export function newSetLog(
   side: string | null,
   reps: number,
   band: string,
-  note?: string | null
+  note?: string | null,
+  rir: number | null = null,
+  setType: SetType = 'normal'
 ): SetLog {
   return {
     id: crypto.randomUUID(),
@@ -182,6 +205,8 @@ export function newSetLog(
     reps,
     band,
     note: note ?? null,
+    rir: normalizeRir(rir),
+    set_type: normalizeSetType(setType),
     updated_at: new Date().toISOString(),
     deleted: false,
   };
@@ -234,22 +259,38 @@ export async function getSetLogsForSession(sessionId: string): Promise<SetLog[]>
   return logs;
 }
 
-export async function getLatestBandForExercise(exerciseSlug: string): Promise<string | null> {
+// The latest working set (not warm-up or drop) for an exercise, ordered by
+// session date then updated_at, so warm-up/drop rows and edits to old sessions
+// do not change the prefilled band or reps.
+async function latestWorkingLog(exerciseSlug: string): Promise<SetLog | null> {
   const logs = await db.set_logs
-    .filter((log) => !log.deleted && log.exercise_slug === exerciseSlug)
+    .filter(
+      (log) =>
+        !log.deleted &&
+        log.exercise_slug === exerciseSlug &&
+        (log.set_type === 'normal' || log.set_type === 'failure')
+    )
     .toArray();
   if (logs.length === 0) return null;
-  const latest = logs.reduce((a, b) => (a.updated_at >= b.updated_at ? a : b));
-  return latest.band;
+  const ids = [...new Set(logs.map((log) => log.session_id))];
+  const sessions = await db.sessions.where('id').anyOf(ids).toArray();
+  const dateById = new Map(sessions.filter((s) => !s.deleted).map((s) => [s.id, s.date]));
+  const live = logs.filter((log) => dateById.has(log.session_id));
+  if (live.length === 0) return null;
+  return live.reduce((a, b) => {
+    const ad = dateById.get(a.session_id) ?? '';
+    const bd = dateById.get(b.session_id) ?? '';
+    if (ad !== bd) return ad > bd ? a : b;
+    return a.updated_at >= b.updated_at ? a : b;
+  });
+}
+
+export async function getLatestBandForExercise(exerciseSlug: string): Promise<string | null> {
+  return (await latestWorkingLog(exerciseSlug))?.band ?? null;
 }
 
 export async function getLatestRepsForExercise(exerciseSlug: string): Promise<number | null> {
-  const logs = await db.set_logs
-    .filter((log) => !log.deleted && log.exercise_slug === exerciseSlug)
-    .toArray();
-  if (logs.length === 0) return null;
-  const latest = logs.reduce((a, b) => (a.updated_at >= b.updated_at ? a : b));
-  return latest.reps;
+  return (await latestWorkingLog(exerciseSlug))?.reps ?? null;
 }
 
 // The set logs from the most recent session for a given exercise, used to

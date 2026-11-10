@@ -159,3 +159,23 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
 }
+
+.exercise-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.exercise-history li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.exercise-history-date {
+  color: var(--color-text-secondary);
+}

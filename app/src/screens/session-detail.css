@@ -39,3 +39,16 @@
   color: var(--color-text);
   padding: 8px 4px;
 }
+
+/* Set type select and the RIR line of each row. Inputs stay at 16px. */
+.session-detail-type {
+  width: auto;
+  min-width: 96px;
+}
+
+.session-detail .session-set-meta {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}

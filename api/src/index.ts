@@ -8,10 +8,11 @@ import { sendPushNotification, WebPushError, type PushSubscriptionData } from '@
 const TABLES = ['sessions', 'set_logs', 'body_metrics', 'settings', 'nutrition'] as const
 type TableName = (typeof TABLES)[number]
 
-// Column lists per table (must match api/migrations/0001_init.sql).
+// Column lists per table (must match api/migrations/0001_init.sql and later
+// ALTERs, e.g. 0004_set_log_fields.sql).
 const TABLE_COLUMNS: Record<TableName, string[]> = {
   sessions: ['id', 'workout_id', 'date', 'started_at', 'ended_at', 'note', 'updated_at', 'deleted'],
-  set_logs: ['id', 'session_id', 'exercise_slug', 'set_index', 'side', 'reps', 'band', 'note', 'updated_at', 'deleted'],
+  set_logs: ['id', 'session_id', 'exercise_slug', 'set_index', 'side', 'reps', 'band', 'note', 'rir', 'set_type', 'updated_at', 'deleted'],
   body_metrics: ['id', 'date', 'type', 'value', 'updated_at', 'deleted'],
   settings: ['key', 'value', 'updated_at', 'deleted'],
   nutrition: ['id', 'date', 'calories', 'protein', 'updated_at', 'deleted'],
@@ -141,6 +142,11 @@ async function handlePush(request: Request, env: Env): Promise<Response> {
 function normalizeRow(table: TableName, row: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = { ...row }
   out.deleted = row.deleted === 1 || row.deleted === true
+  if (table === 'set_logs') {
+    // Rows pushed by old clients (or before migration 0004) have no set_type.
+    if (typeof out.set_type !== 'string' || out.set_type === '') out.set_type = 'normal'
+    if (typeof out.rir !== 'number') out.rir = null
+  }
   return out
 }
 

@@ -245,3 +245,8 @@
   font-size: 13px;
   color: var(--color-text-secondary);
 }
+
+/* Hidden file input behind the "Restore backup" button. */
+.settings-file-input {
+  display: none;
+}

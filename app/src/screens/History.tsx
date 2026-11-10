@@ -7,6 +7,8 @@ import {
 } from '../db/db'
 import { loadPlan, type PlanData } from '../data/plan'
 import { formatDuration } from '../lib/format'
+import { ConsistencyCalendar } from '../components/ConsistencyCalendar'
+import { useTrainingData } from '../components/useTrainingData'
 import './history.css'
 
 interface HistoryProps {
@@ -17,6 +19,7 @@ interface HistoryProps {
 
 export function History({ onBack, onOpenSession, version }: HistoryProps) {
   const [sessions, setSessions] = useState<Session[]>([])
+  const training = useTrainingData([version])
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({})
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
@@ -80,6 +83,15 @@ export function History({ onBack, onOpenSession, version }: HistoryProps) {
         Back
       </button>
       <h1>History</h1>
+
+      {training ? (
+        <ConsistencyCalendar
+          sessions={sessions}
+          logs={training.logs}
+          plan={training.plan}
+          inventory={training.inventory}
+        />
+      ) : null}
 
       {sessions.length === 0 ? (
         <p className="history-empty">No sessions yet.</p>

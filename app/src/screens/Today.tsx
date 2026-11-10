@@ -8,12 +8,22 @@ import {
   getLatestBodyMetric,
   getSessions,
   getSetLogsForSession,
+  db,
   newBodyMetric,
   updateBodyMetric,
   type Session,
 } from '../db/db'
 import { todayISODate } from '../lib/format'
-import { armMeasurementDue, deloadDue } from '../lib/suggestions'
+import { getLastDeloadDate, setLastDeloadDate } from '../db/config'
+import { armMeasurementDue } from '../lib/suggestions'
+import {
+  deloadAdvice,
+  endedDeloadDate,
+  groupHistory,
+  isDeloadActive,
+  plateauStatus,
+  type DeloadAdvice,
+} from '../lib/progression'
 import './today.css'
 
 // JS getDay(): 0=Sunday ... 6=Saturday. Map the training days to their workout.
@@ -52,7 +62,9 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [failed, setFailed] = useState(false)
   const [armDue, setArmDue] = useState(false)
-  const [deload, setDeload] = useState(false)
+  const [advice, setAdvice] = useState<DeloadAdvice | null>(null)
+  const [lastDeload, setLastDeload] = useState<string | null>(null)
+  const [deloadError, setDeloadError] = useState('')
   const [sessions, setSessions] = useState<Session[]>([])
   const [doneSets, setDoneSets] = useState(0)
   const [latestWeight, setLatestWeight] = useState<number | null>(null)
@@ -66,14 +78,34 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
       .catch(() => {
         if (!cancelled) setFailed(true)
       })
-    Promise.all([getLastArmMeasurementDate(), getFirstSessionDate()])
-      .then(([lastArm, firstSession]) => {
-        if (cancelled) return
-        setArmDue(armMeasurementDue(lastArm))
-        setDeload(deloadDue(firstSession))
+    getLastArmMeasurementDate()
+      .then((lastArm) => {
+        if (!cancelled) setArmDue(armMeasurementDue(lastArm))
       })
       .catch(() => {
         // The prompts are non-critical; ignore db errors.
+      })
+    Promise.all([
+      loadPlan(),
+      getLastDeloadDate(),
+      getFirstSessionDate(),
+      getSessions(),
+      db.set_logs.filter((l) => !l.deleted).toArray(),
+    ])
+      .then(([p, last, first, allSessions, logs]) => {
+        if (cancelled) return
+        setLastDeload(last)
+        setAdvice(
+          deloadAdvice({
+            status: plateauStatus(groupHistory(allSessions, logs), p),
+            lastDeloadDate: last,
+            firstSessionDate: first,
+            todayKey: todayISODate(),
+          })
+        )
+      })
+      .catch(() => {
+        // Deload advice is non-critical; ignore db errors.
       })
     getSessions()
       .then((data) => {
@@ -189,6 +221,29 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
     : 0
   const progressPct =
     totalSets > 0 ? Math.min(100, Math.round((doneSets / totalSets) * 100)) : 0
+
+  const deloadActive = isDeloadActive(lastDeload, todayISO)
+
+  async function startDeload() {
+    setDeloadError('')
+    try {
+      await setLastDeloadDate(todayISO)
+      setLastDeload(todayISO)
+    } catch {
+      setDeloadError('Could not start the deload week. Try again.')
+    }
+  }
+
+  async function endDeload() {
+    setDeloadError('')
+    try {
+      const ended = endedDeloadDate(todayISO)
+      await setLastDeloadDate(ended)
+      setLastDeload(ended)
+    } catch {
+      setDeloadError('Could not end the deload week. Try again.')
+    }
+  }
 
   async function refreshWeight() {
     const metric = await getLatestBodyMetric('weight_kg')
@@ -328,7 +383,7 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
           </div>
           {todayDone ? (
             <p className="today-card-done-line">
-              You're all set for today!
+              You're all set for today.
             </p>
           ) : (
             <button
@@ -346,20 +401,33 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
         <p className="today-rest">Rest day. No workout scheduled today.</p>
       )}
 
-      {(armDue || deload) && (
+      {deloadActive && (
+        <section className="today-deload">
+          <p className="today-deload-text">Deload week: half the sets, one band lighter</p>
+          <button type="button" className="today-deload-btn" onClick={() => void endDeload()}>
+            End deload
+          </button>
+        </section>
+      )}
+
+      {!deloadActive && advice?.due && (
+        <section className="today-deload">
+          <h2>Deload week</h2>
+          <p className="today-deload-text">{advice.message}</p>
+          <p className="today-deload-sub">Half the sets, one band lighter, for one week.</p>
+          <button type="button" className="today-deload-btn" onClick={() => void startDeload()}>
+            Start deload week
+          </button>
+        </section>
+      )}
+
+      {deloadError && <p className="today-prompt">{deloadError}</p>}
+
+      {armDue && (
         <section className="today-prompts">
           <h2>Due</h2>
           <div className="today-prompt-list">
-            {armDue && (
-              <p className="today-prompt">
-                Arm measurement due. Log it on the Progress screen.
-              </p>
-            )}
-            {deload && (
-              <p className="today-prompt">
-                Deload week. Do half the sets, same bands.
-              </p>
-            )}
+            <p className="today-prompt">Arm measurement due. Log it on the Progress screen.</p>
           </div>
         </section>
       )}

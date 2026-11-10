@@ -5,6 +5,7 @@
 
 import {
   db,
+  normalizeSetLog,
   getSetting,
   setSetting,
   getSyncQueue,
@@ -172,7 +173,7 @@ async function mergeRecord(table: string, record: Record<string, unknown>): Prom
     case 'set_logs': {
       const local = await db.set_logs.get(String(record.id))
       if (!local || local.updated_at <= incomingUpdatedAt) {
-        await db.set_logs.put(record as unknown as SetLog)
+        await db.set_logs.put(normalizeSetLog(record) as unknown as SetLog)
       }
       break
     }

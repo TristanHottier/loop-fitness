@@ -6,13 +6,18 @@ interface RestTimerProps {
   seconds: number
   label: string
   onDone: () => void
+  // Saves the current rest length (seconds) as the exercise's default.
+  onSaveDefault?: (seconds: number) => void | Promise<void>
 }
 
 const RING_RADIUS = 32
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
 
-export function RestTimer({ seconds, label, onDone }: RestTimerProps) {
+export function RestTimer({ seconds, label, onDone, onSaveDefault }: RestTimerProps) {
   const [remaining, setRemaining] = useState(seconds)
+  // Length of this rest including adjustments, for the ring and for saving.
+  const [total, setTotal] = useState(seconds)
+  const [saved, setSaved] = useState<'idle' | 'saving' | 'saved' | 'failed'>('idle')
   const endTimeRef = useRef(Date.now() + seconds * 1000)
   const doneRef = useRef(false)
   const audioRef = useRef<AudioContext | null>(null)
@@ -67,6 +72,19 @@ export function RestTimer({ seconds, label, onDone }: RestTimerProps) {
     if (doneRef.current) return
     endTimeRef.current = Math.max(Date.now(), endTimeRef.current + deltaSeconds * 1000)
     setRemaining(Math.max(0, Math.ceil((endTimeRef.current - Date.now()) / 1000)))
+    setTotal((t) => Math.max(15, t + deltaSeconds))
+    setSaved('idle')
+  }
+
+  async function saveDefault() {
+    if (!onSaveDefault || saved === 'saving') return
+    setSaved('saving')
+    try {
+      await onSaveDefault(total)
+      setSaved('saved')
+    } catch {
+      setSaved('failed')
+    }
   }
 
   function skip() {
@@ -130,7 +148,7 @@ export function RestTimer({ seconds, label, onDone }: RestTimerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const fraction = seconds > 0 ? Math.min(1, remaining / seconds) : 0
+  const fraction = total > 0 ? Math.min(1, remaining / total) : 0
   const dashOffset = RING_CIRCUMFERENCE * (1 - fraction)
 
   return (
@@ -164,16 +182,30 @@ export function RestTimer({ seconds, label, onDone }: RestTimerProps) {
       <div className="rest-timer-body">
         <span className="rest-timer-label">{label}</span>
         <div className="rest-timer-controls">
-          <button type="button" className="rest-timer-btn" onClick={() => adjust(-15)}>
+          <button type="button" className="rest-timer-btn" aria-label="Shorten rest by 15 seconds" onClick={() => adjust(-15)}>
             -15s
           </button>
-          <button type="button" className="rest-timer-btn" onClick={() => adjust(15)}>
+          <button type="button" className="rest-timer-btn" aria-label="Lengthen rest by 15 seconds" onClick={() => adjust(15)}>
             +15s
           </button>
-          <button type="button" className="rest-timer-btn rest-timer-btn-skip" onClick={skip}>
+          <button type="button" className="rest-timer-btn rest-timer-btn-skip" aria-label="Skip rest" onClick={skip}>
             Skip
           </button>
         </div>
+        {onSaveDefault && (
+          <button
+            type="button"
+            className="rest-timer-link"
+            onClick={saveDefault}
+            disabled={saved === 'saving' || saved === 'saved'}
+          >
+            {saved === 'saved'
+              ? `Saved ${formatClock(total)} as default`
+              : saved === 'failed'
+                ? 'Could not save. Try again'
+                : 'Use as default for this exercise'}
+          </button>
+        )}
         <p className="rest-timer-note">The timer cannot ring while the screen is locked.</p>
       </div>
     </div>

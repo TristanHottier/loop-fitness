@@ -303,3 +303,43 @@ Tasks:
 3. [x] Reviewer pass + PWA deploy + commit
 
 Status: complete (reviewer 9/9 pass; one non-blocking note: a zero week-over-week delta renders as no delta tag, consistent with the existing two-entry convention; PWA deployed)
+
+## M24: Audit fixes (session resume, sync safety, push auth, PWA update, styling)
+Done when: the audit findings are fixed across the app and worker, and the PWA update flow and styling are cleaned up.
+
+Tasks:
+1. [x] `app/src/screens/Session.tsx`: reopen an unfinished session instead of creating a new one, restore logged sets, idempotent set logging with un-log, "new best" computed from logged sets, aria-labels on set inputs
+2. [x] `app/src/db/db.ts`: put + enqueue pairs and history reset/delete run in Dexie transactions
+3. [x] `app/src/data/plan.ts`: cached loadPlan/loadMedia with res.ok checks; persist storage
+4. [x] `app/src/screens/Plan.tsx`: heatmap secondary muscles get exact half credit
+5. [x] `api/src/index.ts`: auth + https check on /push/subscribe and /push/unsubscribe, constant-time token compare, invalid rows skipped and reported, lastSent only after a delivered reminder, no error message leak
+6. [x] `api/migrations/0003_updated_at_indexes.sql`: updated_at indexes on the synced tables
+7. [x] `app/src/sync/sync.ts`: drop rejected rows, refresh reminder timezone offset
+8. [x] `app/src/sw.ts`: skipWaiting + clientsClaim, autoUpdate, robust push payload
+9. [x] `app/public/_headers`: nosniff, referrer, frame and permissions policies
+10. [x] CSS: 16px inputs, safe-area insets, global reduced-motion and focus-visible, contrast fixes; manifest renamed to Loop Fitness; `.gitignore` adds `.dev.vars`
+11. [x] D1 migration 0003 applied + Worker + PWA deploy + commit
+
+Status: complete (user-authored audit pass; D1 migration 0003 applied, Worker + PWA deployed, both live URLs HTTP 200)
+
+## M25: RIR, set tags, progression, band inventory, deload, analytics, backup
+Done when: reps in reserve and set tags feed progression, per-exercise progression rules and band inventory drive the ladder, deload is suggested and startable, analytics (plan volume, strength charts, history) are in place, and JSON backup/restore covers nutrition and settings.
+
+Tasks:
+1. [x] `app/src/components/RirPicker.tsx` + `rir-picker.css`: one tap per set (0, 1, 2, 3+) reps in reserve, feeds progression
+2. [x] `app/src/components/ExerciseMenu.tsx` + `exercise-menu.css`: set tags (warm-up, drop, failure); warm-ups and drops added from the "..." menu, don't count in the progress bar, drops start one band lighter with no rest timer
+3. [x] `app/src/components/Toast.tsx` + `toast.css`: "new best" now works (band IDs matched), shown as a calm toast, a mark on the set, and a list on the completion screen
+4. [x] `app/src/components/RestTimer.tsx` + `rest-timer.css`: +/-15s, Skip, and "Use as default for this exercise"
+5. [x] `app/src/screens/Session.tsx`: "Target: band x reps" before the first set, and a "Before moving up, try:" tip when the next band is a big jump
+6. [x] `app/src/lib/progression.ts` + `app/src/components/ExerciseSettings.tsx`: per-exercise rules (all sets at top of range, total-reps target, or two of the last three sessions); 3+ reps in reserve moves up early; step down after two weak sessions; big jumps try a slower tempo then a pause before the next band
+7. [x] `app/src/components/BandInventory.tsx` + `band-inventory.css` + `app/src/lib/ladder.ts`: mark owned bands and optional measured kg; with kg filled in the app builds the band ladder from your own bands, including stacks
+8. [x] `app/src/lib/suggestions.ts` + `app/src/screens/Today.tsx`: deload suggested when about 30% of exercises have plateaued, 6-week calendar as fallback; "Start deload week" halves sets and goes one band lighter
+9. [x] `app/src/components/MuscleVolumeList.tsx` + `muscle-volume-list.css` + `app/src/lib/analytics.ts`: Plan "Planned / This week" volume per muscle against the target range, with the change from last week
+10. [x] `app/src/components/StrengthChart.tsx` + `strength-chart.css` + `app/src/lib/records.ts`: a strength chart per exercise, plus each exercise's recent history and best reps per band
+11. [x] `app/src/components/ConsistencyCalendar.tsx` + `consistency-calendar.css` + `app/src/lib/dates.ts`: History month calendar, a week-based streak that survives rescheduling, and a monthly summary
+12. [x] `app/src/lib/backup.ts` + `app/src/screens/Settings.tsx`: JSON export and restore, which also brings back nutrition and settings
+13. [x] `api/migrations/0004_set_log_fields.sql` + `api/src/index.ts`: set_logs rir + set_type columns (nullable, old-client safe) + exercise_slug index; pull normalises a missing set_type to 'normal'
+14. [x] `app/src/lib/__tests__/`: 88 vitest unit tests (dates, suggestions, setRows, config, records, backup, progression, analytics, ladder)
+15. [x] Migrations 0003 + 0004 applied + Worker + PWA deploy + commit
+
+Status: complete (typecheck + 88 unit tests + build pass; headless phone-size click-through of every new flow with no console errors, which fixed 4 bugs; D1 migrations 0003 + 0004 applied, Worker + PWA deployed, both live URLs HTTP 200; not yet tried on a real phone. Not done by design: supersets (removed in M15), lock-screen rest timer (a PWA can't), weekday missed-session reminders)

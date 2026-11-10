@@ -3,6 +3,11 @@ import { ChevronDown } from 'lucide-react'
 import { loadPlan, resolveExercise } from '../data/plan'
 import type { Exercise, PlanData, Workout } from '../data/plan'
 import { MuscleMap } from '../components/MuscleMap'
+import { MuscleVolumeList } from '../components/MuscleVolumeList'
+import { useTrainingData } from '../components/useTrainingData'
+import { getVolumeTargets, DEFAULT_VOLUME_TARGETS, type VolumeTargets } from '../db/config'
+import { weeklyVolume } from '../lib/analytics'
+import { addDays, dayKey, weekStart } from '../lib/dates'
 import './plan.css'
 
 function hueFor(workoutId: string): string {
@@ -72,6 +77,21 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [failed, setFailed] = useState(false)
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const [view, setView] = useState<'planned' | 'week'>('planned')
+  const [targets, setTargets] = useState<VolumeTargets>(DEFAULT_VOLUME_TARGETS)
+  const training = useTrainingData()
+
+  useEffect(() => {
+    let cancelled = false
+    getVolumeTargets()
+      .then((t) => {
+        if (!cancelled) setTargets(t)
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -196,19 +216,77 @@ export function Plan({ onOpenExercise }: { onOpenExercise: (slug: string) => voi
           </section>
         )
       })}
-      <section className="plan-program-map">
-        <h2 className="plan-program-map-title">Muscles trained across the program</h2>
-        <p className="plan-program-map-sub">
-          Set volume across {plan.workouts.length} workouts
-        </p>
-        <div className="plan-muscle-map">
-          <MuscleMap
-            primary={[]}
-            secondary={[]}
-            volume={programVolume(plan)}
-          />
-        </div>
-      </section>
+      <ProgramSection
+        plan={plan}
+        view={view}
+        onView={setView}
+        targets={targets}
+        training={training}
+      />
     </div>
+  )
+}
+
+function ProgramSection({
+  plan,
+  view,
+  onView,
+  targets,
+  training,
+}: {
+  plan: PlanData
+  view: 'planned' | 'week'
+  onView: (v: 'planned' | 'week') => void
+  targets: VolumeTargets
+  training: ReturnType<typeof useTrainingData>
+}) {
+  const planned = programVolume(plan)
+  const week = weekStart(dayKey())
+  const logged = training ? weeklyVolume(training.logs, training.sessions, plan, week) : {}
+  const lastWeek = training ? weeklyVolume(training.logs, training.sessions, plan, addDays(week, -7)) : {}
+  const isWeek = view === 'week'
+  // List every muscle the program trains, plus anything logged outside of it.
+  const values: Record<string, number> = {}
+  for (const k of Object.keys(planned)) values[k] = isWeek ? (logged[k] ?? 0) : planned[k]
+  if (isWeek) for (const k of Object.keys(logged)) values[k] = logged[k]
+  const options: { id: 'planned' | 'week'; label: string }[] = [
+    { id: 'planned', label: 'Planned' },
+    { id: 'week', label: 'This week' },
+  ]
+  return (
+    <section className="plan-program-map">
+      <h2 className="plan-program-map-title">Muscles trained across the program</h2>
+      <div className="plan-toggle" role="group" aria-label="Volume view">
+        {options.map((o) => (
+          <button
+            key={o.id}
+            type="button"
+            className="plan-toggle-btn"
+            aria-pressed={view === o.id}
+            onClick={() => onView(o.id)}
+          >
+            {o.label}
+          </button>
+        ))}
+      </div>
+      <p className="plan-program-map-sub">
+        {isWeek
+          ? 'Hard sets logged since Monday. Warmups are not counted, drop sets count half.'
+          : `Planned set volume across ${plan.workouts.length} workouts`}
+      </p>
+      <div className="plan-muscle-map">
+        <MuscleMap primary={[]} secondary={[]} volume={isWeek ? logged : planned} />
+      </div>
+      {isWeek && !training ? (
+        <p className="plan-program-map-sub">Loading logged sets</p>
+      ) : (
+        <MuscleVolumeList
+          values={values}
+          targets={targets}
+          previous={isWeek ? lastWeek : undefined}
+          caption={isWeek ? 'Logged sets per muscle this week' : 'Planned sets per muscle per week'}
+        />
+      )}
+    </section>
   )
 }

@@ -3,6 +3,9 @@ import { ChevronLeft } from 'lucide-react'
 import { loadMedia, loadPlan, resolveExercise } from '../data/plan'
 import type { MediaMap, PlanData } from '../data/plan'
 import { MuscleMap } from '../components/MuscleMap'
+import { StrengthChart } from '../components/StrengthChart'
+import { useTrainingData } from '../components/useTrainingData'
+import { exerciseHistory, recordsByBand } from '../lib/analytics'
 import './exercise.css'
 
 function hueFor(workoutId: string): string {
@@ -37,6 +40,7 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [media, setMedia] = useState<MediaMap | null>(null)
   const [failed, setFailed] = useState(false)
+  const training = useTrainingData([slug])
 
   useEffect(() => {
     let cancelled = false
@@ -142,6 +146,37 @@ export function Exercise({ slug, onBack }: { slug: string; onBack: () => void })
       </div>
       {exercise.unilateral ? <p className="exercise-note">One set per side.</p> : null}
       {exercise.optional ? <p className="exercise-note">Optional.</p> : null}
+
+      {training && training.logs.some((l) => l.exercise_slug === slug) ? (
+        <>
+          <section className="exercise-section">
+            <h2>Strength</h2>
+            <StrengthChart slug={slug} data={training} />
+          </section>
+
+          <section className="exercise-section">
+            <h2>History</h2>
+            <ul className="exercise-history">
+              {exerciseHistory(training.logs, training.sessions, slug, 5).map((h) => (
+                <li key={h.sessionId}>
+                  <span className="exercise-history-date">{h.date}</span> {'\u2014'} {h.text}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="exercise-section">
+            <h2>Records</h2>
+            <ul className="exercise-history">
+              {recordsByBand(training.logs, training.sessions, slug, training.plan, training.inventory).map((r) => (
+                <li key={r.band}>
+                  <span className="exercise-history-date">{r.band}</span> {'\u2014'} {r.reps} reps
+                </li>
+              ))}
+            </ul>
+          </section>
+        </>
+      ) : null}
 
       <section className="exercise-section">
         <h2>Targets</h2>
