@@ -101,7 +101,7 @@
 .band-picker-step.is-current {
   background-color: var(--color-accent);
   border-color: var(--color-accent);
-  color: #FFFFFF;
+  color: var(--color-on-accent);
 }
 
 .band-picker-step.is-current:hover {
@@ -117,7 +117,7 @@
 }
 
 .band-picker-step.is-current.is-last-used .band-picker-step-text {
-  border-bottom-color: #FFFFFF;
+  border-bottom-color: var(--color-on-accent);
 }
 
 .band-picker-sr-only {

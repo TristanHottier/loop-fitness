@@ -77,7 +77,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 16px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -105,7 +105,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .settings-passphrase:focus-visible {

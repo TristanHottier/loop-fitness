@@ -77,7 +77,14 @@ export function Settings() {
     setWeighInEnabled(next)
     setReminderNote('')
     if (next) {
-      const result = await enablePush()
+      let result
+      try {
+        result = await enablePush()
+      } catch {
+        setWeighInEnabled(false)
+        setReminderNote('Could not register for reminders. Check your connection and sign-in, then try again.')
+        return
+      }
       if (result.status === 'denied') {
         setWeighInEnabled(false)
         setReminderNote('Notification permission was denied. Allow notifications in the browser.')
@@ -89,7 +96,11 @@ export function Settings() {
         return
       }
     } else {
-      await disablePush()
+      try {
+        await disablePush()
+      } catch {
+        setReminderNote('Could not unregister this device on the server; reminders may still arrive.')
+      }
     }
     await saveReminderSettings(next, weighInTime)
   }
@@ -106,12 +117,18 @@ export function Settings() {
     setResetNote('')
     try {
       await resetSessionHistory()
+      let syncFailed = false
       if (getToken() !== null) {
         const result = await syncNow()
         setStatus(result)
         setPending(await pendingCount())
+        syncFailed = result.state === 'error'
       }
-      setResetNote('Session history reset.')
+      setResetNote(
+        syncFailed
+          ? 'Session history reset on this device. Sync failed; it will retry automatically.'
+          : 'Session history reset.'
+      )
       setResetConfirmOpen(false)
     } catch {
       setResetNote('Reset failed. Try again.')

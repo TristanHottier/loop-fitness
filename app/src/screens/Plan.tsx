@@ -38,7 +38,8 @@ function totalSetsFor(plan: PlanData, workout: Workout): number {
 }
 
 // Per-muscle set counts for the whole workout. Primary muscles get the full
-// set count, secondary muscles get half, rounded. A muscle key may appear in
+// set count, secondary muscles get half (fractional values are fine, the
+// heatmap steps are thresholds). A muscle key may appear in
 // several exercises, so the counts accumulate per key.
 function workoutVolume(plan: PlanData, workout: Workout): Record<string, number> {
   const volume: Record<string, number> = {}
@@ -48,7 +49,7 @@ function workoutVolume(plan: PlanData, workout: Workout): Record<string, number>
       volume[key] = (volume[key] ?? 0) + ex.sets
     }
     for (const key of ex.muscles.secondary) {
-      volume[key] = (volume[key] ?? 0) + Math.round(ex.sets / 2)
+      volume[key] = (volume[key] ?? 0) + ex.sets / 2
     }
   }
   return volume

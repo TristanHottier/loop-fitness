@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { loadPlan, resolveExercise, type PlanData, type Workout } from '../data/plan'
 import {
   newSession,
@@ -8,8 +8,13 @@ import {
   getLatestBandForExercise,
   getLatestRepsForExercise,
   getLatestSessionLogsForExercise,
+  getOpenSession,
+  getSetLogsForSession,
+  deleteSetLog,
   endSession,
+  db,
   type Session as SessionRecord,
+  type SetLog,
 } from '../db/db'
 import { ChevronDown, ChevronRight } from 'lucide-react'
 import { RestTimer } from '../components/RestTimer'
@@ -19,6 +24,14 @@ import { suggestForExercise, type BandSuggestion } from '../lib/suggestions'
 import './session.css'
 
 type InputState = { reps: string; band: string; note: string }
+
+// The best earlier performance for an exercise, from sessions other than the
+// current one: the highest band ladder position, and the most reps per band.
+type PriorBest = { maxBandIdx: number; repsByBand: Record<string, number> }
+
+function setKey(slug: string, setIndex: number, side: string | null): string {
+  return side ? `${slug}|${setIndex}|${side}` : `${slug}|${setIndex}`
+}
 
 function hueFor(workoutId: string): string {
   switch (workoutId) {
@@ -65,16 +78,22 @@ export function Session({
   const [plan, setPlan] = useState<PlanData | null>(null)
   const [session, setSession] = useState<SessionRecord | null>(null)
   const [inputs, setInputs] = useState<Record<string, InputState>>({})
-  const [logged, setLogged] = useState<Record<string, boolean>>({})
+  const [logRecords, setLogRecords] = useState<Record<string, SetLog>>({})
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   const [error, setError] = useState<string | null>(null)
   const [activeTimer, setActiveTimer] = useState<{ seconds: number; label: string } | null>(null)
   const [timerKey, setTimerKey] = useState(0)
   const [suggestions, setSuggestions] = useState<Record<string, BandSuggestion | null>>({})
-  const [newBest, setNewBest] = useState<Record<string, boolean>>({})
+  const [priorBest, setPriorBest] = useState<Record<string, PriorBest | null>>({})
   const [bandPickerKey, setBandPickerKey] = useState<string | null>(null)
   const [latestBands, setLatestBands] = useState<Record<string, string>>({})
   const [completed, setCompleted] = useState(false)
+  // Resolve (reopen or create) the session once per workout, even when
+  // StrictMode mounts the effect twice.
+  const sessionRef = useRef<{ workoutId: string; promise: Promise<SessionRecord> } | null>(null)
+  // Set keys with a write in flight, and when each set was last logged.
+  const busyKeys = useRef<Set<string>>(new Set())
+  const loggedAt = useRef<Record<string, number>>({})
 
   useEffect(() => {
     let cancelled = false
@@ -82,9 +101,21 @@ export function Session({
       try {
         const p = await loadPlan()
         if (cancelled) return
-        const date = todayISODate()
-        const s = newSession(workout.id, date)
-        await createSession(s)
+        if (!sessionRef.current || sessionRef.current.workoutId !== workout.id) {
+          sessionRef.current = {
+            workoutId: workout.id,
+            promise: (async () => {
+              const date = todayISODate()
+              const open = await getOpenSession(workout.id, date)
+              if (open) return open
+              const created = newSession(workout.id, date)
+              await createSession(created)
+              return created
+            })(),
+          }
+        }
+        const s = await sessionRef.current.promise
+        const existingLogs = await getSetLogsForSession(s.id)
         if (cancelled) return
         setPlan(p)
         setSession(s)
@@ -116,31 +147,42 @@ export function Session({
             }
           }
         }
+
+        // Reopened session: restore the sets that were already logged.
+        const restored: Record<string, SetLog> = {}
+        for (const log of existingLogs) {
+          const key = setKey(log.exercise_slug, log.set_index, log.side)
+          if (!(key in init)) continue
+          restored[key] = log
+          init[key] = { reps: String(log.reps), band: log.band, note: log.note ?? '' }
+        }
         setInputs(init)
+        setLogRecords(restored)
 
         const sugg: Record<string, BandSuggestion | null> = {}
-        const best: Record<string, boolean> = {}
+        const best: Record<string, PriorBest | null> = {}
         for (const slug of workout.exercises) {
           const ex = resolveExercise(p, workout, slug)
           const prevLogs = await getLatestSessionLogsForExercise(slug)
           sugg[slug] = suggestForExercise(ex, prevLogs, p)
-          if (prevLogs.length === 0) {
-            best[slug] = false
+          const allLogs = await db.set_logs
+            .filter((l) => !l.deleted && l.exercise_slug === slug && l.session_id !== s.id)
+            .toArray()
+          if (allLogs.length === 0) {
+            best[slug] = null
             continue
           }
-          const prevBand = prevLogs.reduce((a, b) =>
-            a.updated_at >= b.updated_at ? a : b
-          ).band
-          const prevReps = prevLogs.reduce((max, log) => Math.max(max, log.reps), 0)
-          const curBandIdx = bandIndex(bandMap[slug], p)
-          const prevBandIdx = bandIndex(prevBand, p)
-          const bandBetter = curBandIdx >= 0 && curBandIdx > prevBandIdx
-          const repsBetter = repsMap[slug] > prevReps
-          best[slug] = bandBetter || repsBetter
+          const repsByBand: Record<string, number> = {}
+          let maxBandIdx = -1
+          for (const l of allLogs) {
+            repsByBand[l.band] = Math.max(repsByBand[l.band] ?? 0, l.reps)
+            maxBandIdx = Math.max(maxBandIdx, bandIndex(l.band, p))
+          }
+          best[slug] = { maxBandIdx, repsByBand }
         }
         if (cancelled) return
         setSuggestions(sugg)
-        setNewBest(best)
+        setPriorBest(best)
       } catch {
         if (!cancelled) setError('Could not start the session.')
       }
@@ -177,10 +219,33 @@ export function Session({
   async function logSet(key: string, slug: string, setIndex: number, side: string | null) {
     const input = inputs[key]
     if (!input) return
-    const reps = parseInt(input.reps, 10) || 0
-    const log = newSetLog(activeSession.id, slug, setIndex, side, reps, input.band, input.note || null)
-    await createSetLog(log)
-    setLogged((prev) => ({ ...prev, [key]: true }))
+    if (busyKeys.current.has(key)) return
+    busyKeys.current.add(key)
+    try {
+      const existing = logRecords[key]
+      if (existing) {
+        // Tapping a logged set again un-logs it. Ignore an accidental double
+        // tap right after logging, and do not restart the rest timer.
+        if (Date.now() - (loggedAt.current[key] ?? 0) < 800) return
+        await deleteSetLog(existing.id)
+        setLogRecords((prev) => {
+          const next = { ...prev }
+          delete next[key]
+          return next
+        })
+        return
+      }
+      const reps = parseInt(input.reps, 10) || 0
+      const log = newSetLog(activeSession.id, slug, setIndex, side, reps, input.band, input.note || null)
+      await createSetLog(log)
+      loggedAt.current[key] = Date.now()
+      setLogRecords((prev) => ({ ...prev, [key]: log }))
+    } catch {
+      setError('Could not save the set.')
+      return
+    } finally {
+      busyKeys.current.delete(key)
+    }
 
     const ex = resolveExercise(activePlan, workout, slug)
 
@@ -198,7 +263,8 @@ export function Session({
 
   function setRow(key: string, slug: string, setIndex: number, side: string | null) {
     const input = inputs[key]
-    const isLogged = logged[key]
+    const isLogged = Boolean(logRecords[key])
+    const sideLabel = side ? `, ${side === 'L' ? 'left' : 'right'}` : ''
     return (
       <>
         <input
@@ -206,6 +272,7 @@ export function Session({
           type="number"
           inputMode="numeric"
           value={input?.reps ?? ''}
+          aria-label={`Reps, set ${setIndex}${sideLabel}`}
           onChange={(e) => updateInput(key, 'reps', e.target.value)}
         />
         <button
@@ -219,6 +286,7 @@ export function Session({
           className="session-input session-input-note"
           type="text"
           placeholder="Note"
+          aria-label={`Note, set ${setIndex}${sideLabel}`}
           value={input?.note ?? ''}
           onChange={(e) => updateInput(key, 'note', e.target.value)}
         />
@@ -252,11 +320,28 @@ export function Session({
   }
 
   const totalSets = totalSetsFor(plan, workout)
-  const doneSets = Object.values(logged).filter(Boolean).length
+  const logged: Record<string, boolean> = {}
+  for (const key of Object.keys(logRecords)) logged[key] = true
+  const doneSets = Object.keys(logged).length
   const progressPct = totalSets > 0 ? Math.round((doneSets / totalSets) * 100) : 0
   const totalReps = Object.keys(logged)
     .filter((key) => logged[key])
-    .reduce((sum, key) => sum + (parseInt(inputs[key]?.reps, 10) || 0), 0)
+    .reduce((sum, key) => sum + (logRecords[key]?.reps ?? 0), 0)
+  // New best: a set logged in this session beats every earlier session, by a
+  // higher band or more reps at the same band.
+  const newBest: Record<string, boolean> = {}
+  for (const slug of workout.exercises) {
+    const prior = priorBest[slug]
+    if (!prior) continue
+    newBest[slug] = setKeysFor(slug).some((key) => {
+      const log = logRecords[key]
+      if (!log) return false
+      const idx = bandIndex(log.band, activePlan)
+      if (idx >= 0 && idx > prior.maxBandIdx) return true
+      const priorReps = prior.repsByBand[log.band]
+      return priorReps !== undefined && log.reps > priorReps
+    })
+  }
   const newBestCount = workout.exercises.filter((slug) => newBest[slug]).length
 
   function setKeysFor(slug: string): string[] {

@@ -56,11 +56,21 @@ async function expectedToken(env: Env): Promise<string> {
   return sha256Hex(env.PASSPHRASE)
 }
 
+// Constant-time string comparison (timingSafeEqual requires equal lengths; the
+// length of the expected token is not secret).
+function safeEqual(a: string, b: string): boolean {
+  const enc = new TextEncoder()
+  const ab = enc.encode(a)
+  const bb = enc.encode(b)
+  if (ab.byteLength !== bb.byteLength) return false
+  return crypto.subtle.timingSafeEqual(ab, bb)
+}
+
 async function isAuthorized(request: Request, env: Env): Promise<boolean> {
   const header = request.headers.get('Authorization') ?? ''
   const token = header.replace(/^Bearer\s+/i, '')
   if (token.length === 0) return false
-  return token === (await expectedToken(env))
+  return safeEqual(token, await expectedToken(env))
 }
 
 async function handleAuth(request: Request, env: Env): Promise<Response> {
@@ -72,7 +82,7 @@ async function handleAuth(request: Request, env: Env): Promise<Response> {
   }
   const provided = await sha256Hex(body.passphrase ?? '')
   const expected = await expectedToken(env)
-  if (provided !== expected) {
+  if (!safeEqual(provided, expected)) {
     return json({ ok: false, error: 'invalid passphrase' }, 401)
   }
   return json({ ok: true, token: expected })
@@ -93,6 +103,7 @@ async function handlePush(request: Request, env: Env): Promise<Response> {
   }
   const records = body.records ?? {}
   const batches: D1PreparedStatement[] = []
+  const rejected: Record<string, string[]> = {}
 
   for (const table of TABLES) {
     const rows = records[table]
@@ -109,8 +120,13 @@ async function handlePush(request: Request, env: Env): Promise<Response> {
 
     for (const row of rows) {
       const rec = row as Record<string, unknown>
-      if (!rec || typeof rec.id !== 'string' && typeof rec.key !== 'string') continue
-      if (typeof rec.updated_at !== 'string') continue
+      const recId = rec ? rec[pk] : undefined
+      if (!rec || typeof recId !== 'string' || recId.length === 0 || typeof rec.updated_at !== 'string') {
+        // Skip invalid rows rather than failing the whole batch, and report them
+        // so the client can drop them instead of retrying forever.
+        if (rec && typeof recId === 'string') (rejected[table] ??= []).push(recId)
+        continue
+      }
       const values = cols.map((c) => coerce(rec[c]))
       batches.push(env.DB.prepare(sql).bind(...(values as unknown[])))
     }
@@ -119,7 +135,7 @@ async function handlePush(request: Request, env: Env): Promise<Response> {
   if (batches.length > 0) {
     await env.DB.batch(batches)
   }
-  return json({ ok: true, written: batches.length })
+  return json({ ok: true, written: batches.length, rejected })
 }
 
 function normalizeRow(table: TableName, row: Record<string, unknown>): Record<string, unknown> {
@@ -147,6 +163,15 @@ function handleVapidPublicKey(env: Env): Response {
   return json({ publicKey: env.VAPID_PUBLIC_KEY })
 }
 
+function isHttpsUrl(value: unknown): boolean {
+  if (typeof value !== 'string') return false
+  try {
+    return new URL(value).protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 // Store a subscription. The client POSTs the serialized PushSubscriptionData
 // (endpoint + p256dh/auth keys). Upsert by endpoint so re-subscribing is safe.
 async function handleSubscribe(request: Request, env: Env): Promise<Response> {
@@ -158,6 +183,9 @@ async function handleSubscribe(request: Request, env: Env): Promise<Response> {
   }
   if (!body.endpoint || !body.keys?.p256dh || !body.keys?.auth) {
     return json({ ok: false, error: 'missing endpoint or keys' }, 400)
+  }
+  if (!isHttpsUrl(body.endpoint)) {
+    return json({ ok: false, error: 'endpoint must be an https URL' }, 400)
   }
   const now = new Date().toISOString()
   const sql =
@@ -255,6 +283,7 @@ async function runReminders(env: Env): Promise<void> {
     tag: 'weighin',
   }
 
+  let anySent = false
   for (const sub of subs) {
     let keys: { p256dh: string; auth: string }
     try {
@@ -268,7 +297,9 @@ async function runReminders(env: Env): Promise<void> {
     }
     try {
       const delivered = await sendPushNotification(subscription, payload, vapid)
-      if (!delivered) {
+      if (delivered) {
+        anySent = true
+      } else {
         await env.DB.prepare(
           `UPDATE push_subscriptions SET deleted = 1, updated_at = ? WHERE endpoint = ?`
         )
@@ -284,10 +315,15 @@ async function runReminders(env: Env): Promise<void> {
         )
           .bind(new Date().toISOString(), sub.endpoint)
           .run()
+      } else {
+        console.error('push send failed', err)
       }
     }
   }
 
+  // Only record the send if at least one delivery succeeded, so a total
+  // failure is retried on the next cron run within the window.
+  if (!anySent) return
   // Record the send so the 15-minute window does not fire twice.
   await env.DB.prepare(
     `INSERT INTO settings (key, value, updated_at, deleted) VALUES (?, ?, ?, 0) ` +
@@ -325,14 +361,17 @@ export default {
         return handleVapidPublicKey(env)
       }
       if (path === '/push/subscribe' && request.method === 'POST') {
+        if (!(await isAuthorized(request, env))) return json({ ok: false, error: 'unauthorized' }, 401)
         return await handleSubscribe(request, env)
       }
       if (path === '/push/unsubscribe' && request.method === 'POST') {
+        if (!(await isAuthorized(request, env))) return json({ ok: false, error: 'unauthorized' }, 401)
         return await handleUnsubscribe(request, env)
       }
       return json({ ok: false, error: 'not found' }, 404)
     } catch (err) {
-      return json({ ok: false, error: err instanceof Error ? err.message : String(err) }, 500)
+      console.error('unhandled error', err)
+      return json({ ok: false, error: 'internal error' }, 500)
     }
   },
 

@@ -1,6 +1,6 @@
 {
-  "name": "Fitness",
-  "short_name": "Fitness",
+  "name": "Loop Fitness",
+  "short_name": "Loop",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#191919",

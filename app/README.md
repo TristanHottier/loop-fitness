@@ -71,3 +71,11 @@ The API token needs the **Cloudflare Pages: Edit** permission. The account ID is
 ### Caching
 
 The `_headers` file in `public/` is copied to the build output and sets `Cache-Control: no-cache` on `index.html`, the service worker, the registration script and the web manifest, so updates are picked up without stale caching. Fingerprinted assets in `assets/` keep the default long-lived caching.
+
+## Backend migrations
+
+After pulling changes that add files in `api/migrations/`, apply them before deploying the Worker (run from `api/`):
+
+```sh
+npx wrangler d1 migrations apply loop-fitness-db --remote
+```

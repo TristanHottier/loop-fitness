@@ -5,6 +5,7 @@
 // Worker can display Web Push reminders even when the app is closed.
 // Reference: docs/fitness-app-brief.md, section 6 (reminders).
 
+import { clientsClaim } from 'workbox-core'
 import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from 'workbox-precaching'
 import { registerRoute, NavigationRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
@@ -13,6 +14,12 @@ import { ExpirationPlugin } from 'workbox-expiration'
 declare let self: ServiceWorkerGlobalScope & {
   __WB_MANIFEST: Array<{ url: string; revision: string | null }>
 }
+
+// Take over immediately on deploy instead of waiting for all tabs to close.
+self.addEventListener('install', () => {
+  void self.skipWaiting()
+})
+clientsClaim()
 
 // Precache the build assets so the app shell works offline.
 precacheAndRoute(self.__WB_MANIFEST)
@@ -35,11 +42,20 @@ registerRoute(
 // Push: display the notification. The payload is the JSON PushPayload the
 // Worker sends: { title, body, url, tag }.
 self.addEventListener('push', (event) => {
-  const data = event.data ? event.data.json() : {}
+  let data: { title?: string; body?: string; tag?: string; url?: string } = {}
+  if (event.data) {
+    try {
+      data = event.data.json()
+    } catch {
+      data = { body: event.data.text() }
+    }
+  }
   const title = data.title ?? 'Fitness'
   const options: NotificationOptions = {
     body: data.body,
     tag: data.tag,
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
     data: { url: data.url },
   }
   event.waitUntil(self.registration.showNotification(title, options))

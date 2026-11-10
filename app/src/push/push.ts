@@ -11,7 +11,7 @@ import {
   isPushSupported,
   type SubscribeResult,
 } from '@mmmike/web-push/client'
-import { getApiBase } from '../sync/sync'
+import { getApiBase, getToken } from '../sync/sync'
 import { setSetting, getSetting } from '../db/db'
 
 // Settings keys (synced to the Worker via the settings outbox).
@@ -24,6 +24,19 @@ export const REMINDER_TZ_OFFSET_KEY = 'reminder_timezone_offset'
 // changes, so it tracks the device's current timezone.
 function currentUtcOffsetMinutes(): number {
   return -new Date().getTimezoneOffset()
+}
+
+// POST JSON to an authenticated push endpoint; throws on failure so callers
+// do not report success when the Worker rejected the request.
+async function postAuthed(path: string, payload: unknown): Promise<void> {
+  const token = getToken()
+  if (!token) throw new Error('not authenticated')
+  const res = await fetch(`${getApiBase()}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(payload),
+  })
+  if (!res.ok) throw new Error(`${path} failed (${res.status})`)
 }
 
 // Fetch the Worker's VAPID public key (URL-safe base64).
@@ -44,11 +57,7 @@ export async function enablePush(): Promise<SubscribeResult> {
   const result = await subscribe(publicKey)
   if (result.status === 'subscribed') {
     const data = serializeSubscription(result.subscription)
-    await fetch(`${getApiBase()}/push/subscribe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
+    await postAuthed('/push/subscribe', data)
   }
   return result
 }
@@ -58,11 +67,7 @@ export async function disablePush(): Promise<void> {
   if (!isPushSupported()) return
   const endpoint = await unsubscribe()
   if (endpoint) {
-    await fetch(`${getApiBase()}/push/unsubscribe`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ endpoint }),
-    })
+    await postAuthed('/push/unsubscribe', { endpoint })
   }
 }
 

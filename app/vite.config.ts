@@ -8,6 +8,7 @@ export default defineConfig({
     VitePWA({
       // injectManifest: we write the service worker (src/sw.ts) so it can handle
       // Web Push reminders. VitePWA injects the precache manifest into it.
+      registerType: 'autoUpdate',
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',

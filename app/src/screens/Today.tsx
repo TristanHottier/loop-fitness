@@ -336,7 +336,9 @@ export function Today({ onStartWorkout }: { onStartWorkout: (workout: Workout) =
               className="today-start"
               onClick={() => onStartWorkout(todayWorkout)}
             >
-              Start workout
+              {inProgress && inProgress.workout_id === todayWorkout.id
+                ? 'Resume workout'
+                : 'Start workout'}
             </button>
           )}
         </section>

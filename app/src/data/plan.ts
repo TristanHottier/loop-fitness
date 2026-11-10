@@ -48,14 +48,32 @@ export interface MediaMap {
   [slug: string]: MediaEntry
 }
 
-export async function loadPlan(): Promise<PlanData> {
-  const res = await fetch('/plan.json')
-  return res.json() as Promise<PlanData>
+// Fetch JSON once per page load and share the promise between screens. A
+// failure clears the cache so a later call can retry.
+function cachedJson<T>(url: string, cache: { p: Promise<T> | null }): Promise<T> {
+  if (!cache.p) {
+    cache.p = fetch(url)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Could not load ${url} (HTTP ${res.status})`)
+        return res.json() as Promise<T>
+      })
+      .catch((err) => {
+        cache.p = null
+        throw err
+      })
+  }
+  return cache.p
 }
 
-export async function loadMedia(): Promise<MediaMap> {
-  const res = await fetch('/media.json')
-  return res.json() as Promise<MediaMap>
+const planCache: { p: Promise<PlanData> | null } = { p: null }
+const mediaCache: { p: Promise<MediaMap> | null } = { p: null }
+
+export function loadPlan(): Promise<PlanData> {
+  return cachedJson('/plan.json', planCache)
+}
+
+export function loadMedia(): Promise<MediaMap> {
+  return cachedJson('/media.json', mediaCache)
 }
 
 export function resolveExercise(plan: PlanData, workout: Workout, slug: string): Exercise {

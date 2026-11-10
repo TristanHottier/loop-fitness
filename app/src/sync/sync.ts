@@ -5,6 +5,8 @@
 
 import {
   db,
+  getSetting,
+  setSetting,
   getSyncQueue,
   clearSyncQueue,
   type Session,
@@ -141,8 +143,19 @@ export async function push(): Promise<number> {
     const data = (await res.json().catch(() => ({}))) as { error?: string }
     throw new Error(data.error ?? `push failed (${res.status})`)
   }
+  // Rows the Worker rejected as invalid would never succeed; drop them too
+  // (with a warning) so they cannot block the queue forever.
+  const data = (await res.json().catch(() => ({}))) as { rejected?: Record<string, string[]> }
+  const rejected = data.rejected ?? {}
+  const rejectedIds: string[] = []
+  for (const entry of queue) {
+    if (rejected[entry.table]?.includes(entry.record_id)) {
+      console.warn(`sync: dropping rejected ${entry.table} record ${entry.record_id}`)
+      rejectedIds.push(entry.id)
+    }
+  }
   await clearSyncQueue([...pushedIds, ...skippedIds])
-  return pushedIds.length
+  return pushedIds.length - rejectedIds.length
 }
 
 // Merge a single remote row into the local store (last write wins).
@@ -215,6 +228,18 @@ export async function pull(): Promise<number> {
   return count
 }
 
+// The reminder cron computes local time from a stored UTC offset. If reminders
+// are on and the device's offset changed (travel, DST), update it through the
+// normal settings write path so it syncs. Keys mirror push.ts (not imported:
+// push.ts imports this module).
+async function refreshReminderOffset(): Promise<void> {
+  if ((await getSetting('reminder_weighin_enabled')) !== '1') return
+  const current = String(-new Date().getTimezoneOffset())
+  if ((await getSetting('reminder_timezone_offset')) !== current) {
+    await setSetting('reminder_timezone_offset', current)
+  }
+}
+
 // Full sync: push local changes, then pull remote changes.
 export async function syncNow(): Promise<SyncStatus> {
   if (!isConfigured()) return { state: 'not-configured' }
@@ -222,6 +247,7 @@ export async function syncNow(): Promise<SyncStatus> {
   try {
     await push()
     await pull()
+    await refreshReminderOffset().catch(() => {})
     return { state: 'synced', at: new Date().toISOString() }
   } catch (err) {
     return { state: 'error', message: err instanceof Error ? err.message : String(err) }

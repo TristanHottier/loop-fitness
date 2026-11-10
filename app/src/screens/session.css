@@ -209,9 +209,9 @@
 .session-new-best {
   flex-shrink: 0;
   padding: 2px 8px;
-  background-color: var(--session-hue);
+  background-color: color-mix(in srgb, var(--session-hue) 22%, var(--color-panel));
   border-radius: 6px;
-  color: #FFFFFF;
+  color: var(--color-text);
   font-size: 12px;
   line-height: 1.4;
 }

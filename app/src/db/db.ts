@@ -117,8 +117,10 @@ export async function setSetting(key: string, value: string): Promise<void> {
     updated_at: now,
     deleted: false,
   };
-  await db.settings.put(row);
-  await enqueue('settings', key, now);
+  await db.transaction('rw', db.settings, db.sync_queue, async () => {
+    await db.settings.put(row);
+    await enqueue('settings', key, now);
+  });
 }
 
 export async function getSyncQueue(): Promise<SyncQueueEntry[]> {
@@ -144,8 +146,22 @@ export function newSession(workoutId: string, date: string): Session {
 }
 
 export async function createSession(session: Session): Promise<void> {
-  await db.sessions.put(session);
-  await enqueue('sessions', session.id, session.updated_at);
+  await db.transaction('rw', db.sessions, db.sync_queue, async () => {
+    await db.sessions.put(session);
+    await enqueue('sessions', session.id, session.updated_at);
+  });
+}
+
+// An unfinished, non-deleted session for a workout, or null. Prefers today's
+// session, otherwise the most recently started one.
+export async function getOpenSession(workoutId: string, today: string): Promise<Session | null> {
+  const open = await db.sessions
+    .filter((s) => !s.deleted && s.ended_at === null && s.workout_id === workoutId)
+    .toArray();
+  if (open.length === 0) return null;
+  const todays = open.filter((s) => s.date === today);
+  const pool = todays.length > 0 ? todays : open;
+  return pool.reduce((a, b) => (a.started_at >= b.started_at ? a : b));
 }
 
 export function newSetLog(
@@ -172,23 +188,29 @@ export function newSetLog(
 }
 
 export async function createSetLog(log: SetLog): Promise<void> {
-  await db.set_logs.put(log);
-  await enqueue('set_logs', log.id, log.updated_at);
+  await db.transaction('rw', db.set_logs, db.sync_queue, async () => {
+    await db.set_logs.put(log);
+    await enqueue('set_logs', log.id, log.updated_at);
+  });
 }
 
 export async function updateSetLog(log: SetLog): Promise<void> {
   log.updated_at = new Date().toISOString();
-  await db.set_logs.put(log);
-  await enqueue('set_logs', log.id, log.updated_at);
+  await db.transaction('rw', db.set_logs, db.sync_queue, async () => {
+    await db.set_logs.put(log);
+    await enqueue('set_logs', log.id, log.updated_at);
+  });
 }
 
 export async function deleteSetLog(id: string): Promise<void> {
-  const log = await db.set_logs.get(id);
-  if (!log) return;
-  log.deleted = true;
-  log.updated_at = new Date().toISOString();
-  await db.set_logs.put(log);
-  await enqueue('set_logs', id, log.updated_at);
+  await db.transaction('rw', db.set_logs, db.sync_queue, async () => {
+    const log = await db.set_logs.get(id);
+    if (!log) return;
+    log.deleted = true;
+    log.updated_at = new Date().toISOString();
+    await db.set_logs.put(log);
+    await enqueue('set_logs', id, log.updated_at);
+  });
 }
 
 export async function getSession(id: string): Promise<Session | null> {
@@ -253,13 +275,15 @@ export async function getLatestSessionLogsForExercise(
 }
 
 export async function endSession(sessionId: string): Promise<void> {
-  const session = await db.sessions.get(sessionId);
-  if (!session) return;
-  const now = new Date().toISOString();
-  session.ended_at = now;
-  session.updated_at = now;
-  await db.sessions.put(session);
-  await enqueue('sessions', session.id, now);
+  await db.transaction('rw', db.sessions, db.sync_queue, async () => {
+    const session = await db.sessions.get(sessionId);
+    if (!session) return;
+    const now = new Date().toISOString();
+    session.ended_at = now;
+    session.updated_at = now;
+    await db.sessions.put(session);
+    await enqueue('sessions', session.id, now);
+  });
 }
 
 export async function getSessions(): Promise<Session[]> {
@@ -290,8 +314,10 @@ export async function getLastArmMeasurementDate(): Promise<string | null> {
 
 export async function updateSession(session: Session): Promise<void> {
   session.updated_at = new Date().toISOString();
-  await db.sessions.put(session);
-  await enqueue('sessions', session.id, session.updated_at);
+  await db.transaction('rw', db.sessions, db.sync_queue, async () => {
+    await db.sessions.put(session);
+    await enqueue('sessions', session.id, session.updated_at);
+  });
 }
 
 // Soft-delete every session and set log, and enqueue each so the reset
@@ -299,44 +325,48 @@ export async function updateSession(session: Session): Promise<void> {
 // untouched.
 export async function resetSessionHistory(): Promise<void> {
   const now = new Date().toISOString();
-  const sessions = await db.sessions.filter((s) => !s.deleted).toArray();
-  for (const s of sessions) {
-    s.deleted = true;
-    s.updated_at = now;
-    await db.sessions.put(s);
-    await enqueue('sessions', s.id, now);
-  }
-  const logs = await db.set_logs.filter((l) => !l.deleted).toArray();
-  for (const l of logs) {
-    l.deleted = true;
-    l.updated_at = now;
-    await db.set_logs.put(l);
-    await enqueue('set_logs', l.id, now);
-  }
+  await db.transaction('rw', db.sessions, db.set_logs, db.sync_queue, async () => {
+    const sessions = await db.sessions.filter((s) => !s.deleted).toArray();
+    for (const s of sessions) {
+      s.deleted = true;
+      s.updated_at = now;
+      await db.sessions.put(s);
+      await enqueue('sessions', s.id, now);
+    }
+    const logs = await db.set_logs.filter((l) => !l.deleted).toArray();
+    for (const l of logs) {
+      l.deleted = true;
+      l.updated_at = now;
+      await db.set_logs.put(l);
+      await enqueue('set_logs', l.id, now);
+    }
+  });
 }
 
 // Soft-delete a single session and its set logs, and enqueue each so the
 // delete propagates to the server.
 export async function deleteSession(id: string): Promise<void> {
   const now = new Date().toISOString();
-  const session = await db.sessions.get(id);
-  if (session && !session.deleted) {
-    session.deleted = true;
-    session.updated_at = now;
-    await db.sessions.put(session);
-    await enqueue('sessions', id, now);
-  }
-  const logs = await db.set_logs
-    .where('session_id')
-    .equals(id)
-    .filter((l) => !l.deleted)
-    .toArray();
-  for (const log of logs) {
-    log.deleted = true;
-    log.updated_at = now;
-    await db.set_logs.put(log);
-    await enqueue('set_logs', log.id, now);
-  }
+  await db.transaction('rw', db.sessions, db.set_logs, db.sync_queue, async () => {
+    const session = await db.sessions.get(id);
+    if (session && !session.deleted) {
+      session.deleted = true;
+      session.updated_at = now;
+      await db.sessions.put(session);
+      await enqueue('sessions', id, now);
+    }
+    const logs = await db.set_logs
+      .where('session_id')
+      .equals(id)
+      .filter((l) => !l.deleted)
+      .toArray();
+    for (const log of logs) {
+      log.deleted = true;
+      log.updated_at = now;
+      await db.set_logs.put(log);
+      await enqueue('set_logs', log.id, now);
+    }
+  });
 }
 
 export function newBodyMetric(type: BodyMetricType, date: string, value: number): BodyMetric {
@@ -351,23 +381,29 @@ export function newBodyMetric(type: BodyMetricType, date: string, value: number)
 }
 
 export async function createBodyMetric(metric: BodyMetric): Promise<void> {
-  await db.body_metrics.put(metric);
-  await enqueue('body_metrics', metric.id, metric.updated_at);
+  await db.transaction('rw', db.body_metrics, db.sync_queue, async () => {
+    await db.body_metrics.put(metric);
+    await enqueue('body_metrics', metric.id, metric.updated_at);
+  });
 }
 
 export async function updateBodyMetric(metric: BodyMetric): Promise<void> {
   metric.updated_at = new Date().toISOString();
-  await db.body_metrics.put(metric);
-  await enqueue('body_metrics', metric.id, metric.updated_at);
+  await db.transaction('rw', db.body_metrics, db.sync_queue, async () => {
+    await db.body_metrics.put(metric);
+    await enqueue('body_metrics', metric.id, metric.updated_at);
+  });
 }
 
 export async function deleteBodyMetric(id: string): Promise<void> {
-  const metric = await db.body_metrics.get(id);
-  if (!metric) return;
-  metric.deleted = true;
-  metric.updated_at = new Date().toISOString();
-  await db.body_metrics.put(metric);
-  await enqueue('body_metrics', id, metric.updated_at);
+  await db.transaction('rw', db.body_metrics, db.sync_queue, async () => {
+    const metric = await db.body_metrics.get(id);
+    if (!metric) return;
+    metric.deleted = true;
+    metric.updated_at = new Date().toISOString();
+    await db.body_metrics.put(metric);
+    await enqueue('body_metrics', id, metric.updated_at);
+  });
 }
 
 export async function getBodyMetrics(type: BodyMetricType): Promise<BodyMetric[]> {
@@ -403,23 +439,29 @@ export function newNutritionEntry(date: string, calories: number, protein: numbe
 }
 
 export async function createNutritionEntry(entry: NutritionEntry): Promise<void> {
-  await db.nutrition.put(entry);
-  await enqueue('nutrition', entry.id, entry.updated_at);
+  await db.transaction('rw', db.nutrition, db.sync_queue, async () => {
+    await db.nutrition.put(entry);
+    await enqueue('nutrition', entry.id, entry.updated_at);
+  });
 }
 
 export async function updateNutritionEntry(entry: NutritionEntry): Promise<void> {
   entry.updated_at = new Date().toISOString();
-  await db.nutrition.put(entry);
-  await enqueue('nutrition', entry.id, entry.updated_at);
+  await db.transaction('rw', db.nutrition, db.sync_queue, async () => {
+    await db.nutrition.put(entry);
+    await enqueue('nutrition', entry.id, entry.updated_at);
+  });
 }
 
 export async function deleteNutritionEntry(id: string): Promise<void> {
-  const entry = await db.nutrition.get(id);
-  if (!entry) return;
-  entry.deleted = true;
-  entry.updated_at = new Date().toISOString();
-  await db.nutrition.put(entry);
-  await enqueue('nutrition', id, entry.updated_at);
+  await db.transaction('rw', db.nutrition, db.sync_queue, async () => {
+    const entry = await db.nutrition.get(id);
+    if (!entry) return;
+    entry.deleted = true;
+    entry.updated_at = new Date().toISOString();
+    await db.nutrition.put(entry);
+    await enqueue('nutrition', id, entry.updated_at);
+  });
 }
 
 export async function getNutritionEntries(): Promise<NutritionEntry[]> {

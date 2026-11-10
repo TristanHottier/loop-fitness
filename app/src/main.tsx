@@ -14,6 +14,9 @@ import './styles/tokens.css'
 // (or a saved light theme) is visible immediately.
 applyTheme(getStoredTheme())
 
+// Ask the browser not to evict IndexedDB (iOS can drop it under pressure).
+Promise.resolve(navigator.storage?.persist?.()).catch(() => {})
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <App />
