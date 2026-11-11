@@ -79,3 +79,7 @@ After pulling changes that add files in `api/migrations/`, apply them before dep
 ```sh
 npx wrangler d1 migrations apply loop-fitness-db --remote
 ```
+
+`api/wrangler.jsonc` does not store the account ID, so `CLOUDFLARE_ACCOUNT_ID` must be set (as above) for `wrangler deploy` and the migrations command too.
+
+Migration `0005_auth_failures.sql` adds the table used to rate-limit failed authentication (10 failures per IP per 15 minutes). Until it is applied, the Worker logs an error and does not rate-limit.

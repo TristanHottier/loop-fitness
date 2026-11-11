@@ -6,7 +6,7 @@ import { MuscleMap } from '../components/MuscleMap'
 import { MuscleVolumeList } from '../components/MuscleVolumeList'
 import { useTrainingData } from '../components/useTrainingData'
 import { getVolumeTargets, DEFAULT_VOLUME_TARGETS, type VolumeTargets } from '../db/config'
-import { volumeStatus, weeklyVolume } from '../lib/analytics'
+import { muscleVolumeStatus, weeklyVolume } from '../lib/analytics'
 import { addDays, dayKey, weekStart } from '../lib/dates'
 import './plan.css'
 
@@ -201,7 +201,9 @@ function ProgramSection({
     { id: 'planned', label: 'Planned' },
     { id: 'week', label: 'This week' },
   ]
-  const below = Object.values(values).filter((v) => volumeStatus(v, targets) === 'below').length
+  const below = Object.entries(values).filter(
+    ([m, v]) => muscleVolumeStatus(m, v, plan.muscleTargets, targets) === 'below'
+  ).length
   return (
     <section className="plan-program">
       <Collapsible

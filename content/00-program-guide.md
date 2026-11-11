@@ -5,7 +5,7 @@
 
 ## 1. Realistic expectations
 
-Doubling your arm size (30 cm to 60 cm) is not achievable. A 60 cm arm is larger than the arms of most professional bodybuilders, who use drugs and train for a decade or more.
+Doubling arm circumference is not a realistic goal for a natural lifter: it would put you beyond the arms of most professional bodybuilders, who use drugs and train for a decade or more.
 
 - Natural muscle gain is front-loaded: published estimates for an untrained young man range from roughly **4-7 kg of lean mass in a well-executed first year** (conservative) up to about 9-11 kg (McDonald model), and the rate **roughly halves each following year**.
 - That is whole-body muscle, and the arms get only a fraction of it. A realistic arm target is roughly **+2-4 cm in year one** and **+5-8 cm over 2-3 years** (my estimate from these rates, not a measured figure).

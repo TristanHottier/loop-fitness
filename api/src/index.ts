@@ -74,6 +74,68 @@ async function isAuthorized(request: Request, env: Env): Promise<boolean> {
   return safeEqual(token, await expectedToken(env))
 }
 
+// Rate limiting for failed authentication (both /auth and Bearer-token routes:
+// the token is the SHA-256 of the passphrase, so guesses could be sent to
+// either). Failures are counted per client IP in a fixed window stored in D1
+// (api/migrations/0005_auth_failures.sql). Once an IP reaches the limit, every
+// authenticated request from it is refused with 429 until the window ends, so
+// further guesses are never checked. If the table is missing (migration not
+// applied yet) the limiter fails open and logs an error.
+const AUTH_MAX_FAILURES = 10
+const AUTH_WINDOW_MS = 15 * 60 * 1000
+
+function clientIp(request: Request): string {
+  return request.headers.get('CF-Connecting-IP') ?? 'unknown'
+}
+
+async function isRateLimited(env: Env, ip: string): Promise<boolean> {
+  try {
+    const cutoff = new Date(Date.now() - AUTH_WINDOW_MS).toISOString()
+    const row = await env.DB.prepare(
+      `SELECT count FROM auth_failures WHERE bucket = ? AND window_start >= ?`
+    )
+      .bind(`ip:${ip}`, cutoff)
+      .first<{ count: number }>()
+    return (row?.count ?? 0) >= AUTH_MAX_FAILURES
+  } catch (err) {
+    console.error('rate limit check failed', err)
+    return false
+  }
+}
+
+async function recordAuthFailure(env: Env, ip: string): Promise<void> {
+  try {
+    const now = new Date().toISOString()
+    const cutoff = new Date(Date.now() - AUTH_WINDOW_MS).toISOString()
+    await env.DB.prepare(
+      `INSERT INTO auth_failures (bucket, count, window_start) VALUES (?, 1, ?) ` +
+        `ON CONFLICT(bucket) DO UPDATE SET ` +
+        `count = CASE WHEN auth_failures.window_start < ? THEN 1 ELSE auth_failures.count + 1 END, ` +
+        `window_start = CASE WHEN auth_failures.window_start < ? THEN excluded.window_start ELSE auth_failures.window_start END`
+    )
+      .bind(`ip:${ip}`, now, cutoff, cutoff)
+      .run()
+  } catch (err) {
+    console.error('rate limit record failed', err)
+  }
+}
+
+function rateLimited(): Response {
+  const res = json({ ok: false, error: 'too many attempts, try again later' }, 429)
+  res.headers.set('Retry-After', String(AUTH_WINDOW_MS / 1000))
+  return res
+}
+
+// Gate for Bearer-token routes: null when the request may proceed, otherwise
+// the 401/429 response to return.
+async function requireAuth(request: Request, env: Env): Promise<Response | null> {
+  const ip = clientIp(request)
+  if (await isRateLimited(env, ip)) return rateLimited()
+  if (await isAuthorized(request, env)) return null
+  await recordAuthFailure(env, ip)
+  return json({ ok: false, error: 'unauthorized' }, 401)
+}
+
 async function handleAuth(request: Request, env: Env): Promise<Response> {
   let body: { passphrase?: string }
   try {
@@ -81,9 +143,12 @@ async function handleAuth(request: Request, env: Env): Promise<Response> {
   } catch {
     return json({ ok: false, error: 'invalid json' }, 400)
   }
+  const ip = clientIp(request)
+  if (await isRateLimited(env, ip)) return rateLimited()
   const provided = await sha256Hex(body.passphrase ?? '')
   const expected = await expectedToken(env)
   if (!safeEqual(provided, expected)) {
+    await recordAuthFailure(env, ip)
     return json({ ok: false, error: 'invalid passphrase' }, 401)
   }
   return json({ ok: true, token: expected })
@@ -356,22 +421,26 @@ export default {
         return await handleAuth(request, env)
       }
       if (path === '/sync/push' && request.method === 'POST') {
-        if (!(await isAuthorized(request, env))) return json({ ok: false, error: 'unauthorized' }, 401)
+        const denied = await requireAuth(request, env)
+        if (denied) return denied
         return await handlePush(request, env)
       }
       if (path === '/sync/pull' && request.method === 'GET') {
-        if (!(await isAuthorized(request, env))) return json({ ok: false, error: 'unauthorized' }, 401)
+        const denied = await requireAuth(request, env)
+        if (denied) return denied
         return await handlePull(request, env)
       }
       if (path === '/push/vapid-public-key' && request.method === 'GET') {
         return handleVapidPublicKey(env)
       }
       if (path === '/push/subscribe' && request.method === 'POST') {
-        if (!(await isAuthorized(request, env))) return json({ ok: false, error: 'unauthorized' }, 401)
+        const denied = await requireAuth(request, env)
+        if (denied) return denied
         return await handleSubscribe(request, env)
       }
       if (path === '/push/unsubscribe' && request.method === 'POST') {
-        if (!(await isAuthorized(request, env))) return json({ ok: false, error: 'unauthorized' }, 401)
+        const denied = await requireAuth(request, env)
+        if (denied) return denied
         return await handleUnsubscribe(request, env)
       }
       return json({ ok: false, error: 'not found' }, 404)
@@ -385,5 +454,11 @@ export default {
   // weigh-in reminder (and any other enabled reminders) at their times.
   async scheduled(event: ScheduledEvent, env: Env): Promise<void> {
     await runReminders(env)
+    // Drop rate-limit rows older than a day.
+    const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+    await env.DB.prepare(`DELETE FROM auth_failures WHERE window_start < ?`)
+      .bind(dayAgo)
+      .run()
+      .catch((err) => console.error('rate limit cleanup failed', err))
   },
 }

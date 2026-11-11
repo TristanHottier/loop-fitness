@@ -3,7 +3,8 @@
   "name": "loop-fitness-api",
   "main": "src/index.ts",
   "compatibility_date": "2025-01-01",
-  "account_id": "91bb3fe9409e615d9e13e3a3eead606d",
+  // account_id is not stored here: set CLOUDFLARE_ACCOUNT_ID in your shell
+  // (see app/README.md, "Wrangler CLI").
   "d1_databases": [
     {
       "binding": "DB",
