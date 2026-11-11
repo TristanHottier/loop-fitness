@@ -374,3 +374,18 @@ Tasks:
 9. [x] Removed `app/src/components/StrengthChart.tsx` + `strength-chart.css` (superseded by the collapsible "Last used" section in Progress)
 
 Status: complete (typecheck + 97 unit tests + build pass, 75 precache entries). Estimated working time (sets x (45 s + rest), unilateral doubled): Pull 52.5, Push 42, Shoulders and arms 54 (57 with finisher), Legs and forearms 60 min; add 13 min warm-up and cool-down (Saturday is about 75 min in total). Higher volume for specialised muscles is supported but not proven: Schoenfeld et al. 2017 and Pelland et al. 2024 (preprint; more sets give more hypertrophy with diminishing returns, no named plateau), Brigatto et al. (16, 24, 32 weekly sets per muscle group; muscle thickness tended to rise with volume, not every comparison significant, small trial), Enes et al. (quads, sets progressed to 52 per week in trained men; hypertrophy results to be read with caution). Individual recovery limits the real optimum, so ranges are meant to be adjusted by how the user recovers.
+
+## M28: Auth-failure rate limiting, account_id out of wrangler.jsonc, Plan below-target fix, repo docs
+Done when: failed authentication is rate-limited per client IP (so the passphrase hash can't be brute-forced), the account ID is no longer stored in `api/wrangler.jsonc` (set via `CLOUDFLARE_ACCOUNT_ID` in the shell), the Plan "below target" count judges each muscle against its own range, and the repo has a root README, LICENSE and screenshots.
+
+Tasks:
+1. [x] `api/migrations/0005_auth_failures.sql`: new `auth_failures` table (bucket, count, window_start) for rate-limiting failed authentication
+2. [x] `api/src/index.ts`: `requireAuth` gate for the Bearer-token routes + per-IP rate limiting (10 failures per 15 min, 429 with Retry-After); `isRateLimited` / `recordAuthFailure` (fixed window, fails open and logs an error if the table is missing); the cron now also deletes rate-limit rows older than a day
+3. [x] `api/wrangler.jsonc`: account_id removed (now set via `CLOUDFLARE_ACCOUNT_ID` in the shell, see `app/README.md` "Wrangler CLI")
+4. [x] `app/src/screens/Plan.tsx`: the "below target" count now uses `muscleVolumeStatus` with per-muscle targets (was `volumeStatus` against a single global target)
+5. [x] `content/00-program-guide.md`: wording fix (arm circumference, not "30 cm to 60 cm")
+6. [x] `app/README.md`: note that `CLOUDFLARE_ACCOUNT_ID` is required for `wrangler deploy` and the migrations command; note about migration 0005
+7. [x] New root `README.md`, `LICENSE`, and `docs/screenshots/` (7 screenshots)
+8. [x] D1 migration 0005 applied + Worker + PWA deploy + commit
+
+Status: complete (API typecheck + 97 unit tests + build pass, 75 precache entries; D1 migration 0005 applied, Worker + PWA deployed, both live URLs HTTP 200)
