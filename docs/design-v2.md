@@ -1,7 +1,7 @@
 # Loop Fitness, visual style v2
 
 Two directions. Pick one (or blend them). Phase 2 applies the chosen direction to the real app.
-Nothing here changes features or data. It is a restyle only.
+This is a restyle only. Nothing here changes features or data.
 
 Hard rules that stay in both directions:
 - No em dashes or en dashes, no middle dots, no monospace, no large all-caps titles, no uppercase text, anywhere in the UI.
@@ -9,8 +9,8 @@ Hard rules that stay in both directions:
 - Must not look AI generated. Banned: cream background with serif headings and a terracotta accent, near-black with a single acid accent, purple or neon gradients, a grid of identical rounded cards, glassmorphism, sparkle icons, emoji, confetti, exclamation marks.
 
 Shared notes
-- The logo is an infinity line on a dark tile. I could not view the PNG (no image input in this model), so the "infinity line" motif below is drawn from the brief and your task text. If the real mark differs, the cover band and the signature motion need a quick recheck.
-- Muscle-group colors are a shared semantic set used in both directions (the muscle map and exercise tags). They are calm and desaturated so the map reads as a diagram, not a rainbow.
+- The logo is an infinity line on a dark tile. The infinity line motif below comes from the brief and the task text, not from the logo PNG, which could not be viewed. If the real mark differs, recheck the cover band and the signature motion.
+- Muscle-group colors are a shared semantic set used in both directions (the muscle map and exercise tags). They are desaturated so the map reads as a diagram.
 - Fonts are self-hosted in Phase 2. The static previews load them from a CDN so you see the real type on the phone.
 
 Muscle-group colors (shared, both directions)
@@ -33,7 +33,7 @@ Used at about 0.85 opacity in the muscle map and as tag tints. All desaturated.
 
 # Direction A: Notion with a richer finish
 
-A calm, document-like base with one muted hue per workout. The richness comes from type contrast, a cover band, and a single signature motion (the infinity line drawing itself). Surfaces stay flat; only sheets and the timer bar get a soft shadow.
+A calm, document-like base with one muted hue per workout. The finish comes from type contrast, a cover band and one signature motion, the infinity line drawing itself. Surfaces stay flat; only sheets and the timer bar get a soft shadow.
 
 ## Color tokens
 
@@ -71,7 +71,7 @@ Per-workout hue on light (darker for contrast): Pull #2383E2, Push #2E7D5B, Shou
 ## Type
 - Display face: Figtree (geometric, rounded terminals). Titles 28 to 32, bold. Big numerals 40 to 56.
 - Body and data: Inter, tabular figures. Body 16.
-- Sentence case everywhere. Size and weight do the contrast, not color.
+- Sentence case everywhere. Contrast comes from size and weight. Color is not used for contrast.
 
 ## Layout concept
 - Workout pages: a cover band about 120px tall, built from the logo infinity line in the workout hue at low opacity. Below it, an icon, the title, and property rows (days, duration, equipment tags).
@@ -202,14 +202,14 @@ Per-workout hue on light: Pull #2563EB, Push #1F8A54, Shoulders and arms #C46A1E
 - Sentence case. The larger numerals and heavier display face are the main difference from A.
 
 ## Layout concept
-- Workout pages: a solid filled cover band in the workout hue (about 120px), title in white on top, then property rows. The fill is solid, not a low-opacity tint (that is A's move).
+- Workout pages: a solid filled cover band in the workout hue (about 120px), title in white on top, then property rows. The fill is solid; A uses a low-opacity tint.
 - Today: the week strip and the next-workout card use the workout hue as a filled accent (filled ring for done days, filled progress bar). Bigger numerals for the weight entry.
 - Session: the active exercise gets a filled left border and a light tinted background. Set rows are taller. The top progress line is a filled bar in the workout hue.
 - Rest timer: a filled ring in the workout hue around large numerals.
 - Band picker: same as A, but the selected step is filled in the workout hue.
 - Progress: charts with a filled area (solid, single hue, no gradient), a stronger line, and larger value labels.
 - Icons: same custom outline set as A (1.75 stroke, round caps).
-- Signature motion: same as A (infinity line draws on splash and session complete). B keeps the motion identical so the two directions differ in color and scale, not in behavior.
+- Signature motion: same as A (infinity line draws on splash and session complete). B keeps the motion identical, so the two directions differ only in color and scale.
 - Empty states: same as A.
 
 ## Wireframes
@@ -290,22 +290,22 @@ Progress (dark)
 # Review against the generic defaults
 
 Direction A
-- Cream/serif/terracotta: not used. Base is neutral dark, type is geometric sans, accent is blue. No change needed.
-- Near-black with one acid accent: A is near-neutral (#191919) but it carries three muted workout hues plus a blue accent, so it is not a single-acid look. Kept the hues desaturated so none reads as acid.
+- Cream/serif/terracotta: not used. Base is neutral dark, type is geometric sans, accent is blue.
+- Near-black with one acid accent: A is near-neutral (#191919) but carries three muted workout hues plus a blue accent, so it is not a single-acid look. The hues are desaturated so none reads as acid.
 - Purple or neon gradients: none. No gradients at all. The area fade in the chart is a single-hue opacity fade, not a gradient between colors.
-- Grid of identical rounded cards: Today and Progress use property rows and stacked sections, not a card grid. Kept.
+- Grid of identical rounded cards: Today and Progress use property rows and stacked sections instead of a card grid.
 - Glassmorphism: none. Surfaces are flat with 1px borders; only sheets and the timer bar get a soft shadow.
 - Sparkle/emoji/confetti/exclamation: none.
-- What I changed from a naive read: I kept the workout hues desaturated (Notion tag colors) rather than saturated, and I limited shadows to sheets and the timer bar so the base stays flat.
+- Workout hues are desaturated (Notion tag colors) and shadows are limited to sheets and the timer bar, so the base stays flat.
 
 Direction B
-- Cream/serif/terracotta: not used. Base is deep ink (#0E1013), type is geometric sans, accents are blue/green/amber. No change needed.
-- Near-black with one acid accent: B is the closest to this trap. I avoided it two ways: the base is a deep ink with a slight blue cast (not pure black), and the palette carries three workout hues plus a neutral accent, so no single acid color dominates. I kept the hues strong but below neon.
+- Cream/serif/terracotta: not used. Base is deep ink (#0E1013), type is geometric sans, accents are blue/green/amber.
+- Near-black with one acid accent: B is the closest to this default. The base is a deep ink with a slight blue cast (not pure black), and the palette carries three workout hues plus a neutral accent, so no single acid color dominates. The hues are strong but below neon.
 - Purple or neon gradients: none. The chart fill is a solid single hue, not a gradient.
-- Grid of identical rounded cards: same as A, property rows and stacked sections. Kept.
+- Grid of identical rounded cards: same as A, property rows and stacked sections.
 - Glassmorphism: none.
 - Sparkle/emoji/confetti/exclamation: none.
-- What I changed from a naive read: I made the base a blue-cast ink instead of pure black, and I used the workout hues as filled blocks (cover, progress, ring) rather than as a single accent, so the bolder color does not collapse into the "one acid accent" default.
+- The base is a blue-cast ink instead of pure black, and workout hues are filled blocks (cover, progress, ring) rather than a single accent, so the bolder color does not collapse into the "one acid accent" default.
 
 ---
 
@@ -313,13 +313,13 @@ Direction B
 
 Direction A was chosen and applied to the real app. Everything below is live in `app/src`.
 
-- **Tokens and fonts.** `app/src/styles/tokens.css` carries the full Direction A set: three dark surface levels (bg, panel, sheet), the three muted workout hues, the ten desaturated muscle-group colors, Figtree (display) and Inter (body) self-hosted via `@fontsource`, a single `--shadow-soft` (used only on the band picker sheet and the rest timer bar), and a `--color-positive` for delta tags.
-- **Session.** Infinity-line cover band in the workout hue, a thin progress line, each exercise as a toggle with its set rows inside, the active exercise with a 3px left border and a 5% hue tint, a checkbox that draws its check stroke on tap, a "new best" pill, and a session-complete view where the infinity line draws itself over 1.2s.
-- **Rest timer.** A floating bottom bar with a depleting ring in the workout hue around large tabular numerals; minus 15, plus 15, and skip as text buttons.
-- **Band picker.** A new bottom sheet: the Tube/Loop ladder as steps with the lb value, the last-used band underlined, the current band filled in the accent.
-- **Today.** A week strip (Mon to Sun) with the three training days marked and done days as filled rings, a thin session progress line, the next workout as a card, and weight entry as a property row.
-- **Progress.** Charts in one hue with a soft single-hue area fade, light gridlines, a direct label on the latest point, and delta tags such as +0.4 cm. Each chart sits in a card with a header row (title, latest value, delta).
-- **Plan and exercise.** A cover band per workout (and per exercise) built from the infinity line in the workout hue at low opacity, property rows for the key facts, and the muscle map recolored to the per-group muscle colors (primary at full opacity, secondary at 45%).
-- **Settings.** Flat property rows, Figtree section titles, panel cards, and the destructive reset in the error color.
+- Tokens and fonts: `app/src/styles/tokens.css` carries the full Direction A set: three dark surface levels (bg, panel, sheet), the three muted workout hues, the ten desaturated muscle-group colors, Figtree (display) and Inter (body) self-hosted via `@fontsource`, a single `--shadow-soft` (used only on the band picker sheet and the rest timer bar), and a `--color-positive` for delta tags.
+- Session: Infinity-line cover band in the workout hue, a thin progress line, each exercise as a toggle with its set rows inside, the active exercise with a 3px left border and a 5% hue tint, a checkbox that draws its check stroke on tap, a "new best" pill, and a session-complete view where the infinity line draws itself over 1.2s.
+- Rest timer: A floating bottom bar with a depleting ring in the workout hue around large tabular numerals; minus 15, plus 15, and skip as text buttons.
+- Band picker: A new bottom sheet: the Tube/Loop ladder as steps with the lb value, the last-used band underlined, the current band filled in the accent.
+- Today: A week strip (Mon to Sun) with the three training days marked and done days as filled rings, a thin session progress line, the next workout as a card, and weight entry as a property row.
+- Progress: Charts in one hue with a soft single-hue area fade, light gridlines, a direct label on the latest point, and delta tags such as +0.4 cm. Each chart sits in a card with a header row (title, latest value, delta).
+- Plan and exercise: A cover band per workout (and per exercise) built from the infinity line in the workout hue at low opacity, property rows for the key facts, and the muscle map recolored to the per-group muscle colors (primary at full opacity, secondary at 45%).
+- Settings: Flat property rows, Figtree section titles, panel cards, and the destructive reset in the error color.
 
 Deviations from the wireframes: the Today weight row wraps its two buttons onto a second line so it does not overflow at 360px; the today-ring highlight uses an outline (a focus-ring style) rather than a box-shadow, to keep shadows limited to the two allowed surfaces. The reviewer passed the design checklist at 360 to 412 px with no open items.

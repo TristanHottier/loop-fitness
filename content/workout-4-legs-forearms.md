@@ -20,13 +20,11 @@
 | **Bar on back, feet in handles** | A tube clipped to each end of the bar. Put a foot in the handle at the other end of each tube. Rest the bar across your upper back. |
 | **Bar in hands, feet in handles** | Same tubes, holding the bar in your hands. Stand wider for more tension. |
 
-Matching tubes on both ends matter most here, see the Program Guide for tube pairing.
-
----
+Matching tubes on both ends matter most here. See the Program Guide for tube pairing.
 
 ## Band selection guide
 
-Ratings are the resistance at **full stretch**, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
+Ratings are the resistance at full stretch, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
 
 | Exercise | Start with |
 |---|---|
@@ -39,8 +37,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Ankle plantarflexion | Loop 15-50 |
 | Reverse curl | Tube 30 lb |
 | Wrist curl, Wrist extension | Tube 30 lb |
-
----
 
 ## Session overview
 
@@ -61,8 +57,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 > *Romanian deadlift, Reverse curl, Wrist curl and Wrist extension are not on your chart. I added them for hamstrings and forearms.*
 
----
-
 ## Warm-up (8 min)
 
 1. **Seated row, light** (30 lb), 1 × 15
@@ -71,8 +65,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 4. **Bodyweight glute bridges**, 1 × 15
 5. **Wrist circles**, 10 each direction
 6. **Squat, light**, 1 × 12
-
----
 
 ## The exercises
 
@@ -95,8 +87,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** sit farther back, stack tubes, or use an underhand grip to bring in more biceps.
 
----
-
 ### 2. Curl biceps (neutral grip): tube and Pilates bar under feet, 2 × 12-15
 **Targets:** biceps, brachialis (arm thickness)
 
@@ -115,8 +105,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** choke up on the tubes, or use heavier tubes.
 
----
-
 ### 3. Triceps extension: loop, 2 × 12-15
 **Targets:** triceps (long head)
 
@@ -133,8 +121,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** elbows flaring, arching the lower back.
 
 **Progress:** next loop up, or single-arm.
-
----
 
 ### 4. Squat: tube and Pilates bar on back, 3 × 12-20
 **Targets:** quads, glutes, hamstrings
@@ -155,8 +141,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** knees caving in, heels lifting, rounding the lower back, leaning too far forward.
 
 **Progress:** stack tubes, shorten the tubes (more tension at the top), or add a 2 s pause at the bottom.
-
----
 
 ### 5. Romanian deadlift: tube and Pilates bar in hands, 3 × 10-15
 **Targets:** hamstrings, glutes, lower back
@@ -179,8 +163,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** stack tubes, shorten the tubes, or add a 2 s pause at the bottom.
 
----
-
 ### 6. Lunges: loop, 2 × 10-12 each leg
 **Targets:** quads, glutes, hamstrings
 
@@ -200,8 +182,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** move to the next loop up, or add a 2 s pause at the bottom.
 
----
-
 ### 7. Ankle plantarflexion: loop, 3 × 15-20 each leg
 **Targets:** calves
 
@@ -219,8 +199,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** bending the knee, rushing the lowering.
 
 **Progress:** pull the ends closer for more tension, or move to the next loop up.
-
----
 
 ### 8. Reverse curl: tube and Pilates bar in hands, 3 × 12-15
 **Targets:** forearm extensors, brachioradialis, biceps
@@ -240,8 +218,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** stand wider, shorten the tubes, or use heavier tubes.
 
----
-
 ### 9. Wrist curl: tube and Pilates bar in hands, 3 × 15-20
 **Targets:** forearm flexors
 
@@ -260,8 +236,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** if 30 lb is too heavy, sit with your feet closer to the chair to reduce the stretch. To go heavier, move your feet farther away.
 
----
-
 ### 10. Wrist extension: tube and Pilates bar in hands, 3 × 15-20
 **Targets:** forearm extensors
 
@@ -279,8 +253,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** same as the Wrist curl.
 
----
-
 ## Cool-down (5 min)
 - **Doorway lat stretch:** 30 s each side
 - **Biceps wall stretch:** 30 s each side
@@ -288,8 +260,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 - **Hamstring stretch:** 30 s each leg
 - **Hip flexor lunge stretch:** 30 s each side
 - **Forearm stretch** (arm straight, pull fingers back, then down): 30 s each position, each arm
-
----
 
 ## Log
 

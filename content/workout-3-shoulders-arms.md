@@ -19,11 +19,9 @@
 | **Bar in hands, feet in handles** | A tube clipped to each end of the bar. Put a foot in the handle at the other end of each tube. Stand wider for more tension. |
 | **Bar under feet** | Lay the bar on the floor and stand on it. A tube on each end, hold the handle at the far end of each tube. |
 
----
-
 ## Band selection guide
 
-Ratings are the resistance at **full stretch**, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
+Ratings are the resistance at full stretch, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
 
 | Exercise | Start with |
 |---|---|
@@ -35,8 +33,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Wide grip barbell, Side pull biceps | Tube 30 lb |
 | Push-down tricep | Tube 30 lb |
 | Triceps extension, Bicep curls | Loop 15-50 |
-
----
 
 ## Session overview
 
@@ -55,8 +51,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | 10 | Bicep curls (finisher, optional) | Loop | 2 × 20 | 45 s |
 | | Cool-down | | 5 min | |
 
----
-
 ## Warm-up (8 min)
 
 1. **Arm circles**, 10 forward and 10 backward
@@ -64,8 +58,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 3. **Scapular push-ups**, 1 × 10
 4. **Bend over fly, light**, 1 × 15
 5. **Pull down, light**, 1 × 12
-
----
 
 ## The exercises
 
@@ -87,8 +79,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** move to the next loop, stand wider, or finish the last set with partial reps in the top half.
 
----
-
 ### 2. Bend over fly: tube and Pilates bar under feet, 3 × 15-20
 **Targets:** rear delts, mid-back
 
@@ -104,13 +94,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 2. Squeeze your rear delts for 1 s.
 3. Lower in 3 s.
 
-**Cues:** Spread your arms apart rather than lifting them.
+**Cues:** Spread your arms apart.
 
 **Mistakes:** standing up during the rep, shrugging, pulling with the hands.
 
 **Progress:** choke up on the tubes or use heavier tubes.
-
----
 
 ### 3. Close grip lift: tube and Pilates bar in hands, 4 × 12-15
 **Targets:** side delts, upper traps, biceps
@@ -130,8 +118,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** stand wider, shorten the tubes, or use heavier tubes. If you feel pinching at the top of the shoulder, stop at chin height instead.
 
----
-
 ### 4. Pull down (underhand): tube, Pilates bar and door, 3 × 12-15
 **Targets:** lower lats, biceps
 
@@ -149,8 +135,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** leaning too far back, shrugging.
 
 **Progress:** step back or stack tubes.
-
----
 
 ### 5. Push down (straight-arm): tube, Pilates bar and door, 3 × 15
 **Targets:** lats (isolation)
@@ -173,8 +157,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** step back or stack tubes.
 
----
-
 ### 6. Wide grip barbell: tube and Pilates bar in hands, 3 × 10-12
 **Targets:** biceps
 
@@ -194,8 +176,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** swinging, elbows drifting forward.
 
 **Progress:** stand wider or use heavier tubes.
-
----
 
 ### 7. Side pull biceps: tube and handle on door, 2 × 12-15 each arm
 **Targets:** biceps (peak)
@@ -218,8 +198,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** step away from the door or use a heavier tube.
 
----
-
 ### 8. Push-down tricep: tube and handles on door, 4 × 12-15
 **Targets:** triceps
 
@@ -236,8 +214,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** elbows drifting forward, leaning over.
 
 **Progress:** step back or stack tubes.
-
----
 
 ### 9. Triceps extension: loop, 3 × 12-15
 **Targets:** triceps (long head)
@@ -256,8 +232,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** next loop up, or single-arm.
 
----
-
 ### 10. Bicep curls (finisher, optional): loop, 2 × 20
 **Targets:** biceps (pump)
 
@@ -271,15 +245,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Note:** drop this if you are running past 70 minutes or your elbows are sore.
 
----
-
 ## Cool-down (5 min)
 - **Cross-body shoulder stretch:** 30 s each side
 - **Overhead triceps stretch:** 30 s each side
 - **Biceps wall stretch:** 30 s each side
 - **Neck side stretch:** 20 s each side
-
----
 
 ## Log
 

@@ -19,11 +19,9 @@
 | **Bar under feet** | Lay the bar on the floor and stand on it. A tube on each end, hold the handle at the far end of each tube. |
 | **Bar on chest, tube under you** | One tube clipped between both ends of the bar, passing under your upper back as you lie on the floor. |
 
----
-
 ## Band selection guide
 
-Ratings are the resistance at **full stretch**, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
+Ratings are the resistance at full stretch, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
 
 | Exercise | Start with |
 |---|---|
@@ -34,8 +32,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Push-down tricep | Tube 30-40 lb |
 | Triceps extension | Loop 15-50 |
 | Kneeling crunch | Tube 40 lb |
-
----
 
 ## Session overview
 
@@ -51,8 +47,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | 7 | Kneeling crunch | Tube, handles, door (top) | 3 × 12-15 | 60 s |
 | | Cool-down | | 5 min | |
 
----
-
 ## Warm-up (8 min)
 
 1. **Arm circles**, 10 forward and 10 backward
@@ -60,8 +54,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 3. **Push-ups, no band**, 1 × 10
 4. **Lateral raises, light**, 1 × 15
 5. **Grip press, light**, 1 × 12
-
----
 
 ## The exercises
 
@@ -84,8 +76,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** add or swap in a heavier tube, or add a 2 s pause at the top. When the tubes are no longer enough, use the Lying chest press with a heavy loop (35-95 or 50-145): lie down, loop across your upper back, press the sides up.
 
----
-
 ### 2. Hex press: tube and Pilates bar under feet, 2 × 12-15
 **Targets:** inner and upper chest, front delts, triceps
 
@@ -103,8 +93,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** letting the handles drift apart, leaning back, shrugging.
 
 **Progress:** use heavier tubes or choke up on the tubes.
-
----
 
 ### 3. Standing press: tube, Pilates bar and door, 3 × 10-12
 **Targets:** front delts, upper chest, triceps
@@ -126,8 +114,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** step farther forward, stack tubes, or use a narrower stance.
 
----
-
 ### 4. Lateral raises: tube and Pilates bar under feet, 3 × 15-20
 **Targets:** side delts (shoulder width)
 
@@ -145,8 +131,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** shrugging, raising above shoulder height, using momentum.
 
 **Progress:** use heavier tubes, choke up, or do the last set with partial reps in the top half.
-
----
 
 ### 5. Push-down tricep: tube, Pilates bar and door, 4 × 12-15
 **Targets:** triceps
@@ -167,8 +151,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** step back or stack tubes.
 
----
-
 ### 6. Triceps extension: loop, 4 × 12-15
 **Targets:** triceps (long head)
 
@@ -186,8 +168,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** elbows flaring out, arching the lower back.
 
 **Progress:** move to the next loop up, or go single-arm.
-
----
 
 ### 7. Kneeling crunch: tube and handles on door, 3 × 12-15
 **Targets:** abs
@@ -209,15 +189,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** use a heavier tube or step back.
 
----
-
 ## Cool-down (5 min)
 - **Doorway chest stretch:** 30 s each side
 - **Cross-body shoulder stretch:** 30 s each side
 - **Overhead triceps stretch:** 30 s each side
 - **Child's pose:** 45 s
-
----
 
 ## Log
 

@@ -19,11 +19,9 @@
 | **Bar in hands, feet in handles** | A tube clipped to each end of the bar. Put a foot in the handle at the other end of each tube. Stand wider for more tension. |
 | **Bar under feet** | Lay the bar on the floor and stand on it. A tube on each end, hold the handle at the far end of each tube. |
 
----
-
 ## Band selection guide
 
-Ratings are the resistance at **full stretch**, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
+Ratings are the resistance at full stretch, so the real load mid-range is lower. Start here, then adjust so the last 2 reps are hard but clean.
 
 | Exercise | Start with |
 |---|---|
@@ -33,8 +31,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 | Close grip barbell | Tube 30 lb |
 | V-ups | Tube 30 lb |
 | Trunk twist | Loop 15-50 |
-
----
 
 ## Session overview
 
@@ -53,8 +49,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 > *Face pull is not on your chart. I added it for rear delts, upper traps and shoulder health.*
 
----
-
 ## Warm-up (8 min)
 
 1. **Arm circles**, 10 forward and 10 backward
@@ -62,8 +56,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 3. **Pull down, light** (30 lb), 1 × 15
 4. **Reverse fly, light**, 1 × 15
 5. **Close grip barbell, light**, 1 × 12
-
----
 
 ## The exercises
 
@@ -87,8 +79,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** step back, stack tubes, or switch to handles and go single-arm.
 
----
-
 ### 2. Seated row: tube, Pilates bar and door, 4 × 10-15
 **Targets:** mid-back, lats, rear delts, biceps
 
@@ -108,8 +98,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** sit farther back, stack tubes, or use an underhand grip to bring in more biceps.
 
----
-
 ### 3. Bend over rows: loop, 3 × 10-15
 **Targets:** mid-back, lats, rear delts, biceps, lower back
 
@@ -128,8 +116,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** standing up during the rep, rounding the lower back, jerking with the hips.
 
 **Progress:** widen your stance, grip lower on the loop, or move to the next loop.
-
----
 
 ### 4. Reverse fly: tube and Pilates bar under feet, 3 × 15-20
 **Targets:** rear delts, mid-back
@@ -151,8 +137,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** choke up on the tubes, use heavier tubes, or stand with feet wider.
 
----
-
 ### 5. Face pull: tube and handles on door, 3 × 15-20
 **Targets:** rear delts, upper traps, rotator cuff (shoulder health)
 
@@ -166,13 +150,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 3. At the end, rotate your hands back so your knuckles point toward the ceiling, and squeeze for 1 s.
 4. Return in 3 s.
 
-**Cues:** "Pull the band apart, not just back."
+**Cues:** "Pull the band apart as you pull it back."
 
 **Mistakes:** elbows dropping low, leaning back to cheat the rep.
 
 **Progress:** step back or stack tubes.
-
----
 
 ### 6. Close grip barbell: tube and Pilates bar in hands, 3 × 10-12
 **Targets:** biceps
@@ -194,8 +176,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** stand wider, shorten the tubes, or use heavier tubes.
 
----
-
 ### 7. V-ups: tube and handles on door, 3 × 10-15
 **Targets:** abs, hip flexors
 
@@ -215,8 +195,6 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 **Mistakes:** swinging with momentum, arching the lower back, bending the arms.
 
 **Progress:** use a heavier tube or lower in 4 s. Easier: tuck your knees. If your lower back complains, use the tuck version.
-
----
 
 ### 8. Trunk twist: loop on door, 2 × 12-15 each side
 **Targets:** obliques, abs
@@ -239,15 +217,11 @@ Ratings are the resistance at **full stretch**, so the real load mid-range is lo
 
 **Progress:** step away from the door or use the next loop up.
 
----
-
 ## Cool-down (5 min)
 - **Doorway lat stretch:** 30 s each side
 - **Cross-body shoulder stretch:** 30 s each side
 - **Biceps wall stretch:** 30 s each side
 - **Child's pose:** 45 s
-
----
 
 ## Log
 

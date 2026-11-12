@@ -19,28 +19,28 @@ Source: `C:\Users\trist\AppData\Local\Temp\opencode\MuscleMap` (MIT, Copyright
 - aria-labels.
 - Optional pinch-to-zoom.
 
-What we do NOT port: style presets, gradient fills, pulse, shadows, undo/redo,
+What we do not port: style presets, gradient fills, pulse, shadows, undo/redo,
 multi-select, long press, drag select, tooltips, localization.
 
 ## File locations
 
 Extraction pipeline (already built and verified):
 
-- `scripts/extract-musclemap.mjs` - parses the 4 Swift path files, emits the 4 JSON assets.
-- `scripts/verify-musclemap.mjs` - JSON/schema/byte-for-byte checks.
-- `scripts/generate-musclemap-preview.mjs` - builds the standalone preview.
-- `scripts/verify-musclemap-preview.mjs` - self-contained + data-sync checks.
+- `scripts/extract-musclemap.mjs`: parses the 4 Swift path files, emits the 4 JSON assets.
+- `scripts/verify-musclemap.mjs`: JSON/schema/byte-for-byte checks.
+- `scripts/generate-musclemap-preview.mjs`: builds the standalone preview.
+- `scripts/verify-musclemap-preview.mjs`: self-contained + data-sync checks.
 
 Generated assets (the only writes under `app/src`):
 
-- `app/src/assets/musclemap/male-front.json` - 28 parts, 111 paths.
-- `app/src/assets/musclemap/male-back.json` - 16 parts, 70 paths.
-- `app/src/assets/musclemap/female-front.json` - 28 parts, 114 paths.
-- `app/src/assets/musclemap/female-back.json` - 14 parts, 66 paths.
+- `app/src/assets/musclemap/male-front.json`: 28 parts, 111 paths.
+- `app/src/assets/musclemap/male-back.json`: 16 parts, 70 paths.
+- `app/src/assets/musclemap/female-front.json`: 28 parts, 114 paths.
+- `app/src/assets/musclemap/female-back.json`: 14 parts, 66 paths.
 
 QA preview (open by double-click, no build step):
 
-- `docs/design-preview/musclemap-preview.html` - all 4 bodies, one color per
+- `docs/design-preview/musclemap-preview.html`: all 4 bodies, one color per
   region, per-body legend.
 
 ## Data format
@@ -67,12 +67,12 @@ Each JSON file:
 }
 ```
 
-- `slug` - the region identifier.
-- `parent` - parent slug for sub-groups, else null.
-- `alwaysVisible` - true only for `ankles`, `adductors`, `neck`.
-- `isMuscle` - false for `hair` and `head` (cosmetic), true otherwise.
-- `order` - 0-based source index, i.e. draw order.
-- `common` / `left` / `right` - SVG `d` strings, usable verbatim in
+- `slug`: the region identifier.
+- `parent`: parent slug for sub-groups, else null.
+- `alwaysVisible`: true only for `ankles`, `adductors`, `neck`.
+- `isMuscle`: false for `hair` and `head` (cosmetic), true otherwise.
+- `order`: 0-based source index, i.e. draw order.
+- `common` / `left` / `right`: SVG `d` strings, usable verbatim in
   `<path d>`. `common` is shared by both sides; `left` and `right` are the
   per-side paths.
 
@@ -131,11 +131,11 @@ Notes on the collapses:
 The SDK enum defines `rearDeltoid`, `upperTrapezius`, and `rhomboids`, but
 none of them have geometry in the 4 path files. Decisions (approved):
 
-1. rear delts - fall back to the whole `deltoids` region on the back.
-2. upper traps - not a `plan.json` key, so not mapped. (If added later, fall
+1. rear delts: fall back to the whole `deltoids` region on the back.
+2. upper traps: not a `plan.json` key, so not mapped. (If added later, fall
    back to the whole `trapezius` region on the back.)
-3. mid back - fall back to the `upperBack` region on the back.
-4. brachialis - no SDK region; fall back to `biceps` on the front.
+3. mid back: fall back to the `upperBack` region on the back.
+4. brachialis: no SDK region; fall back to `biceps` on the front.
 
 ## Heatmap
 

@@ -2,22 +2,22 @@
 
 ## 0. Your job
 
-You are taking over a planning handoff. Do **not** build the app. Produce, from this brief only:
+You are taking over a planning handoff. Do not build the app. Produce, from this brief only:
 
-1. One **agent prompt** per agent listed in section 7.
-2. One **SKILL.md** per skill listed in section 8.
+1. One agent prompt per agent listed in section 7.
+2. One SKILL.md per skill listed in section 8.
 3. An `opencode.json` that sets the model for every agent (provider and model id left as placeholders, the model is Qwen 3.8 through an API, unlimited usage).
-4. `PROMPT.md`: the **initial prompt** the user sends to the agent collection to start work (section 10 says what it must do).
+4. `PROMPT.md`: the initial prompt the user sends to the agent collection to start work (section 10 says what it must do).
 
 Before writing files, check the current OpenCode documentation for the exact formats and locations of agent files, skill files and `opencode.json`, and follow them. Verify Cloudflare free-tier limits and Web Push details the same way. Output each file in its own fenced block with its path above it, then a short list of assumptions the user should confirm.
 
-**Qwen writing rules.** Every prompt must be short and imperative, name exact file paths, and give numbered steps. Do not paste long documents into prompts, point to files instead (`docs/brief.md`, `content/`). Each agent prompt: role, inputs, workflow, rules, definition of done, handoff format. Target 350 words per agent, 300 per skill.
+Qwen writing rules: Every prompt must be short and imperative, name exact file paths, and give numbered steps. Do not paste long documents into prompts; point to files instead (`docs/brief.md`, `content/`). Each agent prompt: role, inputs, workflow, rules, definition of done, handoff format. Target 350 words per agent, 300 per skill.
 
 ---
 
 ## 1. Product
 
-A personal, single-user app to track a 3-day band training plan. Used on a Samsung S23 Ultra (Android, Chrome), installed as a PWA from the browser. Free to run, forever.
+A personal, single-user app to track a 3-day band training plan. Used on a Samsung S23 Ultra (Android, Chrome), installed as a PWA from the browser. It must be free to run indefinitely.
 
 Core features:
 - Follow the plan: Monday, Wednesday, Friday evenings (Pull, Push, Shoulders and arms).
@@ -77,11 +77,11 @@ The three workout files and the program guide in `content/` are the source of tr
 
 Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only a default for the picker.
 
-**Band ladders (lb, ratings at full stretch)**
+Band ladders (lb, ratings at full stretch)
 - Tube: `30`, `40`, `50`, `30+40`, `30+50`, `40+50`, `30+40+50`
 - Loop: `5-30`, `15-50`, `25-75`, `35-95`, `50-145`
 
-**Workout 1: Pull** (Monday)
+Workout 1: Pull (Monday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
@@ -94,7 +94,7 @@ Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only 
 | V-ups | T + handles | 3 x 10-15 | 60 | T30 |
 | Trunk twist (each side) | L | 2 x 12-15 | 45 | L15-50 |
 
-**Workout 2: Push** (Wednesday)
+Workout 2: Push (Wednesday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
@@ -106,7 +106,7 @@ Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only 
 | Triceps extension | L | 4 x 12-15 | 60 | L15-50 |
 | Kneeling crunch | T + handles | 3 x 12-15 | 60 | T40 |
 
-**Workout 3: Shoulders and arms** (Friday)
+Workout 3: Shoulders and arms (Friday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
@@ -121,7 +121,7 @@ Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only 
 | Triceps extension | L | 3 x 12-15 | 60 | L15-50 |
 | Bicep curls (optional) | L | 2 x 20 | 45 | L15-50 |
 
-**Workout 4: Legs and forearms** (Saturday)
+Workout 4: Legs and forearms (Saturday)
 
 | Exercise | Equip | Sets x reps | Rest | Start |
 |---|---|---|---|---|
@@ -136,11 +136,11 @@ Rest times are seconds. "T" is a tube band, "L" a loop band. Start band is only 
 | Wrist curl | T + Pilates bar | 3 x 15-20 | 45 | T30 |
 | Wrist extension | T + Pilates bar | 3 x 15-20 | 45 | T30 |
 
-**Weekly volume targets.** `plan.json` has a top-level `muscleTargets: { [muscle]: { min, max } }` (weekly hard sets, primary 1, secondary 0.5, unilateral round = 1 set). Each muscle is judged against its own range; muscles without an entry fall back to the user's default range (`getVolumeTargets()`, 10 to 20). The program is an arms and back specialization (M27). Priority muscles: biceps 16-28, triceps, lats, mid back 16-26, rear delts 14-20, forearms 12-20, upper traps 8-14 (planned: biceps 26, triceps 21, lats 21, mid back 19, rear delts 16.5, forearms 17, upper traps 8.5). Maintenance-to-moderate: chest, side delts 6-12; front delts, abs 4-10; obliques 2-6; quads, glutes, hamstrings 4-10; calves 3-8; lower back 2-8; rotator cuff 1-6. Exercises can be in `plan.json` without being in any workout (Upright row, Glute bridge, Cable crossover, Lying chest press); logged history for them stays valid. Estimated working time (sets x (45 s + rest), unilateral doubled): Pull 52.5, Push 42, Shoulders and arms 54 (57 with the finisher), Legs and forearms 60 min, plus 13 min warm-up and cool-down.
+Weekly volume targets: `plan.json` has a top-level `muscleTargets: { [muscle]: { min, max } }` (weekly hard sets, primary 1, secondary 0.5, unilateral round = 1 set). Each muscle is judged against its own range; muscles without an entry fall back to the user's default range (`getVolumeTargets()`, 10 to 20). The program is an arms and back specialization (M27). Priority muscles: biceps 16-28, triceps, lats, mid back 16-26, rear delts 14-20, forearms 12-20, upper traps 8-14 (planned: biceps 26, triceps 21, lats 21, mid back 19, rear delts 16.5, forearms 17, upper traps 8.5). Maintenance-to-moderate: chest, side delts 6-12; front delts, abs 4-10; obliques 2-6; quads, glutes, hamstrings 4-10; calves 3-8; lower back 2-8; rotator cuff 1-6. Exercises can be in `plan.json` without being in any workout (Upright row, Glute bridge, Cable crossover, Lying chest press); logged history for them stays valid. Estimated working time (sets x (45 s + rest), unilateral doubled): Pull 52.5, Push 42, Shoulders and arms 54 (57 with the finisher), Legs and forearms 60 min, plus 13 min warm-up and cool-down.
 
-**Schema notes.** An exercise has `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `optional`. Side pull biceps is `unilateral`: one logged set per side.
+Schema notes: An exercise has `slug`, `name`, `equipment`, `repMin`, `repMax`, `sets`, `restSeconds`, `startBand`, `unilateral`, `optional`. Side pull biceps is `unilateral`: one logged set per side.
 
-**Progression suggestion rule.** After a session, for each exercise: if every set hit `repMax` with the same band, suggest the next band on the ladder (or single-arm if already at the top); if any set is under `repMin`, suggest staying on the band. Show it as a note on the exercise card next session. Also show: arm measurement due every 4 weeks, deload week every 6 to 8 weeks (half the sets, same bands).
+Progression suggestion rule: After a session, for each exercise: if every set hit `repMax` with the same band, suggest the next band on the ladder (or single-arm if already at the top); if any set is under `repMin`, suggest staying on the band. Show it as a note on the exercise card next session. Also show: arm measurement due every 4 weeks, deload week every 6 to 8 weeks (half the sets, same bands).
 
 ---
 
@@ -158,15 +158,15 @@ All synced tables also have `updated_at` and `deleted`. IDs are client-generated
 
 ## 6. Screens and behaviour
 
-Bottom navigation, four tabs: **Today**, **Plan**, **Progress**, **Settings**.
+Bottom navigation, four tabs: Today, Plan, Progress, Settings.
 
-- **Today**: the next workout, a quick weight entry, any due prompt (measure arms, deload).
-- **Workout session**: exercise list. Each set is a row with reps and band prefilled from the last time. Tapping the check on a row logs it and starts the rest timer for that exercise. Optional note per set.
-- **Rest timer**: sticky bar at the bottom with countdown, minus 15 s, plus 15 s and skip. Ends with vibration and a short chime. Keep the screen awake during a session (Wake Lock). The timer stores an end timestamp and recomputes on `visibilitychange`, so it stays correct if the page is throttled. Unilateral: timer starts after the second side. Known limit: a web app cannot ring while the screen is locked, say this in the skill.
-- **Plan**: the three workouts, each exercise opens its page (instructions from `content/`, YouTube embeds, gallery images).
-- **Progress**: weight chart with a 7-day average, arm circumference chart (left and right), simple table of entries, add and edit entries.
-- **History**: past sessions, editable.
-- **Settings**: reminder toggles and times (default off), theme, sync status, export to CSV.
+- Today: the next workout, a quick weight entry, any due prompt (measure arms, deload).
+- Workout session: exercise list. Each set is a row with reps and band prefilled from the last time. Tapping the check on a row logs it and starts the rest timer for that exercise. Optional note per set.
+- Rest timer: sticky bar at the bottom with countdown, minus 15 s, plus 15 s and skip. Ends with vibration and a short chime. Keep the screen awake during a session (Wake Lock). The timer stores an end timestamp and recomputes on `visibilitychange`, so it stays correct if the page is throttled. Unilateral: timer starts after the second side. Known limit: a web app cannot ring while the screen is locked, say this in the skill.
+- Plan: the three workouts, each exercise opens its page (instructions from `content/`, YouTube embeds, gallery images).
+- Progress: weight chart with a 7-day average, arm circumference chart (left and right), simple table of entries, add and edit entries.
+- History: past sessions, editable.
+- Settings: reminder toggles and times (default off), theme, sync status, export to CSV.
 
 ---
 
@@ -199,18 +199,18 @@ Bottom navigation, four tabs: **Today**, **Plan**, **Progress**, **Settings**.
 
 Reference: the Notion website and app, with a richer finish. A calm, document-like base with one muted hue per workout. Direction A from `docs/design-v2.md` is the chosen direction. All values live in `app/src/styles/tokens.css`.
 
-**Type**
+Type:
 - Display face: Figtree (self-hosted). Titles 28 to 32 px, bold. Big numerals 40 to 56 px.
 - Body and data: Inter (self-hosted), tabular figures. Body 16 px.
-- Sentence case everywhere. Size and weight do the contrast, not color.
+- Sentence case everywhere. Contrast comes from size and weight. Color is not used for contrast.
 
-**Color tokens**
+Color tokens:
 - Dark (default): background `#191919`, panel `#1F1F1F`, sheet `#262626`, border `#2F2F2F`, text `#EBEBEB`, secondary text `#9B9B9B`, accent `#529CCA`.
 - Light: background `#FFFFFF`, panel `#F7F6F3`, sheet `#FFFFFF`, border `#E9E9E7`, text `#37352F`, secondary text `#787774`, accent `#2383E2`.
 - Per-workout hue (dark): Pull `#529CCA`, Push `#5E9E7A`, Shoulders and arms `#C29A5B`. On light: Pull `#2383E2`, Push `#2E7D5B`, Shoulders and arms `#A66A2E`.
 - Muscle-group colors (shared, desaturated): chest `#C97B6E`, front delts `#C79A5B`, side delts `#B8A24A`, rear delts `#5E9E7A`, biceps `#529CCA`, brachialis `#6E7FC0`, triceps `#7FA85E`, lats `#5FA8A8`, mid back `#8A7FB0`, upper back `#7A8A9A`.
 
-**Surfaces and layout**
+Surfaces and layout:
 - Flat surfaces, 1 px borders, radius 4 to 6 px, generous whitespace, left-aligned content.
 - Soft shadow only on bottom sheets and the rest timer bar. No other shadows.
 - Touch targets at least 48 px.
@@ -224,7 +224,7 @@ Reference: the Notion website and app, with a richer finish. A calm, document-li
 - Signature motion: the infinity line draws itself on the splash screen and on the session complete screen. Everything else moves only in response to a tap. Respect reduced motion.
 - Empty states use the infinity line and one sentence saying what to do next.
 
-**Never**
+Never:
 - Em dashes or en dashes in UI text, and no center dots (middle dots) as separators, use commas or separate lines.
 - Monospace fonts anywhere in the UI.
 - Large all-caps titles or any `text-transform: uppercase`.
